@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>批量配置IB网口IP地址 | AI HPC in doing we learn!</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="​        服务器上架上电后，安装操作系统CentOS7.5，根据落柜位置、服务器SN序列号，规划配置IB网卡的IP地址。首先写出文件file_sn列出SN与IB网口与IP地址之间的对应关系，然后在各个计算节点运行ibip.sh配置IP。可以在管理节点（192.168.1.254）使用tentakel批量运行ibip.sh 管理节点运行命令：12tentakel -g cu &quot;wg">
+<meta property="og:type" content="article">
+<meta property="og:title" content="批量配置IB网口IP地址">
+<meta property="og:url" content="http://example.com/2022/06/16/IB_IP/index.html">
+<meta property="og:site_name" content="AI HPC in doing we learn!">
+<meta property="og:description" content="​        服务器上架上电后，安装操作系统CentOS7.5，根据落柜位置、服务器SN序列号，规划配置IB网卡的IP地址。首先写出文件file_sn列出SN与IB网口与IP地址之间的对应关系，然后在各个计算节点运行ibip.sh配置IP。可以在管理节点（192.168.1.254）使用tentakel批量运行ibip.sh 管理节点运行命令：12tentakel -g cu &quot;wg">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-06-15T16:39:39.031Z">
+<meta property="article:modified_time" content="2022-06-15T16:39:39.030Z">
+<meta property="article:author" content="zhangdonghao678@163.com">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="AI HPC in doing we learn!" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">AI HPC in doing we learn!</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-IB_IP" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/06/16/IB_IP/" class="article-date">
+  <time datetime="2022-06-15T16:39:39.031Z" itemprop="datePublished">2022-06-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      批量配置IB网口IP地址
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>​        服务器上架上电后，安装操作系统CentOS7.5，根据落柜位置、服务器SN序列号，规划配置IB网卡的IP地址。首先写出文件file_sn列出SN与IB网口与IP地址之间的对应关系，然后在各个计算节点运行ibip.sh配置IP。可以在管理节点（192.168.1.254）使用tentakel批量运行ibip.sh</p>
+<h2 id="管理节点运行命令："><a href="#管理节点运行命令：" class="headerlink" title="管理节点运行命令："></a>管理节点运行命令：</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tentakel -g cu <span class="string">&quot;wget http://192.168.1.254/ibip.sh&quot;</span></span><br><span class="line">tentakel -g cu <span class="string">&quot;bash ibip.sh&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="ibip-sh脚本内容如下："><a href="#ibip-sh脚本内容如下：" class="headerlink" title="ibip.sh脚本内容如下："></a>ibip.sh脚本内容如下：</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#可以使用的ib.sh</span></span><br><span class="line">wget http://115.26.91.194/file_sn -NP /var/</span><br><span class="line"><span class="built_in">cd</span> /var</span><br><span class="line">sn_local=`dmidecode -t system |awk /<span class="string">&quot;Serial Number&quot;</span>/<span class="string">&#x27;&#123;print $3&#125;&#x27;</span>|<span class="built_in">sort</span> -u|sed -e <span class="string">&#x27;s/-//g&#x27;</span>`</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="built_in">read</span> line</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$line</span> &gt; ./line</span><br><span class="line">sn=`<span class="built_in">cat</span> line | awk <span class="string">&#x27;&#123;print $1&#125;&#x27;</span>`</span><br><span class="line">ip=`<span class="built_in">cat</span> line | awk <span class="string">&#x27;&#123;print $2&#125;&#x27;</span>`</span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$sn</span> = <span class="variable">$sn_local</span> ];<span class="keyword">then</span></span><br><span class="line"><span class="built_in">cat</span> &gt;/etc/sysconfig/network-scripts/ifcfg-ib0 &lt;&lt; <span class="string">EOF</span></span><br><span class="line"><span class="string">NAME=ib0</span></span><br><span class="line"><span class="string">DEVICE=ib0</span></span><br><span class="line"><span class="string">BOOTPROTO=static</span></span><br><span class="line"><span class="string">ONBOOT=yes</span></span><br><span class="line"><span class="string">TYPE=InfiniBand</span></span><br><span class="line"><span class="string">IPADDR=$ip</span></span><br><span class="line"><span class="string">NETMASK=255.255.0.0</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span> &lt; /var/file_sn</span><br><span class="line"><span class="built_in">rm</span> -rf ./line</span><br><span class="line"><span class="built_in">rm</span> -rf /var/file_sn</span><br><span class="line"><span class="built_in">cd</span></span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<h2 id="file-sn文件内容如下："><a href="#file-sn文件内容如下：" class="headerlink" title="file_sn文件内容如下："></a>file_sn文件内容如下：</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">111111153	192.168.2.1</span><br><span class="line">111111122	192.168.3.2</span><br><span class="line">111111133	192.168.2.3</span><br><span class="line">*********   ***.***.*.*</span><br></pre></td></tr></table></figure>
+
+<p>第一列是服务器SN，第二列是IB网卡IP地址。</p>
+<h2 id="管理节点安装tentakel："><a href="#管理节点安装tentakel：" class="headerlink" title="管理节点安装tentakel："></a>管理节点安装tentakel：</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf tentakel.tar.gz</span><br><span class="line"><span class="built_in">cd</span> tentakel</span><br><span class="line">vim tentakel.conf</span><br></pre></td></tr></table></figure>
+
+<p>修改tentakel.conf文件内容示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">[root@mu01 tentakel]<span class="comment"># cat tentakel.conf</span></span><br><span class="line"><span class="comment"># $Id: tentakel.conf.example,v 1.10 2005/03/13 18:43:41 cran Exp $</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Example configuration file for tentakel</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># first section: global parameters</span></span><br><span class="line"><span class="built_in">set</span> ssh_path=<span class="string">&quot;/usr/bin/ssh&quot;</span></span><br><span class="line"><span class="built_in">set</span> method=<span class="string">&quot;ssh&quot;</span></span><br><span class="line"><span class="comment">#set user=&quot;root&quot; # use EUID of the tentakel process when user is unset</span></span><br><span class="line"><span class="comment">#set format=&quot;%d %on&quot;</span></span><br><span class="line"><span class="comment">#set maxparallel=&quot;3&quot; # run at most 3 commands in parallel</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># second section: groups</span></span><br><span class="line"></span><br><span class="line">group all()</span><br><span class="line">+mu01</span><br><span class="line">@cu</span><br><span class="line">@ibcu</span><br><span class="line"></span><br><span class="line">group cu()</span><br><span class="line">+cu01</span><br><span class="line">+cu02</span><br><span class="line">+cu03</span><br><span class="line">*****</span><br><span class="line"></span><br><span class="line">group ibcu()</span><br><span class="line">+ibcu01</span><br><span class="line">+ibcu02</span><br><span class="line">+ibcu03</span><br><span class="line">*******</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">./tentakel.sh </span><br><span class="line"><span class="built_in">cd</span></span><br><span class="line">tentakel -g cu <span class="built_in">date</span></span><br><span class="line">tentakel -g cu <span class="string">&quot;ibstat|grep State&quot;</span> &gt; 1.txt</span><br></pre></td></tr></table></figure>
+
+<p>hosts文件同步复制给所有计算节点：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tentakel -g cu <span class="string">&quot;mkdir /etc/bak&quot;</span></span><br><span class="line">tentakel -g cu <span class="string">&quot;mv /etc/hosts /etc/bak&quot;</span></span><br><span class="line">tentakel -g cu <span class="string">&quot;wget -P /etc/  http://192.168.1.254/hosts&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="管理节点和计算节点配置免密互相登录："><a href="#管理节点和计算节点配置免密互相登录：" class="headerlink" title="管理节点和计算节点配置免密互相登录："></a>管理节点和计算节点配置免密互相登录：</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">unzip nopasswd.zip</span><br><span class="line">cd /opt/nopasswd/</span><br></pre></td></tr></table></figure>
+
+<p>编辑hostfile文件和/etc/hosts文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">vim hostfile </span><br><span class="line"><span class="built_in">cat</span> hostfile</span><br><span class="line">mu01</span><br><span class="line">cu01</span><br><span class="line">cu02</span><br><span class="line">cu03</span><br><span class="line">****</span><br><span class="line"></span><br><span class="line">ibmu01</span><br><span class="line">ibcu01</span><br><span class="line">ibcu02</span><br><span class="line">ibcu03</span><br><span class="line">*****</span><br></pre></td></tr></table></figure>
+
+<p>hosts文件内容示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">cat  /etc/hosts</span><br><span class="line">192.168.1.254  mu01</span><br><span class="line">192.168.1.1    cu01</span><br><span class="line">192.168.1.2    cu02</span><br><span class="line">192.168.1.3    cu03</span><br><span class="line">***.***.*.*    ****</span><br><span class="line"></span><br><span class="line">192.168.2.254  ibmu01</span><br><span class="line">192.168.2.1    ibcu01</span><br><span class="line">192.168.3.2    ibcu02</span><br><span class="line">192.168.2.3    ibcu03</span><br><span class="line">***.***.*.*    ******</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./nopasswdroot </span><br></pre></td></tr></table></figure>
+
+<p>nopasswdroot脚本内容如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="built_in">read</span> -p <span class="string">&quot;please input rootpassword: &quot;</span> passwd</span><br><span class="line">ssh-keygen -t dsa -N <span class="string">&quot;&quot;</span> -f <span class="string">&quot;<span class="variable">$HOME</span>/.ssh/id_dsa&quot;</span></span><br><span class="line"><span class="built_in">cp</span> -r <span class="variable">$HOME</span>/.ssh/id_dsa.pub <span class="variable">$HOME</span>/.ssh/authorized_keys</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;StrictHostKeyChecking no&quot;</span> &gt;&gt; <span class="variable">$HOME</span>/.ssh/config</span><br><span class="line"><span class="built_in">chmod</span> 600 <span class="variable">$HOME</span>/.ssh/config</span><br><span class="line"><span class="built_in">chmod</span> 600 <span class="variable">$HOME</span>/.ssh/authorized_keys</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> node <span class="keyword">in</span> $(<span class="built_in">cat</span> hostfile)</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">/usr/bin/expect &lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">set force_conservative 0  ;# set to 1 to force conservative mode even if</span></span><br><span class="line"><span class="string">			  ;# script wasn&#x27;t run conservatively originally</span></span><br><span class="line"><span class="string">if &#123;\$force_conservative&#125; &#123;</span></span><br><span class="line"><span class="string">	set send_slow &#123;1 .1&#125;</span></span><br><span class="line"><span class="string">	proc send &#123;ignore arg&#125; &#123;</span></span><br><span class="line"><span class="string">		sleep .1</span></span><br><span class="line"><span class="string">		exp_send -s -- \$arg</span></span><br><span class="line"><span class="string">	&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">set timeout -1</span></span><br><span class="line"><span class="string">spawn scp -rp /root/.ssh $&#123;node&#125;:/root</span></span><br><span class="line"><span class="string">match_max 100000</span></span><br><span class="line"><span class="string">expect -exact &quot;root@$&#123;node&#125;&#x27;s password: &quot;</span></span><br><span class="line"><span class="string">send -- &quot;$passwd\r&quot;</span></span><br><span class="line"><span class="string">expect eof</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<p>服务器上架到批量配置IB网卡IP，方法流程。</p>
+<p>1、服务器上架、上电；</p>
+<p>2、电源线，OS业务管理网线、IB网线布线理线；</p>
+<p>3、规划OS管理网段IP地址、IB网卡IP地址；</p>
+<p>4、安装操作系统，修改hostname和OS管理IP地址（可以用PXE，配置脚本写进ks文件）；</p>
+<p>5、修改管理节点hosts文件；</p>
+<p>6、nopasswdroot配置免密登录到计算节点；</p>
+<p>7、同步hosts文件到计算节点；</p>
+<p>8、安装tentakel批量运行命令工具；</p>
+<p>9、ibip.sh脚本配合file_sn文件批量修改IB网卡IP地址。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/06/16/IB_IP/" data-id="cl4fwftl70000xha3bm5r1k13" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/06/16/blog1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          参考资料网址
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/06/16/blog1/">参考资料网址</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/16/IB_IP/">批量配置IB网口IP地址</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2022 zhangdonghao678@163.com<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
