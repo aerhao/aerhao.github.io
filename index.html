@@ -64,6 +64,48 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-nopassword" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/06/16/nopassword/" class="article-date">
+  <time datetime="2022-06-16T15:42:50.186Z" itemprop="datePublished">2022-06-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/06/16/nopassword/">集群环境配置普通用户免密登录</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一、创建文件/etc/profile.d/nopassword.sh将其放在管理节点/etc/profile.d下即可，<br>不对root用户做设置，当普通用户登陆会自动判断免密，如果未设置免密会自动设置<br>内容如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">username=`<span class="built_in">whoami</span>`</span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$username</span> == root ]</span><br><span class="line">        <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">&quot;root user nothing to do! &quot;</span> &gt; /dev/null</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">        /usr/local/sbin/authorized_keys.sh</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line">-----------------------------------------------------------------------------------------</span><br><span class="line">赋予执行权限</span><br><span class="line"><span class="built_in">chmod</span> a+x /etc/profild.d/nopassword.sh</span><br><span class="line">-----------------------------------------------------------------------------------------</span><br></pre></td></tr></table></figure>
+
+<p>二、以上脚本调用了 /usr/local/sbin/authorized_keys.sh工具</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/sbin/authorized_keys.sh内容如下所示</span><br><span class="line">-----------------------------------------------------------------------------------------</span><br><span class="line"><span class="comment">#!/usr/bin/env bash</span></span><br><span class="line">PASSPHRASE=<span class="string">&quot;&quot;</span></span><br><span class="line">KEYTYPES=<span class="string">&quot;rsa dsa ecdsa&quot;</span></span><br><span class="line">AUTHORIZEDKEYS=<span class="variable">$HOME</span>/.ssh/authorized_keys</span><br><span class="line"></span><br><span class="line"><span class="comment">#echo Creating the user SSH v2 $AUTHORIZEDKEYS file for user $USER</span></span><br><span class="line"><span class="comment">#echo Beware: An empty passphrase is used which means a lower security level.</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Make sure the user HOME directory exists</span></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">test</span> ! -d <span class="variable">$HOME</span></span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> ERROR: No home directory <span class="variable">$HOME</span> <span class="keyword">for</span> user <span class="variable">$USER</span></span><br><span class="line">        <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Make sure the ssh-keygen tool is installed</span></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">test</span> ! -x /usr/bin/ssh-keygen</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> ERROR: ssh-keygen not found, please install the openssh package</span><br><span class="line">        <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Make sure the user .ssh directory exists</span></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">test</span> ! -d <span class="variable">$HOME</span>/.ssh/</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">        <span class="built_in">mkdir</span> -v <span class="variable">$HOME</span>/.ssh/</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Make sure .ssh/ has the correct protection</span></span><br><span class="line"><span class="built_in">chmod</span> 700 <span class="variable">$HOME</span>/.ssh/</span><br><span class="line"></span><br><span class="line"><span class="comment"># Go to the .ssh folder</span></span><br><span class="line"><span class="built_in">cd</span> <span class="variable">$HOME</span>/.ssh/</span><br><span class="line"></span><br><span class="line"><span class="comment"># Append the key to $AUTHORIZEDKEYS (create if non-existent)</span></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">test</span> ! -f <span class="variable">$AUTHORIZEDKEYS</span></span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">        <span class="built_in">touch</span> <span class="variable">$AUTHORIZEDKEYS</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Loop over possible key types</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> keytype <span class="keyword">in</span> <span class="variable">$KEYTYPES</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">        <span class="comment"># Generate keys if necessary</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">test</span> ! -f id_<span class="variable">$&#123;keytype&#125;</span>.pub</span><br><span class="line">        <span class="keyword">then</span></span><br><span class="line">                <span class="built_in">echo</span> Generating SSH key <span class="keyword">for</span> keytype <span class="variable">$keytype</span></span><br><span class="line">                /usr/bin/ssh-keygen -t <span class="variable">$&#123;keytype&#125;</span> -f id_<span class="variable">$&#123;keytype&#125;</span> -N <span class="string">&quot;<span class="variable">$PASSPHRASE</span>&quot;</span> &gt; /dev/null</span><br><span class="line">        <span class="keyword">fi</span></span><br><span class="line">        <span class="comment"># If the pattern in id_$&#123;keytype&#125;.pub is not found, then append it</span></span><br><span class="line">        <span class="keyword">if</span> grep -f id_<span class="variable">$&#123;keytype&#125;</span>.pub <span class="variable">$AUTHORIZEDKEYS</span> &gt; /dev/null</span><br><span class="line">        <span class="keyword">then</span></span><br><span class="line">                <span class="built_in">echo</span> <span class="variable">$keytype</span> key already <span class="keyword">in</span> <span class="variable">$AUTHORIZEDKEYS</span> &gt; /dev/null &gt; /dev/null</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">                <span class="built_in">echo</span> Appending <span class="variable">$keytype</span> key to <span class="variable">$AUTHORIZEDKEYS</span></span><br><span class="line">                <span class="built_in">cat</span> id_<span class="variable">$&#123;keytype&#125;</span>.pub &gt;&gt; <span class="variable">$AUTHORIZEDKEYS</span></span><br><span class="line">        <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Fix file permissions</span></span><br><span class="line"><span class="built_in">chmod</span> 600 <span class="variable">$AUTHORIZEDKEYS</span></span><br><span class="line">-----------------------------------------------------------------------------------------</span><br><span class="line"></span><br><span class="line">赋予执行权限：<span class="built_in">chmod</span> a+x /usr/local/sbin/authorized_keys.sh</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/06/16/nopassword/" data-id="cl4h6ygxi00036ja3bo3idyhs" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-hexo_d" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/06/16/hexo_d/" class="article-date">
@@ -104,7 +146,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/hexo_d/" data-id="cl4fxquih00022ua361ij4aop" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/16/hexo_d/" data-id="cl4h6ygxh00026ja31hny4hdh" class="article-share-link">Share</a>
       
       
     </footer>
@@ -166,7 +208,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/blog1/" data-id="cl4fxqui700012ua34cu8fcko" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/16/blog1/" data-id="cl4h6ygxf00016ja390in062j" class="article-share-link">Share</a>
       
       
     </footer>
@@ -210,7 +252,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/IB_IP/" data-id="cl4fxqui200002ua37usgbi4j" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/16/IB_IP/" data-id="cl4h6ygx900006ja3d0q66wv9" class="article-share-link">Share</a>
       
       
     </footer>
@@ -249,6 +291,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2022/06/16/nopassword/">集群环境配置普通用户免密登录</a>
+          </li>
         
           <li>
             <a href="/2022/06/16/hexo_d/">解决hexo d命令部署github博客时报错</a>
