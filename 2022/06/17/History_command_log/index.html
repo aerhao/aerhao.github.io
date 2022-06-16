@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>记录每个用户的历史命令 | AI HPC in doing we learn!</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="实现记录每个用户的历史命令，保存日志到&#x2F;tmp&#x2F;rizhi&#x2F;用户名目录下以备审计。编辑&#x2F;etc&#x2F;profile,文件末尾追加如下内容: 1234567891011121314151617181920212223242526272829HISTFILESIZE&#x3D;2000HISTTIMEFORMAT&#x3D;&quot;%Y%m%d-%H%M &#96;whoami&#96; &quot;PS1&#x3D;&quot;&#96;whoami&#96;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记录每个用户的历史命令">
+<meta property="og:url" content="http://example.com/2022/06/17/History_command_log/index.html">
+<meta property="og:site_name" content="AI HPC in doing we learn!">
+<meta property="og:description" content="实现记录每个用户的历史命令，保存日志到&#x2F;tmp&#x2F;rizhi&#x2F;用户名目录下以备审计。编辑&#x2F;etc&#x2F;profile,文件末尾追加如下内容: 1234567891011121314151617181920212223242526272829HISTFILESIZE&#x3D;2000HISTTIMEFORMAT&#x3D;&quot;%Y%m%d-%H%M &#96;whoami&#96; &quot;PS1&#x3D;&quot;&#96;whoami&#96;">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-06-16T16:05:31.178Z">
+<meta property="article:modified_time" content="2022-06-16T16:05:31.177Z">
+<meta property="article:author" content="zhangdonghao678@163.com">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="AI HPC in doing we learn!" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">AI HPC in doing we learn!</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-History_command_log" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/06/17/History_command_log/" class="article-date">
+  <time datetime="2022-06-16T16:05:31.178Z" itemprop="datePublished">2022-06-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      记录每个用户的历史命令
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>实现记录每个用户的历史命令，保存日志到/tmp/rizhi/用户名目录下以备审计。<br>编辑/etc/profile,文件末尾追加如下内容:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">HISTFILESIZE=2000</span><br><span class="line">HISTTIMEFORMAT=<span class="string">&quot;%Y%m%d-%H%M `whoami` &quot;</span></span><br><span class="line"></span><br><span class="line">PS1=<span class="string">&quot;`whoami`@`hostname`:&quot;</span><span class="string">&#x27;[$PWD]&#x27;</span></span><br><span class="line"><span class="built_in">history</span></span><br><span class="line">USER_IP=`<span class="built_in">who</span> -u am i 2&gt;/dev/null| awk <span class="string">&#x27;&#123;print $NF&#125;&#x27;</span>|sed -e <span class="string">&#x27;s/[()]//g&#x27;</span>`</span><br><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$USER_IP</span>&quot;</span> = <span class="string">&quot;&quot;</span> ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">USER_IP=`hostname`</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="keyword">if</span> [ ! -d /tmp/rizhi ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line"><span class="built_in">mkdir</span> /tmp/rizhi</span><br><span class="line"><span class="built_in">chmod</span> 777 /tmp/rizhi</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="keyword">if</span> [ ! -d /tmp/rizhi/<span class="variable">$&#123;LOGNAME&#125;</span> ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line"><span class="built_in">mkdir</span> /tmp/rizhi/<span class="variable">$&#123;LOGNAME&#125;</span></span><br><span class="line"><span class="built_in">chmod</span> 300 /tmp/rizhi/<span class="variable">$&#123;LOGNAME&#125;</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="built_in">export</span> HISTSIZE=4096</span><br><span class="line">DT=`<span class="built_in">date</span> <span class="string">&quot;+%Y-%m-%d_%H:%M:%S&quot;</span>`</span><br><span class="line"><span class="built_in">export</span> HISTFILE=<span class="string">&quot;/tmp/rizhi/<span class="variable">$&#123;LOGNAME&#125;</span>/<span class="variable">$&#123;USER_IP&#125;</span> rizhi.<span class="variable">$DT</span>&quot;</span></span><br><span class="line"><span class="built_in">chmod</span> 600 /tmp/rizhi/<span class="variable">$&#123;LOGNAME&#125;</span>/*rizhi* 2&gt;/dev/null</span><br><span class="line"></span><br><span class="line">NODE_HOME=/usr/local/node14</span><br><span class="line">PATH=<span class="variable">$PATH</span>:<span class="variable">$NODE_HOME</span>/bin</span><br><span class="line">NODE_PATH=<span class="variable">$NODE_HOME</span>/lib/node_mudules</span><br><span class="line"><span class="built_in">export</span> PATH NODE_HOME NODE_PATH</span><br></pre></td></tr></table></figure>
+<p>source /etc/profile</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/06/17/History_command_log/" data-id="cl4h8745f0000f1a3f8ut59fc" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2022/06/16/nopasswdroot/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">集群环境root账号配置免密登录</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/06/17/History_command_log/">记录每个用户的历史命令</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/16/nopasswdroot/">集群环境root账号配置免密登录</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/16/nopassword/">集群环境配置普通用户免密登录</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/16/hexo_d/">解决hexo d命令部署github博客时报错</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/16/blog1/">AI HPC学习资料网址</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2022 zhangdonghao678@163.com<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

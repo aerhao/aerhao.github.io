@@ -64,6 +64,84 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-History_command_log" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/06/17/History_command_log/" class="article-date">
+  <time datetime="2022-06-16T16:05:31.178Z" itemprop="datePublished">2022-06-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/06/17/History_command_log/">记录每个用户的历史命令</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>实现记录每个用户的历史命令，保存日志到/tmp/rizhi/用户名目录下以备审计。<br>编辑/etc/profile,文件末尾追加如下内容:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">HISTFILESIZE=2000</span><br><span class="line">HISTTIMEFORMAT=<span class="string">&quot;%Y%m%d-%H%M `whoami` &quot;</span></span><br><span class="line"></span><br><span class="line">PS1=<span class="string">&quot;`whoami`@`hostname`:&quot;</span><span class="string">&#x27;[$PWD]&#x27;</span></span><br><span class="line"><span class="built_in">history</span></span><br><span class="line">USER_IP=`<span class="built_in">who</span> -u am i 2&gt;/dev/null| awk <span class="string">&#x27;&#123;print $NF&#125;&#x27;</span>|sed -e <span class="string">&#x27;s/[()]//g&#x27;</span>`</span><br><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$USER_IP</span>&quot;</span> = <span class="string">&quot;&quot;</span> ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">USER_IP=`hostname`</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="keyword">if</span> [ ! -d /tmp/rizhi ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line"><span class="built_in">mkdir</span> /tmp/rizhi</span><br><span class="line"><span class="built_in">chmod</span> 777 /tmp/rizhi</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="keyword">if</span> [ ! -d /tmp/rizhi/<span class="variable">$&#123;LOGNAME&#125;</span> ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line"><span class="built_in">mkdir</span> /tmp/rizhi/<span class="variable">$&#123;LOGNAME&#125;</span></span><br><span class="line"><span class="built_in">chmod</span> 300 /tmp/rizhi/<span class="variable">$&#123;LOGNAME&#125;</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="built_in">export</span> HISTSIZE=4096</span><br><span class="line">DT=`<span class="built_in">date</span> <span class="string">&quot;+%Y-%m-%d_%H:%M:%S&quot;</span>`</span><br><span class="line"><span class="built_in">export</span> HISTFILE=<span class="string">&quot;/tmp/rizhi/<span class="variable">$&#123;LOGNAME&#125;</span>/<span class="variable">$&#123;USER_IP&#125;</span> rizhi.<span class="variable">$DT</span>&quot;</span></span><br><span class="line"><span class="built_in">chmod</span> 600 /tmp/rizhi/<span class="variable">$&#123;LOGNAME&#125;</span>/*rizhi* 2&gt;/dev/null</span><br><span class="line"></span><br><span class="line">NODE_HOME=/usr/local/node14</span><br><span class="line">PATH=<span class="variable">$PATH</span>:<span class="variable">$NODE_HOME</span>/bin</span><br><span class="line">NODE_PATH=<span class="variable">$NODE_HOME</span>/lib/node_mudules</span><br><span class="line"><span class="built_in">export</span> PATH NODE_HOME NODE_PATH</span><br></pre></td></tr></table></figure>
+<p>source /etc/profile</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/06/17/History_command_log/" data-id="cl4h8745f0000f1a3f8ut59fc" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-nopasswdroot" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/06/16/nopasswdroot/" class="article-date">
+  <time datetime="2022-06-16T15:56:59.226Z" itemprop="datePublished">2022-06-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/06/16/nopasswdroot/">集群环境root账号配置免密登录</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>文件名nopasswdroot.sh，需要配合hostfile文件使用<br>hostfile文件里面每行是集群一个节点主机名</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">read</span> -p <span class="string">&quot;please input rootpassword: &quot;</span> passwd</span><br><span class="line">ssh-keygen -t dsa -N <span class="string">&quot;&quot;</span> -f <span class="string">&quot;<span class="variable">$HOME</span>/.ssh/id_dsa&quot;</span></span><br><span class="line"><span class="built_in">cp</span> -r <span class="variable">$HOME</span>/.ssh/id_dsa.pub <span class="variable">$HOME</span>/.ssh/authorized_keys</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;StrictHostKeyChecking no&quot;</span> &gt;&gt; <span class="variable">$HOME</span>/.ssh/config</span><br><span class="line"><span class="built_in">chmod</span> 600 <span class="variable">$HOME</span>/.ssh/config</span><br><span class="line"><span class="built_in">chmod</span> 600 <span class="variable">$HOME</span>/.ssh/authorized_keys</span><br><span class="line"><span class="comment">#mkdir $HOME/.vnc/</span></span><br><span class="line"><span class="comment">#echo &quot;111111&quot; &gt;&gt; $HOME/.vnc/passwd</span></span><br><span class="line"><span class="comment">#chmod 600 $HOME/.vnc/passwd</span></span><br><span class="line"><span class="comment">#vncserver :9 -f $HOME/.vnc/passwd</span></span><br><span class="line"><span class="comment">#vncserver -kill :9</span></span><br><span class="line"><span class="keyword">for</span> node <span class="keyword">in</span> $(<span class="built_in">cat</span> hostfile)</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">/usr/bin/expect &lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">set force_conservative 0  ;# set to 1 to force conservative mode even if</span></span><br><span class="line"><span class="string">			  ;# script wasn&#x27;t run conservatively originally</span></span><br><span class="line"><span class="string">if &#123;\$force_conservative&#125; &#123;</span></span><br><span class="line"><span class="string">	set send_slow &#123;1 .1&#125;</span></span><br><span class="line"><span class="string">	proc send &#123;ignore arg&#125; &#123;</span></span><br><span class="line"><span class="string">		sleep .1</span></span><br><span class="line"><span class="string">		exp_send -s -- \$arg</span></span><br><span class="line"><span class="string">	&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">set timeout -1</span></span><br><span class="line"><span class="string">spawn scp -rp /root/.ssh $&#123;node&#125;:/root</span></span><br><span class="line"><span class="string">match_max 100000</span></span><br><span class="line"><span class="string">expect -exact &quot;root@$&#123;node&#125;&#x27;s password: &quot;</span></span><br><span class="line"><span class="string">send -- &quot;$passwd\r&quot;</span></span><br><span class="line"><span class="string">expect eof</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/06/16/nopasswdroot/" data-id="cl4h8745p0004f1a3550rdh6g" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-nopassword" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/06/16/nopassword/" class="article-date">
@@ -96,7 +174,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/nopassword/" data-id="cl4h6ygxi00036ja3bo3idyhs" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/16/nopassword/" data-id="cl4h8745q0005f1a3du0ra3r5" class="article-share-link">Share</a>
       
       
     </footer>
@@ -146,7 +224,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/hexo_d/" data-id="cl4h6ygxh00026ja31hny4hdh" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/16/hexo_d/" data-id="cl4h8745o0003f1a30qp61fyy" class="article-share-link">Share</a>
       
       
     </footer>
@@ -208,7 +286,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/blog1/" data-id="cl4h6ygxf00016ja390in062j" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/16/blog1/" data-id="cl4h8745n0002f1a362offgox" class="article-share-link">Share</a>
       
       
     </footer>
@@ -252,7 +330,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/IB_IP/" data-id="cl4h6ygx900006ja3d0q66wv9" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/16/IB_IP/" data-id="cl4h8745l0001f1a3hopdcrx0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -293,6 +371,14 @@
       <ul>
         
           <li>
+            <a href="/2022/06/17/History_command_log/">记录每个用户的历史命令</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/16/nopasswdroot/">集群环境root账号配置免密登录</a>
+          </li>
+        
+          <li>
             <a href="/2022/06/16/nopassword/">集群环境配置普通用户免密登录</a>
           </li>
         
@@ -302,10 +388,6 @@
         
           <li>
             <a href="/2022/06/16/blog1/">AI HPC学习资料网址</a>
-          </li>
-        
-          <li>
-            <a href="/2022/06/16/IB_IP/">批量配置IB网口IP地址</a>
           </li>
         
       </ul>
