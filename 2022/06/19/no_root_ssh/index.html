@@ -5,17 +5,17 @@
   
 
   
-  <title>配置NFS服务 | AI HPC in doing we learn!</title>
+  <title>管理节点禁止root用户远程ssh登录 | AI HPC in doing we learn!</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="##共享管理节点&#x2F;data目录给计算节点 server端操作： 12345yum -y install nfs-utils rpcbindsystemctl start   rpcbindsystemctl enable  rpcbindsystemctl start   nfs-serversystemctl enable  nfs-server  #建立文件&#x2F;etc&#x2F;exports（若已存在该">
+  <meta name="description" content="编辑文件vi  &#x2F;etc&#x2F;ssh&#x2F;sshd_config把#PermitRootLogin yes改为 1PermitRootLogin no  重启sshd服务 1service sshd restart  之后如果需要远程管理管理节点，需要用普通用户登录，然后su命令切换到root用户拿到最高权限">
 <meta property="og:type" content="article">
-<meta property="og:title" content="配置NFS服务">
-<meta property="og:url" content="http://example.com/2022/06/17/nfs_server/index.html">
+<meta property="og:title" content="管理节点禁止root用户远程ssh登录">
+<meta property="og:url" content="http://example.com/2022/06/19/no_root_ssh/index.html">
 <meta property="og:site_name" content="AI HPC in doing we learn!">
-<meta property="og:description" content="##共享管理节点&#x2F;data目录给计算节点 server端操作： 12345yum -y install nfs-utils rpcbindsystemctl start   rpcbindsystemctl enable  rpcbindsystemctl start   nfs-serversystemctl enable  nfs-server  #建立文件&#x2F;etc&#x2F;exports（若已存在该">
+<meta property="og:description" content="编辑文件vi  &#x2F;etc&#x2F;ssh&#x2F;sshd_config把#PermitRootLogin yes改为 1PermitRootLogin no  重启sshd服务 1service sshd restart  之后如果需要远程管理管理节点，需要用普通用户登录，然后su命令切换到root用户拿到最高权限">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2022-06-17T15:09:09.271Z">
-<meta property="article:modified_time" content="2022-06-17T15:09:09.271Z">
+<meta property="article:published_time" content="2022-06-19T01:35:57.945Z">
+<meta property="article:modified_time" content="2022-06-19T01:35:57.944Z">
 <meta property="article:author" content="zhangdonghao678@163.com">
 <meta name="twitter:card" content="summary">
   
@@ -66,10 +66,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-nfs_server" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-no_root_ssh" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2022/06/17/nfs_server/" class="article-date">
-  <time datetime="2022-06-17T15:09:09.271Z" itemprop="datePublished">2022-06-17</time>
+    <a href="/2022/06/19/no_root_ssh/" class="article-date">
+  <time datetime="2022-06-19T01:35:57.945Z" itemprop="datePublished">2022-06-19</time>
 </a>
     
   </div>
@@ -80,7 +80,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      配置NFS服务
+      管理节点禁止root用户远程ssh登录
     </h1>
   
 
@@ -88,28 +88,18 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>##共享管理节点/data目录给计算节点</p>
-<p>server端操作：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yum -y install nfs-utils rpcbind</span><br><span class="line">systemctl start   rpcbind</span><br><span class="line">systemctl <span class="built_in">enable</span>  rpcbind</span><br><span class="line">systemctl start   nfs-server</span><br><span class="line">systemctl <span class="built_in">enable</span>  nfs-server</span><br></pre></td></tr></table></figure>
+        <p>编辑文件vi  /etc/ssh/sshd_config<br>把#PermitRootLogin yes改为</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PermitRootLogin no</span><br></pre></td></tr></table></figure>
 
-<p>#建立文件/etc/exports（若已存在该文件，则先删除再重新建立）</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/exports</span><br><span class="line"><span class="built_in">cat</span> /etc/exports</span><br><span class="line">/data *(rw,no_root_squash,<span class="built_in">sync</span>)   </span><br><span class="line"><span class="comment">#或者/data *(rw,insecure,no_root_squash,async)</span></span><br></pre></td></tr></table></figure>
+<p>重启sshd服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service sshd restart</span><br></pre></td></tr></table></figure>
 
-<p>#共享文件系统服务</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">exportfs -rv </span><br><span class="line"><span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
-
-<p>client端操作<br>扫描可以使用的 server 目录</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">showmount -e mu01</span><br></pre></td></tr></table></figure>
-
-<p>#客户端mount挂载管理节点/data文件夹到本地/data文件夹</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mount -t nfs -o vers=3 mgmt:/data  /data</span><br></pre></td></tr></table></figure>
-
-<p>上述命令追加写入到/etc/rc.d/rc.local/中以使节点启动后自动挂载目录。</p>
+<p>之后如果需要远程管理管理节点，需要用普通用户登录，然后su命令切换到root用户拿到最高权限</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/17/nfs_server/" data-id="cl4kn14gu00076ta3cfvu0p9a" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/19/no_root_ssh/" data-id="cl4kn14gw00086ta3d4431e5w" class="article-share-link">Share</a>
       
       
     </footer>
@@ -118,19 +108,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2022/06/17/IB_FW_upgrade/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          升级IB交换机固件
-        
-      </div>
-    </a>
   
-  
-    <a href="/2022/06/17/genisoimage/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2022/06/19/CPU_Linpack_Test/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">编译网卡rpm驱动集成到linux系统镜像</div>
+      <div class="article-nav-title">CPU Linpack性能测试</div>
     </a>
   
 </nav>
