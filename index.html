@@ -64,6 +64,57 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-HCA_TO_IB_MODE" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/06/21/HCA_TO_IB_MODE/" class="article-date">
+  <time datetime="2022-06-20T17:25:30.336Z" itemprop="datePublished">2022-06-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/06/21/HCA_TO_IB_MODE/">Linux操作系统HCA卡切换为 IB 模式：</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mst start</span><br><span class="line">mst status</span><br></pre></td></tr></table></figure>
+
+<p>单口卡：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mlxconfig -d /dev/mst/mt4115_pciconf0 <span class="built_in">set</span> LINK_TYPE_P1=ib KEEP_ETH_LINK_UP_P1=1</span><br></pre></td></tr></table></figure>
+
+<p>双口卡：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mlxconfig -d /dev/mst/mt4115_pciconf0 <span class="built_in">set</span> LINK_TYPE_P1=ib KEEP_IB_LINK_UP_P1=1 KEEP_IB_LINK_UP_P2=1</span><br></pre></td></tr></table></figure>
+
+<p>切换工作模式后重启服务器</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#reboot</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>备注：</p>
+<p>/dev/mst/mt4115_pciconf0   这个名称需要更换成mst status实际看到的/dev设备名</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/06/21/HCA_TO_IB_MODE/" data-id="cl4n0ellj000169a35coh5wai" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-no_root_ssh" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/06/19/no_root_ssh/" class="article-date">
@@ -97,7 +148,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/19/no_root_ssh/" data-id="cl4kn14gw00086ta3d4431e5w" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/19/no_root_ssh/" data-id="cl4n0ellx000969a35to70ddt" class="article-share-link">Share</a>
       
       
     </footer>
@@ -214,7 +265,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/19/CPU_Linpack_Test/" data-id="cl4kn14ek00006ta355zw10ep" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/19/CPU_Linpack_Test/" data-id="cl4n0ell8000069a3emhz6fme" class="article-share-link">Share</a>
       
       
     </footer>
@@ -307,7 +358,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/17/IB_FW_upgrade/" data-id="cl4kn14gd00026ta3hkp16wxw" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/17/IB_FW_upgrade/" data-id="cl4n0elln000369a34uid3gkt" class="article-share-link">Share</a>
       
       
     </footer>
@@ -360,7 +411,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/17/nfs_server/" data-id="cl4kn14gu00076ta3cfvu0p9a" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/17/nfs_server/" data-id="cl4n0ellw000869a3hib8bf2v" class="article-share-link">Share</a>
       
       
     </footer>
@@ -432,7 +483,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/17/genisoimage/" data-id="cl4kn14gn00056ta38jrlgxux" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/17/genisoimage/" data-id="cl4n0ellu000669a3co3p8nm1" class="article-share-link">Share</a>
       
       
     </footer>
@@ -471,7 +522,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/17/History_command_log/" data-id="cl4kn14g600016ta345hdgn6c" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/17/History_command_log/" data-id="cl4n0ellm000269a3a4pt4ooz" class="article-share-link">Share</a>
       
       
     </footer>
@@ -510,7 +561,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/nopasswdroot/" data-id="cl4kn14gz00096ta3egjfb4lu" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/16/nopasswdroot/" data-id="cl4n0ellz000a69a30o5nfjd7" class="article-share-link">Share</a>
       
       
     </footer>
@@ -552,7 +603,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/nopassword/" data-id="cl4kn14h1000a6ta3fc4b67ld" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/16/nopassword/" data-id="cl4n0elm1000b69a332vibol6" class="article-share-link">Share</a>
       
       
     </footer>
@@ -602,69 +653,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/hexo_d/" data-id="cl4kn14gq00066ta36ohn97j2" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-blog1" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/06/16/blog1/" class="article-date">
-  <time datetime="2022-06-15T18:36:19.231Z" itemprop="datePublished">2022-06-16</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/06/16/blog1/">AI HPC学习资料网址</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="AI和HPC学习实践笔记"><a href="#AI和HPC学习实践笔记" class="headerlink" title="AI和HPC学习实践笔记"></a><center>AI和HPC学习实践笔记</center></h1><h2 id="书山有路勤为径，学海无涯苦作舟"><a href="#书山有路勤为径，学海无涯苦作舟" class="headerlink" title="书山有路勤为径，学海无涯苦作舟"></a><p align="right">书山有路勤为径，学海无涯苦作舟</p></h2><h3 id="常用网址："><a href="#常用网址：" class="headerlink" title="常用网址："></a><p align="left">常用网址：</p></h3><ul>
-<li><p>863高性能计算机评测中心<br><a target="_blank" rel="noopener" href="http://hpctest.cs.tsinghua.edu.cn/programs.html">http://hpctest.cs.tsinghua.edu.cn/programs.html</a></p>
-</li>
-<li><p>英特尔产品规格处理器<br><a target="_blank" rel="noopener" href="https://ark.intel.com/content/www/cn/zh/ark.html#@Processors">https://ark.intel.com/content/www/cn/zh/ark.html#@Processors</a></p>
-</li>
-<li><p>高性能计算 Linpack 基准测试<br><a target="_blank" rel="noopener" href="http://www.netlib.org/benchmark/hpl/">http://www.netlib.org/benchmark/hpl/</a><br><a target="_blank" rel="noopener" href="http://hpctest.cs.tsinghua.edu.cn/programs.html">http://hpctest.cs.tsinghua.edu.cn/programs.html</a><br><a target="_blank" rel="noopener" href="https://www.hpcg-benchmark.org/software/index.html">https://www.hpcg-benchmark.org/software/index.html</a></p>
-</li>
-<li><p>IB交换机配置命令<br><a target="_blank" rel="noopener" href="https://docs.nvidia.com/networking/display/MLNXOSv3101110">https://docs.nvidia.com/networking/display/MLNXOSv3101110</a><br>交换机固件下载地址：<a target="_blank" rel="noopener" href="https://www.mellanox.com/support/firmware/firmware-downloads">https://www.mellanox.com/support/firmware/firmware-downloads</a><br>IB交换机驱动下载地址：​<a target="_blank" rel="noopener" href="https://www.mellanox.com/products/infiniband-drivers/linux/mlnx_ofed">https://www.mellanox.com/products/infiniband-drivers/linux/mlnx_ofed</a></p>
-</li>
-<li><p>英伟达HPC SDK<br><a target="_blank" rel="noopener" href="https://docs.nvidia.com/hpc-sdk/index.html">https://docs.nvidia.com/hpc-sdk/index.html</a></p>
-</li>
-<li><p>NVIDIA Docker<br><a target="_blank" rel="noopener" href="https://catalog.ngc.nvidia.com/">https://catalog.ngc.nvidia.com/</a></p>
-</li>
-<li><p>Docker Hub 是世界上创建、管理和交付容器最简单方法<br><a target="_blank" rel="noopener" href="https://hub.docker.com/">https://hub.docker.com/</a><br>docker仓库<br><a target="_blank" rel="noopener" href="https://catalog.ngc.nvidia.com/">https://catalog.ngc.nvidia.com/</a><br><a target="_blank" rel="noopener" href="https://hub.docker.com/">https://hub.docker.com/</a></p>
-</li>
-<li><p>Python并行编程<br><a target="_blank" rel="noopener" href="https://python-parallel-programmning-cookbook.readthedocs.io/zh_CN/latest/index.html">https://python-parallel-programmning-cookbook.readthedocs.io/zh_CN/latest/index.html</a></p>
-</li>
-<li><p>MNIST 数据库<br><a target="_blank" rel="noopener" href="http://scc.ustc.edu.cn/389/list.htm">http://scc.ustc.edu.cn/389/list.htm</a><br><a target="_blank" rel="noopener" href="http://yann.lecun.com/exdb/mnist/">http://yann.lecun.com/exdb/mnist/</a></p>
-</li>
-<li><p>Slurm资源管理与作业调度系统安装配置<br><a target="_blank" rel="noopener" href="http://hmli.ustc.edu.cn/doc/linux/slurm-install/slurm-install.html">http://hmli.ustc.edu.cn/doc/linux/slurm-install/slurm-install.html</a><br><a target="_blank" rel="noopener" href="https://www.schedmd.com/archives.php">https://www.schedmd.com/archives.php</a><br><a target="_blank" rel="noopener" href="https://www.tcl.tk/software/tcltk/download.html">https://www.tcl.tk/software/tcltk/download.html</a><br><a target="_blank" rel="noopener" href="https://southgreenplatform.github.io/trainings/hpc/slurminstallation/">https://southgreenplatform.github.io/trainings/hpc/slurminstallation/</a><br><a target="_blank" rel="noopener" href="https://slurm.schedmd.com/quickstart_admin.html">https://slurm.schedmd.com/quickstart_admin.html</a></p>
-</li>
-<li><p>MPICH是消息传递接口 (MPI)标准的高性能和广泛可移植的实现<br><a target="_blank" rel="noopener" href="https://www.mpich.org/">https://www.mpich.org/</a><br><a target="_blank" rel="noopener" href="https://www.open-mpi.org/software/ompi/v4.0/">https://www.open-mpi.org/software/ompi/v4.0/</a><br><a target="_blank" rel="noopener" href="https://www.open-mpi.org/">https://www.open-mpi.org/</a><br><a target="_blank" rel="noopener" href="https://www.mpich.org/downloads/">https://www.mpich.org/downloads/</a></p>
-</li>
-<li><p>李会民：中国科学技术大学<br><a target="_blank" rel="noopener" href="https://hmli.ustc.edu.cn/doc/?cat=linux&amp;title=Linux%E7%B3%BB%E7%BB%9F">https://hmli.ustc.edu.cn/doc/?cat=linux&amp;title=Linux%E7%B3%BB%E7%BB%9F</a></p>
-</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/blog1/" data-id="cl4kn14gl00046ta31s2p9njj" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/16/hexo_d/" data-id="cl4n0ellv000769a346c1figo" class="article-share-link">Share</a>
       
       
     </footer>
@@ -710,6 +699,10 @@
       <ul>
         
           <li>
+            <a href="/2022/06/21/HCA_TO_IB_MODE/">Linux操作系统HCA卡切换为 IB 模式：</a>
+          </li>
+        
+          <li>
             <a href="/2022/06/19/no_root_ssh/">管理节点禁止root用户远程ssh登录</a>
           </li>
         
@@ -723,10 +716,6 @@
         
           <li>
             <a href="/2022/06/17/nfs_server/">配置NFS服务</a>
-          </li>
-        
-          <li>
-            <a href="/2022/06/17/genisoimage/">编译网卡rpm驱动集成到linux系统镜像</a>
           </li>
         
       </ul>

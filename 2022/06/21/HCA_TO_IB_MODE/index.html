@@ -5,17 +5,17 @@
   
 
   
-  <title>管理节点禁止root用户远程ssh登录 | AI HPC in doing we learn!</title>
+  <title>Linux操作系统HCA卡切换为 IB 模式： | AI HPC in doing we learn!</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="编辑文件vi  &#x2F;etc&#x2F;ssh&#x2F;sshd_config把#PermitRootLogin yes改为 1PermitRootLogin no  重启sshd服务 1service sshd restart  之后如果需要远程管理管理节点，需要用普通用户登录，然后su命令切换到root用户拿到最高权限">
+  <meta name="description" content="12mst startmst status  单口卡： 1mlxconfig -d &#x2F;dev&#x2F;mst&#x2F;mt4115_pciconf0 set LINK_TYPE_P1&#x3D;ib KEEP_ETH_LINK_UP_P1&#x3D;1  双口卡： 1mlxconfig -d &#x2F;dev&#x2F;mst&#x2F;mt4115_pciconf0 set LINK_TYPE_P1&#x3D;ib KEEP_IB_LINK_UP_P1&#x3D;1 KEEP_">
 <meta property="og:type" content="article">
-<meta property="og:title" content="管理节点禁止root用户远程ssh登录">
-<meta property="og:url" content="http://example.com/2022/06/19/no_root_ssh/index.html">
+<meta property="og:title" content="Linux操作系统HCA卡切换为 IB 模式：">
+<meta property="og:url" content="http://example.com/2022/06/21/HCA_TO_IB_MODE/index.html">
 <meta property="og:site_name" content="AI HPC in doing we learn!">
-<meta property="og:description" content="编辑文件vi  &#x2F;etc&#x2F;ssh&#x2F;sshd_config把#PermitRootLogin yes改为 1PermitRootLogin no  重启sshd服务 1service sshd restart  之后如果需要远程管理管理节点，需要用普通用户登录，然后su命令切换到root用户拿到最高权限">
+<meta property="og:description" content="12mst startmst status  单口卡： 1mlxconfig -d &#x2F;dev&#x2F;mst&#x2F;mt4115_pciconf0 set LINK_TYPE_P1&#x3D;ib KEEP_ETH_LINK_UP_P1&#x3D;1  双口卡： 1mlxconfig -d &#x2F;dev&#x2F;mst&#x2F;mt4115_pciconf0 set LINK_TYPE_P1&#x3D;ib KEEP_IB_LINK_UP_P1&#x3D;1 KEEP_">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2022-06-19T01:35:57.945Z">
-<meta property="article:modified_time" content="2022-06-19T01:35:57.944Z">
+<meta property="article:published_time" content="2022-06-20T17:25:30.336Z">
+<meta property="article:modified_time" content="2022-06-20T17:25:30.336Z">
 <meta property="article:author" content="zhangdonghao678@163.com">
 <meta name="twitter:card" content="summary">
   
@@ -66,10 +66,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-no_root_ssh" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-HCA_TO_IB_MODE" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2022/06/19/no_root_ssh/" class="article-date">
-  <time datetime="2022-06-19T01:35:57.945Z" itemprop="datePublished">2022-06-19</time>
+    <a href="/2022/06/21/HCA_TO_IB_MODE/" class="article-date">
+  <time datetime="2022-06-20T17:25:30.336Z" itemprop="datePublished">2022-06-21</time>
 </a>
     
   </div>
@@ -80,7 +80,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      管理节点禁止root用户远程ssh登录
+      Linux操作系统HCA卡切换为 IB 模式：
     </h1>
   
 
@@ -88,18 +88,26 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>编辑文件vi  /etc/ssh/sshd_config<br>把#PermitRootLogin yes改为</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PermitRootLogin no</span><br></pre></td></tr></table></figure>
+        <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mst start</span><br><span class="line">mst status</span><br></pre></td></tr></table></figure>
 
-<p>重启sshd服务</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service sshd restart</span><br></pre></td></tr></table></figure>
+<p>单口卡：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mlxconfig -d /dev/mst/mt4115_pciconf0 <span class="built_in">set</span> LINK_TYPE_P1=ib KEEP_ETH_LINK_UP_P1=1</span><br></pre></td></tr></table></figure>
 
-<p>之后如果需要远程管理管理节点，需要用普通用户登录，然后su命令切换到root用户拿到最高权限</p>
+<p>双口卡：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mlxconfig -d /dev/mst/mt4115_pciconf0 <span class="built_in">set</span> LINK_TYPE_P1=ib KEEP_IB_LINK_UP_P1=1 KEEP_IB_LINK_UP_P2=1</span><br></pre></td></tr></table></figure>
+
+<p>切换工作模式后重启服务器</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#reboot</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>备注：</p>
+<p>/dev/mst/mt4115_pciconf0   这个名称需要更换成mst status实际看到的/dev设备名</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/19/no_root_ssh/" data-id="cl4n0ellx000969a35to70ddt" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/21/HCA_TO_IB_MODE/" data-id="cl4n0ellj000169a35coh5wai" class="article-share-link">Share</a>
       
       
     </footer>
@@ -108,19 +116,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2022/06/21/HCA_TO_IB_MODE/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          Linux操作系统HCA卡切换为 IB 模式：
-        
-      </div>
-    </a>
   
-  
-    <a href="/2022/06/19/CPU_Linpack_Test/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2022/06/19/no_root_ssh/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">CPU Linpack性能测试</div>
+      <div class="article-nav-title">管理节点禁止root用户远程ssh登录</div>
     </a>
   
 </nav>
