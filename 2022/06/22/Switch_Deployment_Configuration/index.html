@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>交换机开局基础配置 | AI HPC in doing we learn!</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="调测需要使用一根串口线连接主控板卡的[IOIO]口，串口登录选择波特率115200 1.配置ip，开启ssh，增加admin&#x2F;admin登录账户123456789101112Switch&gt; enable Switch# conf tSwitch(config)# management  ip address  11.11.11.200 255.255.255.0Switch(config)#">
+<meta property="og:type" content="article">
+<meta property="og:title" content="交换机开局基础配置">
+<meta property="og:url" content="http://example.com/2022/06/22/Switch_Deployment_Configuration/index.html">
+<meta property="og:site_name" content="AI HPC in doing we learn!">
+<meta property="og:description" content="调测需要使用一根串口线连接主控板卡的[IOIO]口，串口登录选择波特率115200 1.配置ip，开启ssh，增加admin&#x2F;admin登录账户123456789101112Switch&gt; enable Switch# conf tSwitch(config)# management  ip address  11.11.11.200 255.255.255.0Switch(config)#">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-06-21T16:12:53.485Z">
+<meta property="article:modified_time" content="2022-06-21T16:12:53.485Z">
+<meta property="article:author" content="zhangdonghao678@163.com">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="AI HPC in doing we learn!" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">AI HPC in doing we learn!</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Switch_Deployment_Configuration" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/06/22/Switch_Deployment_Configuration/" class="article-date">
+  <time datetime="2022-06-21T16:12:53.485Z" itemprop="datePublished">2022-06-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      交换机开局基础配置
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>调测需要使用一根串口线连接主控板卡的[IOIO]口，串口登录选择波特率115200</p>
+<h5 id="1-配置ip，开启ssh，增加admin-admin登录账户"><a href="#1-配置ip，开启ssh，增加admin-admin登录账户" class="headerlink" title="1.配置ip，开启ssh，增加admin/admin登录账户"></a>1.配置ip，开启ssh，增加admin/admin登录账户</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Switch&gt; <span class="built_in">enable</span> </span><br><span class="line">Switch<span class="comment"># conf t</span></span><br><span class="line">Switch(config)<span class="comment"># management  ip address  11.11.11.200 255.255.255.0</span></span><br><span class="line">Switch(config)<span class="comment"># exit</span></span><br><span class="line">Switch<span class="comment"># write </span></span><br><span class="line">Switch<span class="comment"># conf t</span></span><br><span class="line">Switch(config)<span class="comment"># ip ssh server enable</span></span><br><span class="line">Switch<span class="comment"># copy r s</span></span><br><span class="line">Switch<span class="comment"># conf t</span></span><br><span class="line">Switch(config)<span class="comment"># username admin privilege 4 password admin</span></span><br><span class="line">Switch(config)<span class="comment"># </span></span><br><span class="line">Switch<span class="comment"># copy r s</span></span><br></pre></td></tr></table></figure>
+
+<p>端口</p>
+<h5 id="2-配置端口静态链路聚合"><a href="#2-配置端口静态链路聚合" class="headerlink" title="2.配置端口静态链路聚合"></a>2.配置端口静态链路聚合</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">Switch(config)<span class="comment"># interface   range eth-0-1 - 2</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># description to-server-1</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># static-channel-group 1</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># exi</span></span><br><span class="line">Switch(config)<span class="comment"># interface  range eth-0-3 - 4</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># description to-server-2</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># static-channel-group 2</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># exi</span></span><br><span class="line">Switch(config)<span class="comment"># interface  range  eth-0-5 - 6</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># description to-server-3      </span></span><br><span class="line">Switch(config-if-range)<span class="comment"># static-channel-group 3</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># exi</span></span><br><span class="line">Switch(config)<span class="comment"># interface  range  eth-0-7 - 8</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># description to-server-4</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># static-channel-group 4</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># exi</span></span><br><span class="line">Switch(config)<span class="comment"># interface  range  eth-0-9 - 10</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># description to-server-5</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># static-channel-group 5</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># exi</span></span><br><span class="line">Switch(config)<span class="comment"># interface  range  eth-0-11 - 12</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># description to-server-6</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># static-channel-group 6</span></span><br><span class="line">Switch(config-if-range)<span class="comment">#</span></span><br><span class="line">Switch<span class="comment">#</span></span><br><span class="line">Switch<span class="comment"># conf t</span></span><br><span class="line">Switch(config)<span class="comment"># interface  range  agg  1 - 6</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># jumboframe enable</span></span><br><span class="line">Switch(config-if-range)<span class="comment">#</span></span><br><span class="line">Switch<span class="comment">#</span></span><br><span class="line">Switch<span class="comment"># write</span></span><br><span class="line">Building configuration...</span><br><span class="line">[OK]</span><br></pre></td></tr></table></figure>
+
+<p>删除</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Switch<span class="comment"># conf t</span></span><br><span class="line">Switch(config)<span class="comment"># interface  range  eth-0-1 - 12    </span></span><br><span class="line">Switch(config-if-range)<span class="comment"># no static-channel-group</span></span><br><span class="line">Switch(config-if-range)<span class="comment">#</span></span><br><span class="line"></span><br><span class="line">Switch<span class="comment"># write</span></span><br><span class="line">Building configuration...</span><br><span class="line">[OK]</span><br><span class="line">Switch<span class="comment"># </span></span><br><span class="line">Switch<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="3-配置动态链路聚合"><a href="#3-配置动态链路聚合" class="headerlink" title="3.配置动态链路聚合"></a>3.配置动态链路聚合</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Switch(config)<span class="comment"># interface range eth-0-3 - 4</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># no jumboframe enable</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># channel-group 2 mode active</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># exit</span></span><br></pre></td></tr></table></figure>
+
+<p>删除</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Switch(config-if-range)<span class="comment"># no channel-group</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="4-查看链路聚合和配置"><a href="#4-查看链路聚合和配置" class="headerlink" title="4.查看链路聚合和配置"></a>4.查看链路聚合和配置</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Switch<span class="comment"># show channel-group summary</span></span><br><span class="line">Switch<span class="comment"># show running-config</span></span><br></pre></td></tr></table></figure>
+
+<p>删除agg组</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Switch(config)<span class="comment"># no interface agg 2</span></span><br><span class="line">Switch(config)<span class="comment"># no interface agg 3</span></span><br><span class="line">Switch(config)<span class="comment"># no interface agg 4</span></span><br><span class="line">Switch(config)<span class="comment"># no interface agg 5</span></span><br><span class="line">Switch(config)<span class="comment"># no interface agg 7</span></span><br><span class="line">Switch(config)<span class="comment"># no interface agg 6</span></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/06/22/Switch_Deployment_Configuration/" data-id="cl4od8bc600056sa3awua7anq" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2022/06/21/HCA_TO_IB_MODE/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Linux操作系统HCA卡切换为 IB 模式：</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/06/22/Switch_Deployment_Configuration/">交换机开局基础配置</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/21/HCA_TO_IB_MODE/">Linux操作系统HCA卡切换为 IB 模式：</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/19/no_root_ssh/">管理节点禁止root用户远程ssh登录</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/19/CPU_Linpack_Test/">CPU Linpack性能测试</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/17/IB_FW_upgrade/">升级IB交换机固件</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2022 zhangdonghao678@163.com<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
