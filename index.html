@@ -64,6 +64,56 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-IB_test" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/06/22/IB_test/" class="article-date">
+  <time datetime="2022-06-22T11:59:35.176Z" itemprop="datePublished">2022-06-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/06/22/IB_test/">IB网络性能测试</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>收集ib驱动内置命令各项测试数据、判断IB网络性能<br>在80个计算节点任意选择2个节点，一个节点发送IB网络数据包数据，另一个节点接收数据。<br>查看IB网络收发包网络带宽。<br>在server端执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ib_write_rw -a</span><br></pre></td></tr></table></figure>
+
+<p>在client端执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ib_write_rw -a   对端节点IB网卡IP地址</span><br></pre></td></tr></table></figure>
+
+<p>新的测试方法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mpirun -machinefile hostfile -np 80 ./IMB-MPI1 pingpong </span><br></pre></td></tr></table></figure>
+
+<p>手动创建hostfile,并根据节点数量输入np值（相等或者少于均可）；<br>其中IMB-MPI1文件是从intel编译器中cp到测试路径中的；<br>intel2018的测试结果不好；<br>使用intel2020编译器测试出来的效果和ib_write_bw这种点对点测试的一致。<br>IMB-MPI1可执行文件的路径：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/opt/intel2020/impi/2019.7.217/intel/bin</span><br></pre></td></tr></table></figure>
+<p>网络调优：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#可以通过mellanox提供的工具自动优化</span></span><br><span class="line">mlnx_tune -h</span><br><span class="line"></span><br><span class="line"><span class="comment">#显示当前配置状态</span></span><br><span class="line">mlnx_tune -r</span><br><span class="line"></span><br><span class="line"><span class="comment">#开始优化</span></span><br><span class="line">mlnx_tune -p HIGH_THROUGHPUT</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/06/22/IB_test/" data-id="cl4pjmgyl000545a33wjb4tbf" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Switch_Deployment_Configuration" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/06/22/Switch_Deployment_Configuration/" class="article-date">
@@ -109,7 +159,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/22/Switch_Deployment_Configuration/" data-id="cl4od8bc600056sa3awua7anq" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/22/Switch_Deployment_Configuration/" data-id="cl4pjmgym000645a3g5785n1w" class="article-share-link">Share</a>
       
       
     </footer>
@@ -160,7 +210,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/21/HCA_TO_IB_MODE/" data-id="cl4od8bc000016sa38zt54gr7" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/21/HCA_TO_IB_MODE/" data-id="cl4pjmgyf000145a32wpe0jl7" class="article-share-link">Share</a>
       
       
     </footer>
@@ -203,7 +253,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/19/no_root_ssh/" data-id="cl4od8bcb000a6sa3btq4bgw9" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/19/no_root_ssh/" data-id="cl4pjmgyt000b45a3dtinhyim" class="article-share-link">Share</a>
       
       
     </footer>
@@ -320,7 +370,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/19/CPU_Linpack_Test/" data-id="cl4od8b9y00006sa3akz0gwdu" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/19/CPU_Linpack_Test/" data-id="cl4pjmgy9000045a30qd40tfr" class="article-share-link">Share</a>
       
       
     </footer>
@@ -413,7 +463,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/17/IB_FW_upgrade/" data-id="cl4od8bc400036sa3bwmmfy47" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/17/IB_FW_upgrade/" data-id="cl4pjmgyj000345a316usevip" class="article-share-link">Share</a>
       
       
     </footer>
@@ -466,7 +516,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/17/nfs_server/" data-id="cl4od8bca00096sa33br38xoo" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/17/nfs_server/" data-id="cl4pjmgyq000a45a3g01gdbqx" class="article-share-link">Share</a>
       
       
     </footer>
@@ -538,7 +588,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/17/genisoimage/" data-id="cl4od8bc800076sa321ez56or" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/17/genisoimage/" data-id="cl4pjmgyo000845a3giz03vy5" class="article-share-link">Share</a>
       
       
     </footer>
@@ -577,7 +627,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/17/History_command_log/" data-id="cl4od8bc200026sa3gi4y5ewl" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/17/History_command_log/" data-id="cl4pjmgyh000245a36nd7eawa" class="article-share-link">Share</a>
       
       
     </footer>
@@ -616,49 +666,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/nopasswdroot/" data-id="cl4od8bcf000b6sa31mqu0ciw" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-nopassword" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/06/16/nopassword/" class="article-date">
-  <time datetime="2022-06-16T15:42:50.186Z" itemprop="datePublished">2022-06-16</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/06/16/nopassword/">集群环境配置普通用户免密登录</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>一、创建文件/etc/profile.d/nopassword.sh将其放在管理节点/etc/profile.d下即可，<br>不对root用户做设置，当普通用户登陆会自动判断免密，如果未设置免密会自动设置<br>内容如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">username=`<span class="built_in">whoami</span>`</span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$username</span> == root ]</span><br><span class="line">        <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">&quot;root user nothing to do! &quot;</span> &gt; /dev/null</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">        /usr/local/sbin/authorized_keys.sh</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line">-----------------------------------------------------------------------------------------</span><br><span class="line">赋予执行权限</span><br><span class="line"><span class="built_in">chmod</span> a+x /etc/profild.d/nopassword.sh</span><br><span class="line">-----------------------------------------------------------------------------------------</span><br></pre></td></tr></table></figure>
-
-<p>二、以上脚本调用了 /usr/local/sbin/authorized_keys.sh工具</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/sbin/authorized_keys.sh内容如下所示</span><br><span class="line">-----------------------------------------------------------------------------------------</span><br><span class="line"><span class="comment">#!/usr/bin/env bash</span></span><br><span class="line">PASSPHRASE=<span class="string">&quot;&quot;</span></span><br><span class="line">KEYTYPES=<span class="string">&quot;rsa dsa ecdsa&quot;</span></span><br><span class="line">AUTHORIZEDKEYS=<span class="variable">$HOME</span>/.ssh/authorized_keys</span><br><span class="line"></span><br><span class="line"><span class="comment">#echo Creating the user SSH v2 $AUTHORIZEDKEYS file for user $USER</span></span><br><span class="line"><span class="comment">#echo Beware: An empty passphrase is used which means a lower security level.</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Make sure the user HOME directory exists</span></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">test</span> ! -d <span class="variable">$HOME</span></span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> ERROR: No home directory <span class="variable">$HOME</span> <span class="keyword">for</span> user <span class="variable">$USER</span></span><br><span class="line">        <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Make sure the ssh-keygen tool is installed</span></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">test</span> ! -x /usr/bin/ssh-keygen</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> ERROR: ssh-keygen not found, please install the openssh package</span><br><span class="line">        <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Make sure the user .ssh directory exists</span></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">test</span> ! -d <span class="variable">$HOME</span>/.ssh/</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">        <span class="built_in">mkdir</span> -v <span class="variable">$HOME</span>/.ssh/</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Make sure .ssh/ has the correct protection</span></span><br><span class="line"><span class="built_in">chmod</span> 700 <span class="variable">$HOME</span>/.ssh/</span><br><span class="line"></span><br><span class="line"><span class="comment"># Go to the .ssh folder</span></span><br><span class="line"><span class="built_in">cd</span> <span class="variable">$HOME</span>/.ssh/</span><br><span class="line"></span><br><span class="line"><span class="comment"># Append the key to $AUTHORIZEDKEYS (create if non-existent)</span></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">test</span> ! -f <span class="variable">$AUTHORIZEDKEYS</span></span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">        <span class="built_in">touch</span> <span class="variable">$AUTHORIZEDKEYS</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Loop over possible key types</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> keytype <span class="keyword">in</span> <span class="variable">$KEYTYPES</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">        <span class="comment"># Generate keys if necessary</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">test</span> ! -f id_<span class="variable">$&#123;keytype&#125;</span>.pub</span><br><span class="line">        <span class="keyword">then</span></span><br><span class="line">                <span class="built_in">echo</span> Generating SSH key <span class="keyword">for</span> keytype <span class="variable">$keytype</span></span><br><span class="line">                /usr/bin/ssh-keygen -t <span class="variable">$&#123;keytype&#125;</span> -f id_<span class="variable">$&#123;keytype&#125;</span> -N <span class="string">&quot;<span class="variable">$PASSPHRASE</span>&quot;</span> &gt; /dev/null</span><br><span class="line">        <span class="keyword">fi</span></span><br><span class="line">        <span class="comment"># If the pattern in id_$&#123;keytype&#125;.pub is not found, then append it</span></span><br><span class="line">        <span class="keyword">if</span> grep -f id_<span class="variable">$&#123;keytype&#125;</span>.pub <span class="variable">$AUTHORIZEDKEYS</span> &gt; /dev/null</span><br><span class="line">        <span class="keyword">then</span></span><br><span class="line">                <span class="built_in">echo</span> <span class="variable">$keytype</span> key already <span class="keyword">in</span> <span class="variable">$AUTHORIZEDKEYS</span> &gt; /dev/null &gt; /dev/null</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">                <span class="built_in">echo</span> Appending <span class="variable">$keytype</span> key to <span class="variable">$AUTHORIZEDKEYS</span></span><br><span class="line">                <span class="built_in">cat</span> id_<span class="variable">$&#123;keytype&#125;</span>.pub &gt;&gt; <span class="variable">$AUTHORIZEDKEYS</span></span><br><span class="line">        <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Fix file permissions</span></span><br><span class="line"><span class="built_in">chmod</span> 600 <span class="variable">$AUTHORIZEDKEYS</span></span><br><span class="line">-----------------------------------------------------------------------------------------</span><br><span class="line"></span><br><span class="line">赋予执行权限：<span class="built_in">chmod</span> a+x /usr/local/sbin/authorized_keys.sh</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/nopassword/" data-id="cl4od8bci000c6sa3b7lefl1s" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/16/nopasswdroot/" data-id="cl4pjmgyu000c45a35cwb7uw5" class="article-share-link">Share</a>
       
       
     </footer>
@@ -704,6 +712,10 @@
       <ul>
         
           <li>
+            <a href="/2022/06/22/IB_test/">IB网络性能测试</a>
+          </li>
+        
+          <li>
             <a href="/2022/06/22/Switch_Deployment_Configuration/">交换机开局基础配置</a>
           </li>
         
@@ -717,10 +729,6 @@
         
           <li>
             <a href="/2022/06/19/CPU_Linpack_Test/">CPU Linpack性能测试</a>
-          </li>
-        
-          <li>
-            <a href="/2022/06/17/IB_FW_upgrade/">升级IB交换机固件</a>
           </li>
         
       </ul>

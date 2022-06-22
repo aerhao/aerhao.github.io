@@ -5,17 +5,17 @@
   
 
   
-  <title>配置NFS服务 | AI HPC in doing we learn!</title>
+  <title>IB网络性能测试 | AI HPC in doing we learn!</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="##共享管理节点&#x2F;data目录给计算节点 server端操作： 12345yum -y install nfs-utils rpcbindsystemctl start   rpcbindsystemctl enable  rpcbindsystemctl start   nfs-serversystemctl enable  nfs-server  #建立文件&#x2F;etc&#x2F;exports（若已存在该">
+  <meta name="description" content="收集ib驱动内置命令各项测试数据、判断IB网络性能在80个计算节点任意选择2个节点，一个节点发送IB网络数据包数据，另一个节点接收数据。查看IB网络收发包网络带宽。在server端执行 1ib_write_rw -a  在client端执行 1ib_write_rw -a   对端节点IB网卡IP地址  新的测试方法： 1mpirun -machinefile hostfile -np 80 .&#x2F;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="配置NFS服务">
-<meta property="og:url" content="http://example.com/2022/06/17/nfs_server/index.html">
+<meta property="og:title" content="IB网络性能测试">
+<meta property="og:url" content="http://example.com/2022/06/22/IB_test/index.html">
 <meta property="og:site_name" content="AI HPC in doing we learn!">
-<meta property="og:description" content="##共享管理节点&#x2F;data目录给计算节点 server端操作： 12345yum -y install nfs-utils rpcbindsystemctl start   rpcbindsystemctl enable  rpcbindsystemctl start   nfs-serversystemctl enable  nfs-server  #建立文件&#x2F;etc&#x2F;exports（若已存在该">
+<meta property="og:description" content="收集ib驱动内置命令各项测试数据、判断IB网络性能在80个计算节点任意选择2个节点，一个节点发送IB网络数据包数据，另一个节点接收数据。查看IB网络收发包网络带宽。在server端执行 1ib_write_rw -a  在client端执行 1ib_write_rw -a   对端节点IB网卡IP地址  新的测试方法： 1mpirun -machinefile hostfile -np 80 .&#x2F;">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2022-06-17T15:09:09.271Z">
-<meta property="article:modified_time" content="2022-06-17T15:09:09.271Z">
+<meta property="article:published_time" content="2022-06-22T11:59:35.176Z">
+<meta property="article:modified_time" content="2022-06-22T11:59:35.175Z">
 <meta property="article:author" content="zhangdonghao678@163.com">
 <meta name="twitter:card" content="summary">
   
@@ -66,10 +66,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-nfs_server" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-IB_test" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2022/06/17/nfs_server/" class="article-date">
-  <time datetime="2022-06-17T15:09:09.271Z" itemprop="datePublished">2022-06-17</time>
+    <a href="/2022/06/22/IB_test/" class="article-date">
+  <time datetime="2022-06-22T11:59:35.176Z" itemprop="datePublished">2022-06-22</time>
 </a>
     
   </div>
@@ -80,7 +80,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      配置NFS服务
+      IB网络性能测试
     </h1>
   
 
@@ -88,28 +88,25 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>##共享管理节点/data目录给计算节点</p>
-<p>server端操作：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yum -y install nfs-utils rpcbind</span><br><span class="line">systemctl start   rpcbind</span><br><span class="line">systemctl <span class="built_in">enable</span>  rpcbind</span><br><span class="line">systemctl start   nfs-server</span><br><span class="line">systemctl <span class="built_in">enable</span>  nfs-server</span><br></pre></td></tr></table></figure>
+        <p>收集ib驱动内置命令各项测试数据、判断IB网络性能<br>在80个计算节点任意选择2个节点，一个节点发送IB网络数据包数据，另一个节点接收数据。<br>查看IB网络收发包网络带宽。<br>在server端执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ib_write_rw -a</span><br></pre></td></tr></table></figure>
 
-<p>#建立文件/etc/exports（若已存在该文件，则先删除再重新建立）</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/exports</span><br><span class="line"><span class="built_in">cat</span> /etc/exports</span><br><span class="line">/data *(rw,no_root_squash,<span class="built_in">sync</span>)   </span><br><span class="line"><span class="comment">#或者/data *(rw,insecure,no_root_squash,async)</span></span><br></pre></td></tr></table></figure>
+<p>在client端执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ib_write_rw -a   对端节点IB网卡IP地址</span><br></pre></td></tr></table></figure>
 
-<p>#共享文件系统服务</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">exportfs -rv </span><br><span class="line"><span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+<p>新的测试方法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mpirun -machinefile hostfile -np 80 ./IMB-MPI1 pingpong </span><br></pre></td></tr></table></figure>
 
-<p>client端操作<br>扫描可以使用的 server 目录</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">showmount -e mu01</span><br></pre></td></tr></table></figure>
+<p>手动创建hostfile,并根据节点数量输入np值（相等或者少于均可）；<br>其中IMB-MPI1文件是从intel编译器中cp到测试路径中的；<br>intel2018的测试结果不好；<br>使用intel2020编译器测试出来的效果和ib_write_bw这种点对点测试的一致。<br>IMB-MPI1可执行文件的路径：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/opt/intel2020/impi/2019.7.217/intel/bin</span><br></pre></td></tr></table></figure>
+<p>网络调优：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#可以通过mellanox提供的工具自动优化</span></span><br><span class="line">mlnx_tune -h</span><br><span class="line"></span><br><span class="line"><span class="comment">#显示当前配置状态</span></span><br><span class="line">mlnx_tune -r</span><br><span class="line"></span><br><span class="line"><span class="comment">#开始优化</span></span><br><span class="line">mlnx_tune -p HIGH_THROUGHPUT</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p>#客户端mount挂载管理节点/data文件夹到本地/data文件夹</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mount -t nfs -o vers=3 mgmt:/data  /data</span><br></pre></td></tr></table></figure>
-
-<p>上述命令追加写入到/etc/rc.d/rc.local/中以使节点启动后自动挂载目录。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/17/nfs_server/" data-id="cl4pjmgyq000a45a3g01gdbqx" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/22/IB_test/" data-id="cl4pjmgyl000545a33wjb4tbf" class="article-share-link">Share</a>
       
       
     </footer>
@@ -118,19 +115,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2022/06/17/IB_FW_upgrade/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          升级IB交换机固件
-        
-      </div>
-    </a>
   
-  
-    <a href="/2022/06/17/genisoimage/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2022/06/22/Switch_Deployment_Configuration/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">编译网卡rpm驱动集成到linux系统镜像</div>
+      <div class="article-nav-title">交换机开局基础配置</div>
     </a>
   
 </nav>
