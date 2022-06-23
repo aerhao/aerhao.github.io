@@ -64,10 +64,10 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-Mattermost_Install" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-IB_8700_setting" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2022/06/22/Mattermost_Install/" class="article-date">
-  <time datetime="2022-06-22T13:12:03.325Z" itemprop="datePublished">2022-06-22</time>
+    <a href="/2022/06/23/IB_8700_setting/" class="article-date">
+  <time datetime="2022-06-23T15:39:25.697Z" itemprop="datePublished">2022-06-23</time>
 </a>
     
   </div>
@@ -78,7 +78,71 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2022/06/22/Mattermost_Install/">安装Mattermost预览版本</a>
+      <a class="article-title" href="/2022/06/23/IB_8700_setting/">配置8700 IB交换机</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>串口线连接8700 IB交换机IOIO口（串口），<br>我习惯使用mobax软件使用串口协议，波特率选择115200</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Mellanox MLNX-OS Switch Management</span><br><span class="line">switch-9f6fce login: admin</span><br></pre></td></tr></table></figure>
+
+<p>出厂默认密码是admin</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Password:</span><br><span class="line">Last login: Mon May 23 08:46:03 on ttyS0</span><br><span class="line">Mellanox Switch</span><br></pre></td></tr></table></figure>
+
+<p>普通模式</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">switch-9f6fce [standalone: master] &gt;</span><br></pre></td></tr></table></figure>
+
+<p>查看命令帮助</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">switch-9f6fce [standalone: master] &gt; ?</span><br></pre></td></tr></table></figure>
+
+<p>进入特权模式</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">switch-9f6fce [standalone: master] &gt;<span class="built_in">enable</span></span><br></pre></td></tr></table></figure>
+
+<p>进入配置终端模式</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">switch-9f6fce [standalone: master] <span class="comment"># configure terminal</span></span><br></pre></td></tr></table></figure>
+
+<p>启动ib 子网管理器</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">switch-9f6fce [standalone: master] <span class="comment"># ib sm</span></span><br></pre></td></tr></table></figure>
+
+<p>查看ib 子网管理器是否启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">switch-9f6fce [standalone: master] (config) <span class="comment"># show ib sm</span></span><br><span class="line"><span class="built_in">enable</span></span><br></pre></td></tr></table></figure>
+
+<p>保存当前运行的配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">switch-9f6fce [standalone: master] (config) <span class="comment"># write memory</span></span><br></pre></td></tr></table></figure>
+
+<p>Mgmt管理口默认是自动获得IP地址，通过dhcp server分配IP地址后用<a target="_blank" rel="noopener" href="https://ip登录/">https://IP登录</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/06/23/IB_8700_setting/" data-id="cl4r6x1ip0003cva31zbiby52" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Mattermost_Install" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/06/23/Mattermost_Install/" class="article-date">
+  <time datetime="2022-06-23T15:38:20.000Z" itemprop="datePublished">2022-06-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/06/23/Mattermost_Install/">安装Mattermost预览版本</a>
     </h1>
   
 
@@ -95,7 +159,7 @@
 <p>编辑配置文件使用docker镜像加速源</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/docker/daemon.json</span><br><span class="line"><span class="built_in">cat</span> /etc/docker/daemon.json</span><br><span class="line">&#123;</span><br><span class="line"> <span class="string">&quot;registry-mirrors&quot;</span> : [</span><br><span class="line">   <span class="string">&quot;https://mirror.ccs.tencentyun.com&quot;</span>,</span><br><span class="line">   <span class="string">&quot;http://registry.docker-cn.com&quot;</span>,</span><br><span class="line">   <span class="string">&quot;http://docker.mirrors.ustc.edu.cn&quot;</span>,</span><br><span class="line">   <span class="string">&quot;http://hub-mirror.c.163.com&quot;</span></span><br><span class="line"> ],</span><br><span class="line"> <span class="string">&quot;insecure-registries&quot;</span> : [</span><br><span class="line">   <span class="string">&quot;registry.docker-cn.com&quot;</span>,</span><br><span class="line">   <span class="string">&quot;docker.mirrors.ustc.edu.cn&quot;</span></span><br><span class="line"> ],</span><br><span class="line"> <span class="string">&quot;debug&quot;</span> : <span class="literal">true</span>,</span><br><span class="line"> <span class="string">&quot;experimental&quot;</span> : <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>一键安装mattermost-预览镜像，并启动容器映射8065端口到宿主机8965端口</p>
+<p>一键安装mattermost-预览镜像，并启动容器映射8065端口到宿主机8065端口</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name mattermost-preview -d --publish 8065:8065 mattermost/mattermost-preview</span><br></pre></td></tr></table></figure>
 
 <p>查看是否启动了docker容器</p>
@@ -108,7 +172,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/22/Mattermost_Install/" data-id="cl4pm7ghs0006saa3b5s18ria" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/23/Mattermost_Install/" data-id="cl4r6x1jd0007cva37q9a0ln4" class="article-share-link">Share</a>
       
       
     </footer>
@@ -158,7 +222,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/22/IB_test/" data-id="cl4pm7ghr0005saa35flc9k6e" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/22/IB_test/" data-id="cl4r6x1j70006cva38vvj77ww" class="article-share-link">Share</a>
       
       
     </footer>
@@ -213,7 +277,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/22/Switch_Deployment_Configuration/" data-id="cl4pm7ght0007saa36ptaaj12" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/22/Switch_Deployment_Configuration/" data-id="cl4r6x1js0008cva3dndya1qz" class="article-share-link">Share</a>
       
       
     </footer>
@@ -264,7 +328,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/21/HCA_TO_IB_MODE/" data-id="cl4pm7ghm0001saa328dydg10" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/21/HCA_TO_IB_MODE/" data-id="cl4r6x1ic0001cva30ytf6yq3" class="article-share-link">Share</a>
       
       
     </footer>
@@ -307,7 +371,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/19/no_root_ssh/" data-id="cl4pm7gi1000csaa384sue31r" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/19/no_root_ssh/" data-id="cl4r6x1kb000dcva380q00y5h" class="article-share-link">Share</a>
       
       
     </footer>
@@ -424,7 +488,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/19/CPU_Linpack_Test/" data-id="cl4pm7ghg0000saa3eibz4zxa" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/19/CPU_Linpack_Test/" data-id="cl4r6x1cm0000cva3cxmh3b5t" class="article-share-link">Share</a>
       
       
     </footer>
@@ -517,7 +581,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/17/IB_FW_upgrade/" data-id="cl4pm7ghp0003saa3c79lg51c" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/17/IB_FW_upgrade/" data-id="cl4r6x1iv0004cva316gm13b5" class="article-share-link">Share</a>
       
       
     </footer>
@@ -570,7 +634,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/17/nfs_server/" data-id="cl4pm7gi0000bsaa3de5r3apf" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/17/nfs_server/" data-id="cl4r6x1k8000ccva3dzql84hi" class="article-share-link">Share</a>
       
       
     </footer>
@@ -642,46 +706,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/17/genisoimage/" data-id="cl4pm7ghv0009saa37o4zg2l5" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-History_command_log" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/06/17/History_command_log/" class="article-date">
-  <time datetime="2022-06-16T16:05:31.178Z" itemprop="datePublished">2022-06-17</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/06/17/History_command_log/">记录每个用户的历史命令</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>实现记录每个用户的历史命令，保存日志到/tmp/rizhi/用户名目录下以备审计。<br>编辑/etc/profile,文件末尾追加如下内容:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">HISTFILESIZE=2000</span><br><span class="line">HISTTIMEFORMAT=<span class="string">&quot;%Y%m%d-%H%M `whoami` &quot;</span></span><br><span class="line"></span><br><span class="line">PS1=<span class="string">&quot;`whoami`@`hostname`:&quot;</span><span class="string">&#x27;[$PWD]&#x27;</span></span><br><span class="line"><span class="built_in">history</span></span><br><span class="line">USER_IP=`<span class="built_in">who</span> -u am i 2&gt;/dev/null| awk <span class="string">&#x27;&#123;print $NF&#125;&#x27;</span>|sed -e <span class="string">&#x27;s/[()]//g&#x27;</span>`</span><br><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$USER_IP</span>&quot;</span> = <span class="string">&quot;&quot;</span> ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">USER_IP=`hostname`</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="keyword">if</span> [ ! -d /tmp/rizhi ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line"><span class="built_in">mkdir</span> /tmp/rizhi</span><br><span class="line"><span class="built_in">chmod</span> 777 /tmp/rizhi</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="keyword">if</span> [ ! -d /tmp/rizhi/<span class="variable">$&#123;LOGNAME&#125;</span> ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line"><span class="built_in">mkdir</span> /tmp/rizhi/<span class="variable">$&#123;LOGNAME&#125;</span></span><br><span class="line"><span class="built_in">chmod</span> 300 /tmp/rizhi/<span class="variable">$&#123;LOGNAME&#125;</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="built_in">export</span> HISTSIZE=4096</span><br><span class="line">DT=`<span class="built_in">date</span> <span class="string">&quot;+%Y-%m-%d_%H:%M:%S&quot;</span>`</span><br><span class="line"><span class="built_in">export</span> HISTFILE=<span class="string">&quot;/tmp/rizhi/<span class="variable">$&#123;LOGNAME&#125;</span>/<span class="variable">$&#123;USER_IP&#125;</span> rizhi.<span class="variable">$DT</span>&quot;</span></span><br><span class="line"><span class="built_in">chmod</span> 600 /tmp/rizhi/<span class="variable">$&#123;LOGNAME&#125;</span>/*rizhi* 2&gt;/dev/null</span><br><span class="line"></span><br><span class="line">NODE_HOME=/usr/local/node14</span><br><span class="line">PATH=<span class="variable">$PATH</span>:<span class="variable">$NODE_HOME</span>/bin</span><br><span class="line">NODE_PATH=<span class="variable">$NODE_HOME</span>/lib/node_mudules</span><br><span class="line"><span class="built_in">export</span> PATH NODE_HOME NODE_PATH</span><br></pre></td></tr></table></figure>
-<p>source /etc/profile</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/17/History_command_log/" data-id="cl4pm7gho0002saa30e4ked57" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/17/genisoimage/" data-id="cl4r6x1k0000acva3e69v167x" class="article-share-link">Share</a>
       
       
     </footer>
@@ -727,7 +752,11 @@
       <ul>
         
           <li>
-            <a href="/2022/06/22/Mattermost_Install/">安装Mattermost预览版本</a>
+            <a href="/2022/06/23/IB_8700_setting/">配置8700 IB交换机</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/23/Mattermost_Install/">安装Mattermost预览版本</a>
           </li>
         
           <li>
@@ -740,10 +769,6 @@
         
           <li>
             <a href="/2022/06/21/HCA_TO_IB_MODE/">Linux操作系统HCA卡切换为 IB 模式：</a>
-          </li>
-        
-          <li>
-            <a href="/2022/06/19/no_root_ssh/">管理节点禁止root用户远程ssh登录</a>
           </li>
         
       </ul>

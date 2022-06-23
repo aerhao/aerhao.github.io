@@ -10,12 +10,12 @@
   <meta name="description" content="基于操作系统CentOS7配置yum源安装docker 1yum -y install docker  启动docker和设置开机自启 12systemctl start dockersystemctl enable docker  编辑配置文件使用docker镜像加速源 12345678910111213141516vim &#x2F;etc&#x2F;docker&#x2F;daemon.jsoncat &#x2F;etc&#x2F;dock">
 <meta property="og:type" content="article">
 <meta property="og:title" content="安装Mattermost预览版本">
-<meta property="og:url" content="http://example.com/2022/06/22/Mattermost_Install/index.html">
+<meta property="og:url" content="http://example.com/2022/06/23/Mattermost_Install/index.html">
 <meta property="og:site_name" content="AI HPC in doing we learn!">
 <meta property="og:description" content="基于操作系统CentOS7配置yum源安装docker 1yum -y install docker  启动docker和设置开机自启 12systemctl start dockersystemctl enable docker  编辑配置文件使用docker镜像加速源 12345678910111213141516vim &#x2F;etc&#x2F;docker&#x2F;daemon.jsoncat &#x2F;etc&#x2F;dock">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2022-06-22T13:12:03.325Z">
-<meta property="article:modified_time" content="2022-06-22T13:12:03.325Z">
+<meta property="article:published_time" content="2022-06-23T15:38:20.000Z">
+<meta property="article:modified_time" content="2022-06-23T15:38:19.999Z">
 <meta property="article:author" content="zhangdonghao678@163.com">
 <meta name="twitter:card" content="summary">
   
@@ -68,8 +68,8 @@
       <div class="outer">
         <section id="main"><article id="post-Mattermost_Install" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2022/06/22/Mattermost_Install/" class="article-date">
-  <time datetime="2022-06-22T13:12:03.325Z" itemprop="datePublished">2022-06-22</time>
+    <a href="/2022/06/23/Mattermost_Install/" class="article-date">
+  <time datetime="2022-06-23T15:38:20.000Z" itemprop="datePublished">2022-06-23</time>
 </a>
     
   </div>
@@ -97,7 +97,7 @@
 <p>编辑配置文件使用docker镜像加速源</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/docker/daemon.json</span><br><span class="line"><span class="built_in">cat</span> /etc/docker/daemon.json</span><br><span class="line">&#123;</span><br><span class="line"> <span class="string">&quot;registry-mirrors&quot;</span> : [</span><br><span class="line">   <span class="string">&quot;https://mirror.ccs.tencentyun.com&quot;</span>,</span><br><span class="line">   <span class="string">&quot;http://registry.docker-cn.com&quot;</span>,</span><br><span class="line">   <span class="string">&quot;http://docker.mirrors.ustc.edu.cn&quot;</span>,</span><br><span class="line">   <span class="string">&quot;http://hub-mirror.c.163.com&quot;</span></span><br><span class="line"> ],</span><br><span class="line"> <span class="string">&quot;insecure-registries&quot;</span> : [</span><br><span class="line">   <span class="string">&quot;registry.docker-cn.com&quot;</span>,</span><br><span class="line">   <span class="string">&quot;docker.mirrors.ustc.edu.cn&quot;</span></span><br><span class="line"> ],</span><br><span class="line"> <span class="string">&quot;debug&quot;</span> : <span class="literal">true</span>,</span><br><span class="line"> <span class="string">&quot;experimental&quot;</span> : <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>一键安装mattermost-预览镜像，并启动容器映射8065端口到宿主机8965端口</p>
+<p>一键安装mattermost-预览镜像，并启动容器映射8065端口到宿主机8065端口</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name mattermost-preview -d --publish 8065:8065 mattermost/mattermost-preview</span><br></pre></td></tr></table></figure>
 
 <p>查看是否启动了docker容器</p>
@@ -110,7 +110,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/22/Mattermost_Install/" data-id="cl4pm7ghs0006saa3b5s18ria" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/23/Mattermost_Install/" data-id="cl4r6x1jd0007cva37q9a0ln4" class="article-share-link">Share</a>
       
       
     </footer>
@@ -118,6 +118,15 @@
   
     
 <nav id="article-nav">
+  
+    <a href="/2022/06/23/IB_8700_setting/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          配置8700 IB交换机
+        
+      </div>
+    </a>
   
   
     <a href="/2022/06/22/IB_test/" id="article-nav-older" class="article-nav-link-wrap">
@@ -159,7 +168,11 @@
       <ul>
         
           <li>
-            <a href="/2022/06/22/Mattermost_Install/">安装Mattermost预览版本</a>
+            <a href="/2022/06/23/IB_8700_setting/">配置8700 IB交换机</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/23/Mattermost_Install/">安装Mattermost预览版本</a>
           </li>
         
           <li>
@@ -172,10 +185,6 @@
         
           <li>
             <a href="/2022/06/21/HCA_TO_IB_MODE/">Linux操作系统HCA卡切换为 IB 模式：</a>
-          </li>
-        
-          <li>
-            <a href="/2022/06/19/no_root_ssh/">管理节点禁止root用户远程ssh登录</a>
           </li>
         
       </ul>

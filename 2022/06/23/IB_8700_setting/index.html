@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>配置8700 IB交换机 | AI HPC in doing we learn!</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="串口线连接8700 IB交换机IOIO口（串口），我习惯使用mobax软件使用串口协议，波特率选择115200 12Mellanox MLNX-OS Switch Managementswitch-9f6fce login: admin  出厂默认密码是admin 123Password:Last login: Mon May 23 08:46:03 on ttyS0Mellanox Switch">
+<meta property="og:type" content="article">
+<meta property="og:title" content="配置8700 IB交换机">
+<meta property="og:url" content="http://example.com/2022/06/23/IB_8700_setting/index.html">
+<meta property="og:site_name" content="AI HPC in doing we learn!">
+<meta property="og:description" content="串口线连接8700 IB交换机IOIO口（串口），我习惯使用mobax软件使用串口协议，波特率选择115200 12Mellanox MLNX-OS Switch Managementswitch-9f6fce login: admin  出厂默认密码是admin 123Password:Last login: Mon May 23 08:46:03 on ttyS0Mellanox Switch">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-06-23T15:39:25.697Z">
+<meta property="article:modified_time" content="2022-06-23T15:39:25.696Z">
+<meta property="article:author" content="zhangdonghao678@163.com">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="AI HPC in doing we learn!" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">AI HPC in doing we learn!</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-IB_8700_setting" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/06/23/IB_8700_setting/" class="article-date">
+  <time datetime="2022-06-23T15:39:25.697Z" itemprop="datePublished">2022-06-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      配置8700 IB交换机
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>串口线连接8700 IB交换机IOIO口（串口），<br>我习惯使用mobax软件使用串口协议，波特率选择115200</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Mellanox MLNX-OS Switch Management</span><br><span class="line">switch-9f6fce login: admin</span><br></pre></td></tr></table></figure>
+
+<p>出厂默认密码是admin</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Password:</span><br><span class="line">Last login: Mon May 23 08:46:03 on ttyS0</span><br><span class="line">Mellanox Switch</span><br></pre></td></tr></table></figure>
+
+<p>普通模式</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">switch-9f6fce [standalone: master] &gt;</span><br></pre></td></tr></table></figure>
+
+<p>查看命令帮助</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">switch-9f6fce [standalone: master] &gt; ?</span><br></pre></td></tr></table></figure>
+
+<p>进入特权模式</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">switch-9f6fce [standalone: master] &gt;<span class="built_in">enable</span></span><br></pre></td></tr></table></figure>
+
+<p>进入配置终端模式</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">switch-9f6fce [standalone: master] <span class="comment"># configure terminal</span></span><br></pre></td></tr></table></figure>
+
+<p>启动ib 子网管理器</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">switch-9f6fce [standalone: master] <span class="comment"># ib sm</span></span><br></pre></td></tr></table></figure>
+
+<p>查看ib 子网管理器是否启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">switch-9f6fce [standalone: master] (config) <span class="comment"># show ib sm</span></span><br><span class="line"><span class="built_in">enable</span></span><br></pre></td></tr></table></figure>
+
+<p>保存当前运行的配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">switch-9f6fce [standalone: master] (config) <span class="comment"># write memory</span></span><br></pre></td></tr></table></figure>
+
+<p>Mgmt管理口默认是自动获得IP地址，通过dhcp server分配IP地址后用<a target="_blank" rel="noopener" href="https://ip登录/">https://IP登录</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/06/23/IB_8700_setting/" data-id="cl4r6x1ip0003cva31zbiby52" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2022/06/23/Mattermost_Install/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">安装Mattermost预览版本</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/06/23/IB_8700_setting/">配置8700 IB交换机</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/23/Mattermost_Install/">安装Mattermost预览版本</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/22/IB_test/">IB网络性能测试</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/22/Switch_Deployment_Configuration/">交换机开局基础配置</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/21/HCA_TO_IB_MODE/">Linux操作系统HCA卡切换为 IB 模式：</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2022 zhangdonghao678@163.com<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
