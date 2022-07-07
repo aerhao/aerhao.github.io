@@ -64,6 +64,59 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-nfs_server" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/06/17/nfs_server/" class="article-date">
+  <time datetime="2022-06-17T15:09:09.271Z" itemprop="datePublished">2022-06-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/06/17/nfs_server/">配置NFS服务</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>##共享管理节点/data目录给计算节点</p>
+<p>server端操作：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yum -y install nfs-utils rpcbind</span><br><span class="line">systemctl start   rpcbind</span><br><span class="line">systemctl <span class="built_in">enable</span>  rpcbind</span><br><span class="line">systemctl start   nfs-server</span><br><span class="line">systemctl <span class="built_in">enable</span>  nfs-server</span><br></pre></td></tr></table></figure>
+
+<p>#建立文件/etc/exports（若已存在该文件，则先删除再重新建立）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/exports</span><br><span class="line"><span class="built_in">cat</span> /etc/exports</span><br><span class="line">/data *(rw,no_root_squash,<span class="built_in">sync</span>)   </span><br><span class="line"><span class="comment">#或者/data *(rw,insecure,no_root_squash,async)</span></span><br></pre></td></tr></table></figure>
+
+<p>#共享文件系统服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">exportfs -rv </span><br><span class="line"><span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+
+<p>client端操作<br>扫描可以使用的 server 目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">showmount -e mu01</span><br></pre></td></tr></table></figure>
+
+<p>#客户端mount挂载管理节点/data文件夹到本地/data文件夹</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mount -t nfs -o vers=3 mgmt:/data  /data</span><br></pre></td></tr></table></figure>
+
+<p>上述命令追加写入到/etc/rc.d/rc.local/中以使节点启动后自动挂载目录。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/06/17/nfs_server/" data-id="cl5azalq4000cfka3e670f2p6" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-genisoimage" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/06/17/genisoimage/" class="article-date">
@@ -126,7 +179,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/17/genisoimage/" data-id="cl4ssq8uu000ae0a3b3rzgn4q" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/17/genisoimage/" data-id="cl5azalpw000afka3b3dp6b1b" class="article-share-link">Share</a>
       
       
     </footer>
@@ -165,7 +218,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/17/History_command_log/" data-id="cl4ssq8uk0002e0a37aef98bv" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/17/History_command_log/" data-id="cl5azalpk0002fka3a8otcioi" class="article-share-link">Share</a>
       
       
     </footer>
@@ -204,7 +257,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/nopasswdroot/" data-id="cl4ssq8v0000ee0a352gxbwtt" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/16/nopasswdroot/" data-id="cl5azalq9000efka3bx7o0qlt" class="article-share-link">Share</a>
       
       
     </footer>
@@ -246,7 +299,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/nopassword/" data-id="cl4ssq8v3000fe0a3ei6b3qym" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/16/nopassword/" data-id="cl5azalqb000ffka3572vccf4" class="article-share-link">Share</a>
       
       
     </footer>
@@ -296,7 +349,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/hexo_d/" data-id="cl4ssq8uw000be0a3coh0cpm3" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/16/hexo_d/" data-id="cl5azalq1000bfka313y3d5uv" class="article-share-link">Share</a>
       
       
     </footer>
@@ -358,7 +411,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/blog1/" data-id="cl4ssq8ut0009e0a38k0b20eh" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/16/blog1/" data-id="cl5azalpv0009fka3b0gadofn" class="article-share-link">Share</a>
       
       
     </footer>
@@ -402,7 +455,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/IB_IP/" data-id="cl4ssq8up0005e0a36dnc8hvm" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/16/IB_IP/" data-id="cl5azalpo0005fka39ok8auz7" class="article-share-link">Share</a>
       
       
     </footer>
@@ -435,7 +488,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li></ul>
     </div>
   </div>
 
@@ -446,6 +499,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2022/07/07/rhel7.9.cfg/">(no title)</a>
+          </li>
         
           <li>
             <a href="/2022/06/25/reset_password_root/">RHEL8重置root管理员密码</a>
@@ -461,10 +518,6 @@
         
           <li>
             <a href="/2022/06/22/IB_test/">IB网络性能测试</a>
-          </li>
-        
-          <li>
-            <a href="/2022/06/22/Switch_Deployment_Configuration/">交换机开局基础配置</a>
           </li>
         
       </ul>
