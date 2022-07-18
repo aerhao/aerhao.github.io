@@ -64,123 +64,6 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-CPU_Linpack_Test" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/06/19/CPU_Linpack_Test/" class="article-date">
-  <time datetime="2022-06-18T16:44:33.510Z" itemprop="datePublished">2022-06-19</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/06/19/CPU_Linpack_Test/">CPU Linpack性能测试</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.HPL简介</p>
-<p>High Performance Linpack (HPL) 是国际上最流行的高性能计算机系统浮点性能的评测工具。通过对高性能计算机采用高斯消元法求解一元N次稠密线性代数方程组的测试，评价高性能计算的浮点性能。TOP500计算机性能测试的标准，也被广泛应用为实际的高性能计算项目评测单机或整机系统达标的Benchmark工具。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://www.top500.org/lists/linpack.php</span><br></pre></td></tr></table></figure>
-
-<p>2.Linpack测试前准备</p>
-<p>在测试前需准备好相关节点的各种并行环境，包括</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">操作系统安装正常；</span><br><span class="line">Mellanox驱动安装正常；</span><br><span class="line">节点间ssh无密码访问环境正常；</span><br><span class="line">NFS网络共享目录设置正常；</span><br><span class="line">NIS服务设置正常；</span><br><span class="line">parallel_studio_xe_2020_update1_cluster_edition安装在共享目录；</span><br><span class="line">环境变量设置正确；</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">tar zxvf parallel_studio_xe_2020_update1_cluster_edition.tgz</span><br><span class="line">./install.sh </span><br><span class="line">yum -y install xorg*</span><br><span class="line">yum -y install libxss*</span><br><span class="line">yum -y install libXss*</span><br><span class="line">yum install compat-libstdc++33.i686</span><br><span class="line">yum install libstdc++.i686</span><br><span class="line">yum install compat-libstdc++33.i686</span><br><span class="line">yum install libstdc++.i686  compat-libstdc++-33-3.2.3-72.el7.x86_64</span><br><span class="line">yum install glibc-devel.i686</span><br><span class="line"></span><br><span class="line">vim /etc/profile</span><br><span class="line"><span class="comment">#####intel2020#####</span></span><br><span class="line"><span class="built_in">source</span> /opt/intel/compilers_and_libraries/linux/bin/compilervars.sh intel64</span><br><span class="line"><span class="built_in">source</span> /opt/intel/mkl/bin/mklvars.sh intel64</span><br><span class="line"><span class="built_in">source</span> /opt/intel/impi/2019.7.217/intel64/bin/mpivars.sh</span><br><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure>
-
-
-
-<p>BIOS调优设置（针对Skylake推荐设置）：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CPU Power and Performance Policy → Performance</span><br><span class="line">Intel Hyper-Threading Technology → off（注意6140和8160处理器设置为on）</span><br><span class="line">Intel Turbo boost Technology → Enabled</span><br></pre></td></tr></table></figure>
-
-<p>HPL.dat文件的几个核心参数意义</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;problem size&quot;</span> N</span><br><span class="line">代表求解矩阵的规模， N= SQRT((GB* 1024*1024*1024)/8)，设置值比计算值稍小即可。</span><br><span class="line"><span class="string">&quot;block size&quot;</span> NB</span><br><span class="line">代表求解矩阵分块的大小，Skylake推荐NB=384。</span><br><span class="line"><span class="string">&quot;Ps and Qs&quot;</span></span><br><span class="line">P×Q=提交作业进程数（一般是CPU数或节点数），如单节点PxQ=1x1, 8节点PxQ=4 x2，或 PxQ=2x4，16节点PxQ=4x4。</span><br></pre></td></tr></table></figure>
-
-<p> 测试文件及环境变量</p>
-<p>以2020版为例，测试文件所在目录为/opt/intel_2020/mkl/benchmarks/mp_linpack/，包含xhpl_intel_dynamic、xhpl_intel64_static、runme_intel64_dynamic、runme_intel64_prv及HPL.dat文件；</p>
-<p>环境变量设置如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> /opt/intel2020/compilers_and_libraries/linux/bin/compilervars.sh intel64</span><br><span class="line"><span class="built_in">source</span> /opt/intel2020/mkl/bin/mklvars.sh intel64</span><br><span class="line"><span class="built_in">source</span> /opt/intel2020/impi/2019.7.217/intel64/bin/mpivars.sh</span><br></pre></td></tr></table></figure>
-
-<p>3.每节点起一个xhpl进程linpack测试步骤</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">大规模HPL测试方法，建议方法是：</span><br><span class="line">先进行单节点测试，尝试多组N值、NB值、PxQ参数等，测得最佳单节点Linpack性能；</span><br><span class="line">再批量完成所有单节点的Linpack测试，检查所有节点是否达标，不能出现单节点效率过低的情况；</span><br><span class="line">然后逐步进行2节点、4节点、8节点……的Linpack扩展测试，确定最优测试参数；</span><br><span class="line">使用全部节点规模完成Linpack测试。</span><br></pre></td></tr></table></figure>
-
-<p>准备测试目录及文件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">以inspur为测试帐户示例，将xhpl_intel_dynamic及HPL.dat两个文件复制到测试目录，建议创建新目录存放Linpack相关文件。</span><br></pre></td></tr></table></figure>
-
-<p>编辑HPL.dat</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">一般HPL.dat文件修改4处即可：N值、NB值、P值和Q值。按照以下建议值更改：</span><br><span class="line">N值：按照上一代测试标准设置即可，即：</span><br><span class="line">0.8或0.9*单节点内存大小（字节数，即GBx10243）x节点数÷8，得数再开平方。</span><br><span class="line">NB值：建议设置为384。</span><br><span class="line">P，Q值：保证P*Q为节点数，例如8节点测试，可设置P=2, Q=4或P=4, Q=2。</span><br></pre></td></tr></table></figure>
-
-<p>创建hostfile</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">按照上一代测试标准编辑即可，即将所有参与测试的节点hostname每行一个写入hostfile。</span><br></pre></td></tr></table></figure>
-
-<p>执行mpirun命令进行每节点一个进程测试</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mpirun -genv I_MPI_FABRICS shm:ofi -genv FI_PROVIDER tcp -machinefile hostfile -np 29 -ppn 1 ./xhpl_intel64_dynamic</span><br></pre></td></tr></table></figure>
-
-<hr>
-<p>若不确定当前BIOS性能设置状态，可执行以下命令：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cpupower -c all frequency-set -g performance</span><br></pre></td></tr></table></figure>
-
-<p>单机测试，可直接在测试目录下运行</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./xhpl_intel64_static</span><br><span class="line">或</span><br><span class="line">./xhpl_intel64_dynamic</span><br></pre></td></tr></table></figure>
-
-<p>不用加任何参数，观察屏幕输出的测试结果。</p>
-<p>多机并行测试（以8节点为例），确认环境变量设置正确后，执行：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mpirun -genv I_MPI_FABRICS shm:ofi -genv FI_PROVIDER tcp –machinefile hostfile –np 8 –ppn 1 ./xhpl_intel64_dynamic  <span class="comment">##以太网络</span></span><br><span class="line">或</span><br><span class="line">mpirun -genv I_MPI_FABRICS -genv I_MPI_FABRICS shm:ofi -genv FI_PROVIDER mlx –machinefile hostfile –np 8 –ppn 1 ./xhpl_intel64_dynamic <span class="comment">##IB网络</span></span><br></pre></td></tr></table></figure>
-
-<hr>
-<p>每节点起两个xhpl进程linpack测试步骤</p>
-<p> 准备测试目录及文件</p>
-<p>以inspur为测试帐户示例，将xhpl_intel_dynamic、xhpl_intel64_static、runme_intel64_dynamic、runme_intel64_prv及HPL.dat文件复制到测试目录，建议创建新目录存放Linpack相关文件。</p>
-<p> 编辑HPL.dat</p>
-<p>一般HPL.dat文件修改4处即可：N值、NB值、P值和Q值。按照以下建议值更改：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">N值：按照上一代测试标准设置即可，即：</span><br><span class="line">0.8或0.9*单节点内存大小（字节数，即GBx10243）x节点数÷8，得数再开平方。</span><br><span class="line">NB值：建议设置为384。</span><br><span class="line">P，Q值：保证P*Q为节点数*2，例如8节点测试，应P*Q=16，可设置P=4, Q=4、P=8, Q=2或P=2, Q=8，在济南超算多节点并行测试中，P&gt;Q效率会比P&lt;Q好。</span><br></pre></td></tr></table></figure>
-
-<p> 编辑runme_xhpl_dynamic文件</p>
-<p>修改测试核数：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> MPI_PROC_NUM=16</span><br><span class="line"><span class="built_in">export</span> MPI_PER_NODE=2</span><br></pre></td></tr></table></figure>
-
-<p>其中，MPI_PROC_NUM值为总的进程数，即测试节点数*2，MPI_PER_NODE值为每节点进程数，取值为2</p>
-<p>   修改测试命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mpirun -perhost <span class="variable">$&#123;MPI_PER_NODE&#125;</span> -np <span class="variable">$&#123;MPI_PROC_NUM&#125;</span> -genv I_MPI_FABRICS shm:tcp -genv FI_PROVIDER mlx -hostfile hostfile ./runme_intel64_prv <span class="string">&quot;<span class="variable">$@</span>&quot;</span> | <span class="built_in">tee</span> -a <span class="variable">$OUT</span>   <span class="comment">## IB网络</span></span><br><span class="line"></span><br><span class="line">mpirun -perhost <span class="variable">$&#123;MPI_PER_NODE&#125;</span> -np <span class="variable">$&#123;MPI_PROC_NUM&#125;</span> -genv I_MPI_FABRICS shm:ofi -genv FI_PROVIDER tcp -hostfile hostfile ./runme_intel64_prv <span class="string">&quot;<span class="variable">$@</span>&quot;</span> | <span class="built_in">tee</span> -a <span class="variable">$OUT</span>   <span class="comment">##以太网络</span></span><br><span class="line"></span><br><span class="line">mpirun -perhost <span class="variable">$&#123;MPI_PER_NODE&#125;</span> -np <span class="variable">$&#123;MPI_PROC_NUM&#125;</span> ./runme_intel64_prv <span class="string">&quot;<span class="variable">$@</span>&quot;</span> | <span class="built_in">tee</span> -a <span class="variable">$OUT</span>   <span class="comment">##单节点测试</span></span><br><span class="line"></span><br><span class="line">其中，</span><br><span class="line">-genv I_MPI_FABRICS shm:tcp -genv FI_PROVIDER mlx参数指定使用IB网络，</span><br><span class="line">-genv I_MPI_FABRICS shm:ofi -genv FI_PROVIDER tcp参数指定使用以太网络</span><br></pre></td></tr></table></figure>
-
-<p>使用runme命令测试</p>
-<p>直接运行./runme_xhpl_dynamic进行测试，测试过程会输出至xhpl_intel64_dynamic_outputs.txt文件中，测试结果输出在HPL.out</p>
-<hr>
-<p>5.Linpack测试结果分析</p>
-<p>Skylake平台CPU浮点运算理论值计算公式为：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">节点数*单节点CPU核数*CPU主频*每个时钟周期浮点运算执行次数（取值32）</span><br></pre></td></tr></table></figure>
-
-<p>例如GOLD 6126型号CPU，其单颗浮点运算理论值为：</p>
-<p>12<em>6</em>32=998.4GFlops</p>
-<p>计算cpu linpack理论值公式shell脚本：./N_calculator.calculator</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$1</span> ] &amp;&amp; [ <span class="variable">$1</span> = <span class="string">&quot;-h&quot;</span> ] </span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;This script is uesd to calculate Problem Size(N) in Linpack input file&quot;</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;AND give you a List about the system performance efficiency&quot;</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~&quot;</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;created by Wei Wei&quot;</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~&quot;</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;What you need to do is &quot;</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;submit your system datas follow the tips&quot;</span></span><br><span class="line">  <span class="built_in">exit</span> 0</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$1</span> ] &amp;&amp; [ <span class="variable">$1</span> != <span class="string">&quot;-h&quot;</span> ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;WRONG Options !&quot;</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;use -h for help&quot;</span></span><br><span class="line">  <span class="built_in">exit</span> 3</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;#################################&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Please Submit Your System&#x27;s Data:&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;#################################&quot;</span></span><br><span class="line"><span class="built_in">declare</span> -i nodes</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;How Many Nodes : &quot;</span>;<span class="built_in">read</span> nodes</span><br><span class="line"><span class="built_in">declare</span> -i memory_per_node</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;How much memory on per node (GB) : &quot;</span></span><br><span class="line"><span class="built_in">read</span> memory_per_node</span><br><span class="line"><span class="built_in">declare</span> -i cores_per_node</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;How many cores per node :&quot;</span></span><br><span class="line"><span class="built_in">read</span> cores_per_node</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;What is your CPU speed per core (Ghz) :&quot;</span></span><br><span class="line"><span class="built_in">read</span> speed_per_core</span><br><span class="line"></span><br><span class="line"><span class="built_in">declare</span> -i total_memory</span><br><span class="line"><span class="built_in">declare</span> -i MEMORY</span><br><span class="line"><span class="built_in">declare</span> -i N_square</span><br><span class="line"><span class="built_in">declare</span> -i N</span><br><span class="line"><span class="built_in">let</span> total_memory=$((<span class="variable">$&#123;memory_per_node&#125;</span>*<span class="variable">$&#123;nodes&#125;</span>))</span><br><span class="line"><span class="built_in">let</span> MEMORY=$((<span class="variable">$&#123;total_memory&#125;</span>*<span class="number">1024</span>*<span class="number">1024</span>*<span class="number">1024</span>)) </span><br><span class="line"><span class="built_in">let</span> N_square=$((<span class="variable">$&#123;MEMORY&#125;</span>/<span class="number">10</span>)) </span><br><span class="line"><span class="built_in">let</span> N1_square=$((<span class="variable">$&#123;MEMORY&#125;</span>*<span class="number">9</span>/<span class="number">80</span>)) </span><br><span class="line"><span class="built_in">let</span> N2_square=$((<span class="variable">$&#123;MEMORY&#125;</span>*<span class="number">85</span>/<span class="number">800</span>))</span><br><span class="line"><span class="comment">#echo $&#123;N_square&#125;</span></span><br><span class="line"><span class="built_in">let</span> N=`<span class="built_in">echo</span> sqrt\(<span class="variable">$&#123;N_square&#125;</span>\)|bc`</span><br><span class="line"><span class="built_in">let</span> N1=`<span class="built_in">echo</span> sqrt\(<span class="variable">$&#123;N1_square&#125;</span>\)|bc` </span><br><span class="line"><span class="built_in">let</span> N2=`<span class="built_in">echo</span> sqrt\(<span class="variable">$&#123;N2_square&#125;</span>\)|bc` </span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;*************************************************&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;When TotalMemory*85% , The N is &quot;</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot; \e[0;31;5m<span class="variable">$&#123;N2&#125;</span>\e[m&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;*************************************************&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;When TotalMemory*80% , The N is &quot;</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot; \e[0;31;5m<span class="variable">$&#123;N&#125;</span>\e[m&quot;</span></span><br><span class="line"><span class="comment">#echo &quot;&gt;&gt;&gt;&gt;&gt; $&#123;N&#125; &lt;&lt;&lt;&lt;&lt;&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;*************************************************&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;When TotalMemory*90% , The N is &quot;</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot; \e[0;31;5m<span class="variable">$&#123;N1&#125;</span>\e[m&quot;</span></span><br><span class="line"><span class="comment">#echo &quot;&gt;&gt;&gt;&gt;&gt; $&#123;N1&#125; &lt;&lt;&lt;&lt;&lt;&quot;</span></span><br><span class="line"><span class="comment">#MAX=`echo &quot;scale=2;$&#123;speed_per_core&#125;*4*$&#123;CPU_per_node&#125;*$&#123;cores_per_CPU&#125;*$&#123;nodes&#125;&quot;|bc`</span></span><br><span class="line">MAX=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;speed_per_core&#125;</span>*32*<span class="variable">$&#123;cores_per_node&#125;</span>*<span class="variable">$&#123;nodes&#125;</span>&quot;</span>|bc`</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;************************************************************************************&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;The System&#x27;s theoretical performance (Rpeak) in Gflops is &lt;&lt;&lt;&lt; <span class="variable">$&#123;MAX&#125;</span> Gflops &gt;&gt;&gt;&gt; &quot;</span></span><br><span class="line"><span class="comment">#echo &quot;&gt;&gt;&gt;&gt;&gt; $&#123;MAX&#125; Gflops&lt;&lt;&lt;&lt;&lt;&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;************************************************************************************&quot;</span></span><br><span class="line">M1=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;MAX&#125;</span>*70/100&quot;</span>|bc`</span><br><span class="line">M2=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;MAX&#125;</span>*72/100&quot;</span>|bc`</span><br><span class="line">M3=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;MAX&#125;</span>*74/100&quot;</span>|bc`</span><br><span class="line">M4=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;MAX&#125;</span>*76/100&quot;</span>|bc`</span><br><span class="line">M5=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;MAX&#125;</span>*78/100&quot;</span>|bc`</span><br><span class="line">M6=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;MAX&#125;</span>*80/100&quot;</span>|bc`</span><br><span class="line">M7=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;MAX&#125;</span>*82/100&quot;</span>|bc`</span><br><span class="line">M8=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;MAX&#125;</span>*84/100&quot;</span>|bc`</span><br><span class="line">M9=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;MAX&#125;</span>*86/100&quot;</span>|bc`</span><br><span class="line">M10=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;MAX&#125;</span>*88/100&quot;</span>|bc`</span><br><span class="line">M11=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;MAX&#125;</span>*90/100&quot;</span>|bc`</span><br><span class="line">M12=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;MAX&#125;</span>*92/100&quot;</span>|bc`</span><br><span class="line">M13=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;MAX&#125;</span>*94/100&quot;</span>|bc`</span><br><span class="line">M14=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;MAX&#125;</span>*96/100&quot;</span>|bc`</span><br><span class="line">M15=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;MAX&#125;</span>*98/100&quot;</span>|bc`</span><br><span class="line">M16=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;MAX&#125;</span>*38/100&quot;</span>|bc`</span><br><span class="line">M17=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;MAX&#125;</span>*40/100&quot;</span>|bc`</span><br><span class="line">M18=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;MAX&#125;</span>*42/100&quot;</span>|bc`</span><br><span class="line">M19=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;MAX&#125;</span>*44/100&quot;</span>|bc`</span><br><span class="line">M20=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;MAX&#125;</span>*46/100&quot;</span>|bc`</span><br><span class="line">M21=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;MAX&#125;</span>*48/100&quot;</span>|bc`</span><br><span class="line">M22=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;MAX&#125;</span>*50/100&quot;</span>|bc`</span><br><span class="line">M23=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;MAX&#125;</span>*52/100&quot;</span>|bc`</span><br><span class="line">M24=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;MAX&#125;</span>*54/100&quot;</span>|bc`</span><br><span class="line">M25=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;MAX&#125;</span>*56/100&quot;</span>|bc`</span><br><span class="line">M26=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;MAX&#125;</span>*58/100&quot;</span>|bc`</span><br><span class="line">M27=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;MAX&#125;</span>*60/100&quot;</span>|bc`</span><br><span class="line">M28=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;MAX&#125;</span>*62/100&quot;</span>|bc`</span><br><span class="line">M29=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;MAX&#125;</span>*64/100&quot;</span>|bc`</span><br><span class="line">M30=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;MAX&#125;</span>*66/100&quot;</span>|bc`</span><br><span class="line">M31=`<span class="built_in">echo</span> <span class="string">&quot;scale=2;<span class="variable">$&#123;MAX&#125;</span>*68/100&quot;</span>|bc`</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Below is the system performance in GFLOPS with other common efficiencies:&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;#####################################################&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;***38% --&gt; <span class="variable">$&#123;M16&#125;</span>     *** 70% --&gt; <span class="variable">$M1</span>     ***&quot;</span>   </span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;***40% --&gt; <span class="variable">$&#123;M17&#125;</span>     *** 72% --&gt; <span class="variable">$M2</span>     ***&quot;</span>   </span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;***42% --&gt; <span class="variable">$&#123;M18&#125;</span>     *** 74% --&gt; <span class="variable">$M3</span>     ***&quot;</span>   </span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;***44% --&gt; <span class="variable">$&#123;M19&#125;</span>     *** 76% --&gt; <span class="variable">$M4</span>     ***&quot;</span>   </span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;***46% --&gt; <span class="variable">$&#123;M20&#125;</span>     *** 78% --&gt; <span class="variable">$M5</span>     ***&quot;</span>   </span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;***48% --&gt; <span class="variable">$&#123;M21&#125;</span>     *** 80% --&gt; <span class="variable">$M6</span>     ***&quot;</span>   </span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;***50% --&gt; <span class="variable">$&#123;M22&#125;</span>     *** 82% --&gt; <span class="variable">$M7</span>     ***&quot;</span>   </span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;***52% --&gt; <span class="variable">$&#123;M23&#125;</span>     *** 84% --&gt; <span class="variable">$M8</span>     ***&quot;</span>   </span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;***54% --&gt; <span class="variable">$&#123;M24&#125;</span>     *** 86% --&gt; <span class="variable">$M9</span>     ***&quot;</span>   </span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;***56% --&gt; <span class="variable">$&#123;M25&#125;</span>     *** 88% --&gt; <span class="variable">$&#123;M10&#125;</span>     ***&quot;</span>   </span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;***58% --&gt; <span class="variable">$&#123;M26&#125;</span>     *** 90% --&gt; <span class="variable">$&#123;M11&#125;</span>     ***&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;***60% --&gt; <span class="variable">$&#123;M27&#125;</span>     *** 92% --&gt; <span class="variable">$&#123;M12&#125;</span>     ***&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;***62% --&gt; <span class="variable">$&#123;M28&#125;</span>     *** 94% --&gt; <span class="variable">$&#123;M13&#125;</span>     ***&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;***64% --&gt; <span class="variable">$&#123;M29&#125;</span>     *** 96% --&gt; <span class="variable">$&#123;M14&#125;</span>     ***&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;***66% --&gt; <span class="variable">$&#123;M30&#125;</span>     *** 98% --&gt; <span class="variable">$&#123;M15&#125;</span>     ***&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;***68% --&gt; <span class="variable">$&#123;M31&#125;</span>     *** 100%--&gt; <span class="variable">$MAX</span>     ***&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;######################################################&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>可在linpack测试运行中，执行turbostat命令查看CPU实时频率，Skylake平台CPU在AVX512指令集上计算效率最好，可执行以下命令设置CPU跑在哪个指令集下</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> MKL_ENABLE_INSTRUCTIONS=AVX512</span><br><span class="line"><span class="built_in">export</span> MKL_ENABLE_INSTRUCTIONS=AVX2 </span><br><span class="line"><span class="built_in">export</span> MKL_ENABLE_INSTRUCTIONS= SSE4_2</span><br></pre></td></tr></table></figure>
-
-<p>目前从多个项目测试结果看，Skylake平台CPU单节点效率可&gt;80%，但4节点以上效率会&lt;50%</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/19/CPU_Linpack_Test/" data-id="cl5qulfg60000gma3byef6475" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
     <article id="post-IB_FW_upgrade" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/06/17/IB_FW_upgrade/" class="article-date">
@@ -264,7 +147,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/17/IB_FW_upgrade/" data-id="cl5qulfi80004gma384bq2vxm" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/17/IB_FW_upgrade/" data-id="cl5quyco00004m0a372v01vya" class="article-share-link">Share</a>
       
       
     </footer>
@@ -317,7 +200,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/17/nfs_server/" data-id="cl5qulfim000egma3a4vaeghg" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/17/nfs_server/" data-id="cl5quycoa000dm0a394fq57cj" class="article-share-link">Share</a>
       
       
     </footer>
@@ -389,7 +272,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/17/genisoimage/" data-id="cl5qulfij000cgma3hmbaef8c" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/17/genisoimage/" data-id="cl5quyco8000bm0a3g6ep9qbz" class="article-share-link">Share</a>
       
       
     </footer>
@@ -428,7 +311,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/17/History_command_log/" data-id="cl5qulfi50002gma31iw354no" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/17/History_command_log/" data-id="cl5quycny0002m0a38k0who4m" class="article-share-link">Share</a>
       
       
     </footer>
@@ -467,7 +350,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/nopasswdroot/" data-id="cl5qulfip000ggma35z37gr4z" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/16/nopasswdroot/" data-id="cl5quycoc000fm0a312x01xg8" class="article-share-link">Share</a>
       
       
     </footer>
@@ -509,7 +392,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/nopassword/" data-id="cl5qulfip000hgma3951611fd" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/16/nopassword/" data-id="cl5quycod000gm0a3hw7p8drd" class="article-share-link">Share</a>
       
       
     </footer>
@@ -559,7 +442,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/hexo_d/" data-id="cl5qulfil000dgma37ibyes37" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/16/hexo_d/" data-id="cl5quyco9000cm0a362dwgoq9" class="article-share-link">Share</a>
       
       
     </footer>
@@ -621,7 +504,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/blog1/" data-id="cl5qulfii000bgma3gpg1946i" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/16/blog1/" data-id="cl5quyco6000am0a35xx82oim" class="article-share-link">Share</a>
       
       
     </footer>
@@ -665,7 +548,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/IB_IP/" data-id="cl5qulfi90005gma30r070tl0" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/16/IB_IP/" data-id="cl5quyco10005m0a36qbk9a9c" class="article-share-link">Share</a>
       
       
     </footer>
@@ -711,15 +594,11 @@
       <ul>
         
           <li>
+            <a href="/2022/07/18/rhel7.9.cfg/">rhel7.9 PXE安装所用ks文件</a>
+          </li>
+        
+          <li>
             <a href="/2022/07/18/PXE_RHEL7.9/">UEFI模式PXE批量安装RHEL7.9</a>
-          </li>
-        
-          <li>
-            <a href="/2022/07/18/UEFI_PXE_RHEL7.9/">(no title)</a>
-          </li>
-        
-          <li>
-            <a href="/2022/07/07/rhel7.9.cfg/">(no title)</a>
           </li>
         
           <li>
@@ -728,6 +607,10 @@
         
           <li>
             <a href="/2022/06/23/IB_8700_setting/">配置8700 IB交换机</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/23/Mattermost_Install/">安装Mattermost预览版本</a>
           </li>
         
       </ul>
