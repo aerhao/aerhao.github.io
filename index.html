@@ -64,6 +64,197 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-CentOS7_install_Slurm" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/08/05/CentOS7_install_Slurm/" class="article-date">
+  <time datetime="2022-08-04T16:28:37.841Z" itemprop="datePublished">2022-08-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/08/05/CentOS7_install_Slurm/">CentOS7.9安装Slurm计算调度集群</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">服务器配置：</span><br><span class="line">1个管理节点control，多个计算节点c1、c2</span><br><span class="line">sda盘安装操作系统标准分区</span><br><span class="line">sdb盘*T，可以挂载/home目录，普通用户家目录使用</span><br><span class="line"></span><br><span class="line">安装系统：CentOS（英文版）</span><br><span class="line"><span class="comment"># cat /etc/redhat-release</span></span><br><span class="line">CentOS Linux release 7.9.2009 (Core)</span><br><span class="line"><span class="comment"># uname -r</span></span><br><span class="line">3.10.0-1160.el7.x86_64</span><br><span class="line"></span><br><span class="line">安装软件：NIS、NFS、NTP</span><br><span class="line">Slurm作业管理系统slurm-22.05.2.tar</span><br><span class="line">munge-0.5.15.tar</span><br><span class="line">mysql80-community-release-el7-6.noarch</span><br></pre></td></tr></table></figure>
+
+<h6 id="1、-安装操作系统"><a href="#1、-安装操作系统" class="headerlink" title="1、 安装操作系统"></a>1、 安装操作系统</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ventoy+CentOS7.9</span><br></pre></td></tr></table></figure>
+
+<h6 id="2、-配置网络、主机名、ssh免密"><a href="#2、-配置网络、主机名、ssh免密" class="headerlink" title="2、 配置网络、主机名、ssh免密"></a>2、 配置网络、主机名、ssh免密</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#ifconfig-ens33是当前的网络连接名</span></span><br><span class="line">vi /etc/sysconfig/network-script/ifconfig-ens33</span><br><span class="line">将onboot=no =&gt; onboot=<span class="built_in">yes</span></span><br><span class="line"><span class="comment">#重启网络服务</span></span><br><span class="line">service network restart</span><br></pre></td></tr></table></figure>
+
+<p>安装net-tools工具方便查看ip</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum search net-tools</span><br><span class="line">yum install net-tools</span><br><span class="line">ifconfig查看ip</span><br></pre></td></tr></table></figure>
+
+<p>关闭防火墙、selinux、NetworkManager</p>
+<p>修改名称，改的名称和映射地址的名称一致</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/hostname</span><br></pre></td></tr></table></figure>
+
+<p>修改hosts文件地址映射主机名</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/hosts</span><br><span class="line"><span class="comment">#添加（以实际ip为准，control是控制器名称，c1、c2是两台计算节点名称，名称自己定）</span></span><br><span class="line">192.168.1.1 control</span><br><span class="line">192.168.1.2 c1</span><br><span class="line">192.168.1.3 c2</span><br></pre></td></tr></table></figure>
+
+<p>配置ssh免密</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">yum install openssl openssh-server –y</span><br><span class="line"><span class="comment"># vim /etc/ssh/sshd_config</span></span><br><span class="line">设置PermitRootLogin=<span class="built_in">yes</span></span><br><span class="line">设置PasswordAuthentication=<span class="built_in">yes</span></span><br><span class="line">设置PubkeyAuthentication=<span class="built_in">yes</span></span><br><span class="line"><span class="comment"># 生成公私密匙对</span></span><br><span class="line">ssh-keygen -t rsa</span><br><span class="line">ssh-copy-id -i ~/.ssh/id_rsa.pub user@server</span><br></pre></td></tr></table></figure>
+
+<p>使用nopasswd脚本配置双向免密</p>
+<h6 id="3、-NFS共享存储"><a href="#3、-NFS共享存储" class="headerlink" title="3、 NFS共享存储"></a>3、 NFS共享存储</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">yum install nfs-utils rpcbind –y</span><br><span class="line">systemctl <span class="built_in">enable</span> rpcbind</span><br><span class="line">systemctl <span class="built_in">enable</span> nfs-server</span><br><span class="line">systemctl <span class="built_in">enable</span> nfs-lock</span><br><span class="line">systemctl <span class="built_in">enable</span> nfs-idmap</span><br><span class="line"><span class="comment">#enble换成start来开启服务</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/exports</span><br><span class="line"><span class="comment">#添加 /home 192.168.145.0/24(rw,sync,no_root_squash) </span></span><br></pre></td></tr></table></figure>
+
+<p>#使配置生效</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exportfs -a</span><br></pre></td></tr></table></figure>
+
+<p>共享/home文件夹</p>
+<p>客户端挂载</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install nfs-utils -y</span><br></pre></td></tr></table></figure>
+
+<p>#检查服务器共享目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">showmount -e 服务器地址</span><br></pre></td></tr></table></figure>
+
+<p>#开机挂载共享存储</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/rc.local</span><br><span class="line"><span class="comment">#添加 </span></span><br><span class="line">mount -t nfs 服务器地址:目录 客户端目</span><br></pre></td></tr></table></figure>
+
+<h6 id="4、-配置NIS"><a href="#4、-配置NIS" class="headerlink" title="4、 配置NIS"></a>4、 配置NIS</h6><p>服务端安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum -y install ypserv ypbind yp-tools</span><br><span class="line">yum -y install setup*</span><br></pre></td></tr></table></figure>
+
+<p>设置NIS开机自启动和现在启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">systemctl <span class="built_in">enable</span> ypserv</span><br><span class="line">systemctl <span class="built_in">enable</span> yppasswdd</span><br><span class="line">systemctl start ypserv</span><br><span class="line">systemctl start yppasswdd</span><br><span class="line">systemctl status ypserv</span><br><span class="line"></span><br><span class="line">rpcinfo -u control ypserv </span><br></pre></td></tr></table></figure>
+
+<p>NIS服务端初始化：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/lib64/yp/ypinit –m</span><br></pre></td></tr></table></figure>
+
+<p>之后输入“Ctrl+D”继续执行命令，输入y</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/lib64/yp/ypinit -s control</span><br></pre></td></tr></table></figure>
+
+<p>每次开机时都需要启动这个nis域名的话，直接把它写入/etc/rc.d/rc.local中</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;/usr/bin/nisdomainname TS10K&quot;</span> &gt;&gt; /etc/rc.local</span><br></pre></td></tr></table></figure>
+
+<p>我们在服务端新增加了用户数据，需要在/var/yp下执行make，否则客户端看不到用户信息。</p>
+<p>客户端安装                   </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yum -y install ypserv ypbind yp-tools</span><br><span class="line">yum -y install setup*</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;NISDOMAIN=TS10K&quot;</span> &gt;&gt; /etc/sysconfig/network</span><br><span class="line">setup</span><br><span class="line"><span class="comment">#配置USE NIS</span></span><br></pre></td></tr></table></figure>
+
+<p>在客户端的/etc/yp.conf中添加”domain TS10K server control”</p>
+<p>开启ypbind，并设置开机自启。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">systemctl <span class="built_in">enable</span> ypbind</span><br><span class="line">systemctl start ypbind</span><br><span class="line">systemctl status ypbind</span><br></pre></td></tr></table></figure>
+
+<p>创建普通用户登录做登录测试验证</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">usetadd test3</span><br><span class="line">passwd test3</span><br></pre></td></tr></table></figure>
+
+<p>创建新用户或更改用户组等信息，则只需在control更新NIS即可：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /var/yp</span><br><span class="line">make</span><br><span class="line">su test3</span><br><span class="line"><span class="comment">#配置普通用户免密登录集群计算节点</span></span><br><span class="line"><span class="built_in">cd</span> /opt/nopasswd/</span><br><span class="line">./nopasswduser </span><br></pre></td></tr></table></figure>
+
+<p>执行上述操作后，client端才能同步到最新用户信息。</p>
+<h6 id="5、-安装munge（管理节点和计算节点）"><a href="#5、-安装munge（管理节点和计算节点）" class="headerlink" title="5、 安装munge（管理节点和计算节点）"></a>5、 安装munge（管理节点和计算节点）</h6><p>#安装rpm构建工具，用来构建rpm安装包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install -y rpmdevtools</span><br><span class="line">yum install gcc bzip2-devel openssl-devel zlib-devel</span><br></pre></td></tr></table></figure>
+
+<p>通过构建工具生成rpm安装包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpmbuild -tb --without verify munge-0.5.15.tar.xz</span><br></pre></td></tr></table></figure>
+
+<p>复制代码使用rpm命令安装生成的安装包(构建好的rpm安装包默认在/root/rpbbuild/RPMS/x86_64/)</p>
+<p>#安装所有munge rpm包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivh munge*</span><br></pre></td></tr></table></figure>
+
+<p>复制代码并生成munge.key</p>
+<p>将生成的munge.key拷贝到计算节点/etc/munge，并更改munge.key的归属用户和组</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#生成munge.key</span></span><br><span class="line">mungekey -v</span><br><span class="line"><span class="built_in">chmod</span> 0600 /etc/munge/munge.key</span><br><span class="line"><span class="built_in">chown</span> -R munge.munge /etc/munge/munge.key</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">启动munge服务</span><br><span class="line">systemctl start munge</span><br><span class="line">munge功能测试</span><br><span class="line">munge -n | ssh 客户端主机名 unmunge</span><br></pre></td></tr></table></figure>
+
+<h6 id="6、-安装NTP时间服务器（每台都要）"><a href="#6、-安装NTP时间服务器（每台都要）" class="headerlink" title="6、 安装NTP时间服务器（每台都要）"></a>6、 安装NTP时间服务器（每台都要）</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### 安装配置ntp时间同步</span></span><br><span class="line">yum install ntp ntpdate -y</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/ntp.conf</span><br><span class="line"><span class="comment"># vim /etc/ntp.conf</span></span><br><span class="line"><span class="comment"># For more information about this file, see the man pages</span></span><br><span class="line"><span class="comment"># ntp.conf(5), ntp_acc(5), ntp_auth(5), ntp_clock(5), ntp_misc(5), ntp_mon(5).</span></span><br><span class="line">driftfile /var/lib/ntp/drift</span><br><span class="line"><span class="comment">#新增:日志目录.</span></span><br><span class="line">logfile /var/log/ntpd.log</span><br><span class="line"><span class="comment"># Permit time synchronization with our time source, but do not</span></span><br><span class="line"><span class="comment"># permit the source to query or modify the service on this system.</span></span><br><span class="line">restrict default nomodify notrap nopeer noquery</span><br><span class="line"><span class="comment"># Permit all access over the loopback interface. This could</span></span><br><span class="line"><span class="comment"># be tightened as well, but to do so would effect some of</span></span><br><span class="line"><span class="comment"># the administrative functions.</span></span><br><span class="line">restrict 127.0.0.1</span><br><span class="line">restrict ::1</span><br><span class="line"><span class="comment">#这一行的含义是授权172.16.128.0网段上的所有机器可以从这台机器上查询和同步时间.</span></span><br><span class="line">restrict 172.16.128.0 mask 255.255.255.0 nomodify notrap</span><br><span class="line"><span class="comment"># Hosts on local network are less restricted.</span></span><br><span class="line"><span class="comment">#restrict 192.168.1.0 mask 255.255.255.0 nomodify notrap</span></span><br><span class="line"><span class="comment"># Use public servers from the pool.ntp.org project.</span></span><br><span class="line"><span class="comment"># Please consider joining the pool (http://www.pool.ntp.org/join.html).</span></span><br><span class="line"><span class="comment">#server 0.centos.pool.ntp.org iburst</span></span><br><span class="line"><span class="comment">#server 1.centos.pool.ntp.org iburst</span></span><br><span class="line"><span class="comment">#server 2.centos.pool.ntp.org iburst</span></span><br><span class="line"><span class="comment">#server 3.centos.pool.ntp.org iburst</span></span><br><span class="line"><span class="comment">#新增:时间服务器列表.</span></span><br><span class="line">server 0.cn.pool.ntp.org iburst</span><br><span class="line">server 1.cn.pool.ntp.org iburst</span><br><span class="line">server 2.cn.pool.ntp.org iburst</span><br><span class="line">server 3.cn.pool.ntp.org iburst </span><br><span class="line"><span class="comment">#新增:当外部时间不可用时，使用本地时间.</span></span><br><span class="line">server 172.16.128.171 iburst</span><br><span class="line">fudge 127.0.0.1 stratum 10</span><br><span class="line"><span class="comment">#broadcast 192.168.1.255 autokey # broadcast server</span></span><br><span class="line"><span class="comment">#broadcastclient # broadcast client</span></span><br><span class="line"><span class="comment">#broadcast 224.0.1.1 autokey # multicast server</span></span><br><span class="line"><span class="comment">#multicastclient 224.0.1.1 # multicast client</span></span><br><span class="line"><span class="comment">#manycastserver 239.255.254.254 # manycast server</span></span><br><span class="line"><span class="comment">#manycastclient 239.255.254.254 autokey # manycast client</span></span><br><span class="line"><span class="comment">#新增:允许上层时间服务器主动修改本机时间.</span></span><br><span class="line">restrict 0.cn.pool.ntp.org nomodify notrap noquery</span><br><span class="line">restrict 1.cn.pool.ntp.org nomodify notrap noquery</span><br><span class="line">restrict 2.cn.pool.ntp.org nomodify notrap noquery</span><br><span class="line"><span class="comment"># Enable public key cryptography.</span></span><br><span class="line"><span class="comment">#crypto</span></span><br><span class="line">includefile /etc/ntp/crypto/pw</span><br><span class="line"><span class="comment"># Key file containing the keys and key identifiers used when operating</span></span><br><span class="line"><span class="comment"># with symmetric key cryptography.</span></span><br><span class="line">keys /etc/ntp/keys</span><br><span class="line"><span class="comment"># Specify the key identifiers which are trusted.</span></span><br><span class="line"><span class="comment">#trustedkey 4 8 42</span></span><br><span class="line"><span class="comment"># Specify the key identifier to use with the ntpdc utility.</span></span><br><span class="line"><span class="comment">#requestkey 8</span></span><br><span class="line"><span class="comment"># Specify the key identifier to use with the ntpq utility.</span></span><br><span class="line"><span class="comment">#controlkey 8</span></span><br><span class="line"><span class="comment"># Enable writing of statistics records.</span></span><br><span class="line"><span class="comment">#statistics clockstats cryptostats loopstats peerstats</span></span><br><span class="line"><span class="comment"># Disable the monitoring facility to prevent amplification attacks using ntpdc</span></span><br><span class="line"><span class="comment"># monlist command when default restrict does not include the noquery flag. See</span></span><br><span class="line"><span class="comment"># CVE-2013-5211 for more details.</span></span><br><span class="line"><span class="comment"># Note: Monitoring will not be disabled with the limited restriction flag.</span></span><br><span class="line"><span class="built_in">disable</span> monitor</span><br></pre></td></tr></table></figure>
+
+<p>复制代码启动ntp服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl <span class="built_in">enable</span> ntpd</span><br><span class="line">systemctl start ntpd</span><br></pre></td></tr></table></figure>
+
+<p>#检查是否开机启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl is-enabled ntpd</span><br></pre></td></tr></table></figure>
+
+<p>查看ntp连接状态如果没有问题，将正确时间写入硬件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ss -tlunp | grep ntp</span></span><br><span class="line"><span class="comment"># ntpq -p</span></span><br><span class="line"><span class="comment"># hwclock -w</span></span><br></pre></td></tr></table></figure>
+
+<p>ntp客户端</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># vim /etc/ntp.conf</span></span><br><span class="line">server 192.168.111.128</span><br></pre></td></tr></table></figure>
+
+<p>重要：修改任意节点服务器的NTP配置文件都需要重启ntpd服务：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># systemctl restart ntpd</span></span><br></pre></td></tr></table></figure>
+
+<p>以crontab任务计划同步时间（需安装ntpdate，每天24点更新同步时间）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># crontab -e</span></span><br><span class="line">0 0 * * * /usr/sbin/sntp -P no -r 192.168.111.128;hwclock -w</span><br></pre></td></tr></table></figure>
+
+<h6 id="7、-安装mysql"><a href="#7、-安装mysql" class="headerlink" title="7、 安装mysql"></a>7、 安装mysql</h6><p>推荐使用rpm安装包方便管理</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MySQL8下载地址https://dev.mysql.com/downloads/</span><br></pre></td></tr></table></figure>
+
+<p>注意：一定要安装mysql-community-devel工具，否则slurm会报错找不到accounting_storage_mysql.so</p>
+<p>#解压包，cd到目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install mysql-community-&#123;server,client,common,libs,devel&#125;-*</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">systemctl start mysqld</span><br><span class="line">mysql -u root -p</span><br><span class="line"><span class="comment">#MySQL8.0安装之后查找默认密码</span></span><br><span class="line">grep <span class="string">&#x27;temporary password&#x27;</span> /var/log/mysqld.log</span><br></pre></td></tr></table></figure>
+
+<p>建立slurm本地连接用户</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; create user <span class="string">&#x27;slurm&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> identified by <span class="string">&#x27;password&#x27;</span></span><br><span class="line"><span class="comment">#授权 如果允许其他节点访问localhost换成节点ip</span></span><br><span class="line">mysql&gt; grant all on slurm_acct_db.* TO <span class="string">&#x27;slurm&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span>;</span><br><span class="line"><span class="comment">#创建数据库</span></span><br><span class="line">mysql&gt; create database slurm_acct_db;</span><br></pre></td></tr></table></figure>
+
+<h6 id="8、-安装slurm"><a href="#8、-安装slurm" class="headerlink" title="8、 安装slurm"></a>8、 安装slurm</h6><p>前提：时间同步（ntp），创建slurm用户，用户id和用户组id在各个计算节点一致；在NIS中创建相同ID的slurm；安装了munge；在控制节点和每个计算节点创建同一个用户slurm</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">useradd slurm</span><br></pre></td></tr></table></figure>
+
+<p>复制代码slurm下载地址</p>
+<p>使用slurm-19.05.5.tar.bz2</p>
+<p>安装cgroup插件</p>
+<p>#在构建rpm前安装好hwloc,在安装slurm后需要配置cgroup.conf</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install hwloc</span><br></pre></td></tr></table></figure>
+
+<p>复制代码构建slurm rpm安装包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpmbuild -ta slurm-22.05.2.tar.bz2</span><br></pre></td></tr></table></figure>
+
+<p>复制代码构建是可能会提示需要某个依赖，安装依赖后重新构建</p>
+<p>#进到生成的rpm包目录，安装所有slurm rpm包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install slurm*</span><br></pre></td></tr></table></figure>
+
+<p>配置好后将slurm.conf 复制到计算节点，常规位置在:/etc/slurm/</p>
+<p>cat slurm.conf</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Minimal slurm.conf file for sigle Linux node</span></span><br><span class="line"><span class="comment"># Replace &quot;HOSTNAME&quot; with computer&#x27;s name (&quot;hostname -s&quot;)</span></span><br><span class="line"><span class="comment"># Replace &quot;USER&quot; with your user name (&quot;id -un&quot;)</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">ControlMachine=control       <span class="comment">#更改为管理节点主机名&quot;HOSTNAME&quot;</span></span><br><span class="line">ControlAddr=192.168.111.128  <span class="comment">#更改为管理节点的ip</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#AuthType=auth/munge</span></span><br><span class="line">MailProg=/usr/local/bin/mail</span><br><span class="line">ClusterName=jackclu</span><br><span class="line">CryptoType=crypto/munge</span><br><span class="line">JobAcctGatherType=jobacct_gather/none</span><br><span class="line">JobCompType=jobcomp/none</span><br><span class="line">MpiDefault=none</span><br><span class="line"></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">MCSPlugin=mcs/account</span><br><span class="line">MCSParameters=enforced,select,privatedata</span><br><span class="line"></span><br><span class="line">ProctrackType=proctrack/pgid</span><br><span class="line">ReturnToService=1</span><br><span class="line"><span class="comment">#SallocDefaultCommand=&quot;/usr/local/bin -n1 -N1 --pty --preserve-env --mpi=none $SHELL&quot;</span></span><br><span class="line">SchedulerType=<span class="built_in">sched</span>/backfill</span><br><span class="line"><span class="comment">#SchedulerPort=7321</span></span><br><span class="line">SelectType=select/cons_res</span><br><span class="line">SelectTypeParameters=CR_CPU</span><br><span class="line">SlurmctldDebug=3</span><br><span class="line">SlurmctldLogFile=/opt/slurm/log/slurmctld.log <span class="comment">#创建文件夹/opt/slurm/log/和slurmctld.log文件</span></span><br><span class="line">SlurmctldPidFile=/opt/slurm/pid/slurmctld.pid</span><br><span class="line">SlurmctldPort=6817</span><br><span class="line">SlurmdPidFile=/opt/slurm/pid/slurmd.pid</span><br><span class="line">SlurmdDebug=3</span><br><span class="line">SlurmdLogFile=/opt/slurm/log/slurmd.log</span><br><span class="line">SlurmdPort=6818</span><br><span class="line">SlurmdSpoolDir=/opt/slurm/slurmd.state</span><br><span class="line"><span class="comment">#SlurmUser=slurmAdmin                         # CHANGE &quot;USER&quot;</span></span><br><span class="line"><span class="comment">#SlurmdUser=slurmAdmin                        # CHANGE &quot;USER&quot;</span></span><br><span class="line">StateSaveLocation=/opt/slurm/slurmctld.state</span><br><span class="line">SwitchType=switch/none</span><br><span class="line"><span class="comment">#配置记账</span></span><br><span class="line">AccountingStorageHost=127.0.0.1               <span class="comment">#数据库位置</span></span><br><span class="line"><span class="comment">#AccountingStoragePass=</span></span><br><span class="line">AccountingStoragePort=6819</span><br><span class="line">AccountingStorageType=accounting_storage/slurmdbd</span><br><span class="line"><span class="comment"># </span></span><br><span class="line"><span class="comment"># COMPUTE NODES 计算节点信息</span></span><br><span class="line"> </span><br><span class="line"><span class="comment"># CHANGE &quot;HOSTNAME&quot;</span></span><br><span class="line">NodeName=control CPUs=2 Boards=1 SocketsPerBoard=2 CoresPerSocket=1 ThreadsPerCore=1 RealMemory=1000</span><br><span class="line">NodeName=c[1-2] CPUs=2 Boards=1 SocketsPerBoard=2 CoresPerSocket=1 ThreadsPerCore=1 RealMemory=1000</span><br><span class="line">PartitionName=debug Nodes=c[1-2],control Default=YES MaxTime=INFINITE State=UP    </span><br><span class="line"><span class="comment"># CHANGE &quot;HOSTNAME&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>cat slurmdbd.conf</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Example slurmdbd.conf file.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># See the slurmdbd.conf man page for more information.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Archive info</span></span><br><span class="line"><span class="comment">#ArchiveJobs=yes</span></span><br><span class="line"><span class="comment">#ArchiveDir=&quot;/tmp&quot;</span></span><br><span class="line"><span class="comment">#ArchiveSteps=yes</span></span><br><span class="line"><span class="comment">#ArchiveScript=</span></span><br><span class="line"><span class="comment">#JobPurge=12</span></span><br><span class="line"><span class="comment">#StepPurge=1</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Authentication info</span></span><br><span class="line">AuthType=auth/munge</span><br><span class="line">AuthInfo=/var/run/munge/munge.socket.2</span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># slurmDBD info</span></span><br><span class="line">Dbdaddr=127.0.0.1</span><br><span class="line">DbdHost=localhost</span><br><span class="line">DbdPort=6819</span><br><span class="line">SlurmUser=slurm</span><br><span class="line"><span class="comment">#MessageTimeout=300</span></span><br><span class="line">DebugLevel=verbose</span><br><span class="line"><span class="comment">#DefaultQOS=normal,standby</span></span><br><span class="line">LogFile=/opt/slurm/log/slurmdbd.log</span><br><span class="line">PidFile=/opt/slurm/log/slurmdbd.pid</span><br><span class="line"><span class="comment">#PluginDir=/usr/lib/slurm</span></span><br><span class="line"><span class="comment">#PrivateData=accounts,users,usage,jobs</span></span><br><span class="line"><span class="comment">#TrackWCKey=yes</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Database info</span></span><br><span class="line">StorageType=accounting_storage/mysql</span><br><span class="line"><span class="comment">#数据库信息</span></span><br><span class="line">StorageHost=127.0.0.1</span><br><span class="line">StoragePort=3306</span><br><span class="line">StoragePass=Inspur1!     <span class="comment">#修改为slurm账户登录MySQL8密码</span></span><br><span class="line">StorageUser=slurm</span><br><span class="line"><span class="comment">#数据库名称</span></span><br><span class="line">StorageLoc=slurm_acct_db <span class="comment">#MySQL创建对应名称数据库</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#控制节点启动 slurmctld和slurmdbd（数据库在控制主机上）</span></span><br><span class="line"><span class="comment">#计算节点就启动 slurmd</span></span><br><span class="line">systectl start slurmctld</span><br><span class="line">systectl start slurmdbd</span><br><span class="line">systectl start slurmd</span><br><span class="line"><span class="comment">#设置开机启动</span></span><br><span class="line">控制器守护程序: systemctl <span class="built_in">enable</span> slurmctld</span><br><span class="line">数据库守护程序: systemctl <span class="built_in">enable</span> slurmdbd</span><br><span class="line">计算节点守护程序: systemctl <span class="built_in">enable</span> slurmd</span><br><span class="line">systectl status slurmctld</span><br><span class="line">systectl status slurmdbd</span><br><span class="line">systectl status slurmd</span><br><span class="line"><span class="comment">#上述查看服务状态是否running,如果faild排查故障原因</span></span><br><span class="line">running排查错误的过程修改了slurm.conf、slurmdbd.conf配置文件</span><br><span class="line"></span><br><span class="line">例如查看/var/log/messages,slurm日志中出现slurmdbd的错误：</span><br><span class="line">error: Database settings not recommended values: innodb_buffer_pool_size innodb_lock_wait_timeout </span><br><span class="line">解决办法是修改mysql的配置文件/etc/my.cnf，添加innodb_buffer_pool_size和innodb_lock_wait_timeout的大小</span><br><span class="line">[mysqld]</span><br><span class="line"> innodb_buffer_pool_size=1024M</span><br><span class="line"> innodb_log_file_size=64M</span><br><span class="line"> innodb_lock_wait_timeout=900</span><br><span class="line">重启mysqld和slurmdbd后正常运行</span><br></pre></td></tr></table></figure>
+
+<h6 id="9、-测试"><a href="#9、-测试" class="headerlink" title="9、 测试"></a>9、 测试</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@control zhangdonghao]<span class="comment"># cat 1.slurm    #创建slurm脚本任务</span></span><br><span class="line"><span class="comment">#!/bin/bash</span></span><br><span class="line"><span class="comment">#SBATCH -o job.%j.out</span></span><br><span class="line"><span class="comment">#SBATCH -p debug</span></span><br><span class="line"><span class="comment">#SBATCH --qos=low</span></span><br><span class="line"><span class="comment">#SBATCH -J myFirstJob</span></span><br><span class="line"><span class="comment">#SBATCH --nodes=1</span></span><br><span class="line"><span class="comment">#SBATCH --ntasks-per-node=1</span></span><br><span class="line"></span><br><span class="line">hostname</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@control zhangdonghao]<span class="comment"># cat 2.slurm   #slurm脚本任务示例模板</span></span><br><span class="line"><span class="comment">#!/bin/bash</span></span><br><span class="line"><span class="comment">#SBATCH --job-name=test              # Job name</span></span><br><span class="line"><span class="comment">#SBATCH --output=test.%j.out    # Stdout (%j expands to jobId)</span></span><br><span class="line"><span class="comment">#SBATCH --error=test.%j.err     # Stderr (%j expands to jobId)</span></span><br><span class="line"><span class="comment">#SBATCH -N 2</span></span><br><span class="line"><span class="comment">#SBATCH -n 3</span></span><br><span class="line"><span class="comment">#SBATCH -p debug</span></span><br><span class="line">hostname</span><br><span class="line"><span class="built_in">date</span></span><br><span class="line"><span class="built_in">sleep</span> 60</span><br><span class="line"><span class="built_in">date</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@control zhangdonghao]<span class="comment"># sbatch 1.slurm</span></span><br><span class="line">[root@control zhangdonghao]<span class="comment"># sbatch 2.slurm</span></span><br><span class="line">[root@control zhangdonghao]<span class="comment"># scontrol update node=c1 state=resume  #重启slurmd服务后修复c1</span></span><br><span class="line">[root@control zhangdonghao]<span class="comment"># scontrol update node=c2 state=resume  #修复c2计算节点</span></span><br><span class="line">[root@control zhangdonghao]<span class="comment"># sinfo       #查看集群</span></span><br><span class="line">PARTITION AVAIL  TIMELIMIT  NODES  STATE NODELIST</span><br><span class="line">debug*       up   infinite      1    mix control</span><br><span class="line">debug*       up   infinite      1  alloc c1</span><br><span class="line">debug*       up   infinite      1   idle c2</span><br><span class="line">[root@control zhangdonghao]<span class="comment"># squeue      #查看当前任务队列</span></span><br><span class="line">             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)</span><br><span class="line">                19     debug     <span class="built_in">test</span>     root PD       0:00      2 (Resources)</span><br><span class="line">                17     debug     <span class="built_in">test</span>    test3  R       0:13      2 c1,control</span><br><span class="line">[root@control zhangdonghao]<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+
+<h6 id="10、监控"><a href="#10、监控" class="headerlink" title="10、监控"></a>10、监控</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Grafana+Promethus</span><br></pre></td></tr></table></figure>
+
+<p>计划友情给客户安装一套系统（CPU 内存 硬盘 网卡）监控软件，暂不包含slurm可视化</p>
+<h6 id="11、-安装应用程序"><a href="#11、-安装应用程序" class="headerlink" title="11、 安装应用程序"></a>11、 安装应用程序</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">MPI编译环境，</span><br><span class="line">ifort（Fortran编译器）</span><br><span class="line">gcc（C语言编译器）</span><br><span class="line">Python3.7（Anaconda版本，加第三方库sklearn、keras、tensorflow2、pytorch等）</span><br><span class="line">matlab软件</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">本实验参考连接：</span><br><span class="line">安装过程笔记</span><br><span class="line">https://juejin.cn/post/6844904065848049672</span><br><span class="line">https://hpc.pku.edu.cn/_book/guide/soft/singularity.html</span><br><span class="line">https://slurm.schedmd.com/configurator.html</span><br><span class="line">https://blog.csdn.net/qq_34149581/article/details/115273509</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/08/05/CentOS7_install_Slurm/" data-id="cl6f965ln0001eva30wmx4umc" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-slurm1" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/08/01/slurm1/" class="article-date">
@@ -102,7 +293,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/08/01/slurm1/" data-id="cl6ao07xm000ji4a3btvhcq0n" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/08/01/slurm1/" data-id="cl6f965of000keva36refeg8i" class="article-share-link">Share</a>
       
       
     </footer>
@@ -191,7 +382,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/07/19/PXE_RHEL7.9/" data-id="cl6ao07x70008i4a3an4q4j1l" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/07/19/PXE_RHEL7.9/" data-id="cl6f965m50009eva3fmoe2j2y" class="article-share-link">Share</a>
       
       
     </footer>
@@ -229,7 +420,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/07/18/rhel7.9.cfg/" data-id="cl6ao07xl000ii4a369rc8xcq" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/07/18/rhel7.9.cfg/" data-id="cl6f965od000jeva34qyr6c58" class="article-share-link">Share</a>
       
       
     </footer>
@@ -272,7 +463,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/25/reset_password_root/" data-id="cl6ao07xl000hi4a367wad4x6" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/25/reset_password_root/" data-id="cl6f965n6000ieva39o6210mj" class="article-share-link">Share</a>
       
       
     </footer>
@@ -336,7 +527,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/23/IB_8700_setting/" data-id="cl6ao07x20003i4a3f2i8g9t1" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/23/IB_8700_setting/" data-id="cl6f965lt0004eva31qx43qwc" class="article-share-link">Share</a>
       
       
     </footer>
@@ -390,7 +581,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/23/Mattermost_Install/" data-id="cl6ao07x60007i4a308tlcuu0" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/23/Mattermost_Install/" data-id="cl6f965m30008eva38xz8606o" class="article-share-link">Share</a>
       
       
     </footer>
@@ -440,7 +631,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/22/IB_test/" data-id="cl6ao07x50006i4a3e2xi2zh1" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/22/IB_test/" data-id="cl6f965lz0007eva33xys6uwx" class="article-share-link">Share</a>
       
       
     </footer>
@@ -495,7 +686,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/22/Switch_Deployment_Configuration/" data-id="cl6ao07x80009i4a38e5u0ooq" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/22/Switch_Deployment_Configuration/" data-id="cl6f965m6000aeva38wudgspv" class="article-share-link">Share</a>
       
       
     </footer>
@@ -546,50 +737,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/21/HCA_TO_IB_MODE/" data-id="cl6ao07x00001i4a3dkpc9rkk" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-no_root_ssh" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/06/19/no_root_ssh/" class="article-date">
-  <time datetime="2022-06-19T01:35:57.945Z" itemprop="datePublished">2022-06-19</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/06/19/no_root_ssh/">管理节点禁止root用户远程ssh登录</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>编辑文件vi  /etc/ssh/sshd_config<br>把#PermitRootLogin yes改为</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PermitRootLogin no</span><br></pre></td></tr></table></figure>
-
-<p>重启sshd服务</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service sshd restart</span><br></pre></td></tr></table></figure>
-
-<p>之后如果需要远程管理管理节点，需要用普通用户登录，然后su命令切换到root用户拿到最高权限</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/19/no_root_ssh/" data-id="cl6ao07xg000ei4a3frw118ss" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/21/HCA_TO_IB_MODE/" data-id="cl6f965lq0002eva33494hym8" class="article-share-link">Share</a>
       
       
     </footer>
@@ -603,7 +751,7 @@
 
   <nav id="page-nav">
     
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
   </nav>
 
 </section>
@@ -635,6 +783,10 @@
       <ul>
         
           <li>
+            <a href="/2022/08/05/CentOS7_install_Slurm/">CentOS7.9安装Slurm计算调度集群</a>
+          </li>
+        
+          <li>
             <a href="/2022/08/01/slurm1/">slurm示例</a>
           </li>
         
@@ -648,10 +800,6 @@
         
           <li>
             <a href="/2022/06/25/reset_password_root/">RHEL8重置root管理员密码</a>
-          </li>
-        
-          <li>
-            <a href="/2022/06/23/IB_8700_setting/">配置8700 IB交换机</a>
           </li>
         
       </ul>
