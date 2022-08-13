@@ -12,7 +12,7 @@
 <meta property="og:url" content="http://example.com/page/2/index.html">
 <meta property="og:site_name" content="AI HPC in doing we learn!">
 <meta property="og:locale" content="en_US">
-<meta property="article:author" content="zhangdonghao678@163.com">
+<meta property="article:author" content="张东豪 zhangdonghao678@163.com">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternate" href="/atom.xml" title="AI HPC in doing we learn!" type="application/atom+xml">
@@ -64,6 +64,61 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Switch_Deployment_Configuration" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/06/22/Switch_Deployment_Configuration/" class="article-date">
+  <time datetime="2022-06-21T16:12:53.485Z" itemprop="datePublished">2022-06-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/06/22/Switch_Deployment_Configuration/">交换机开局基础配置</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>调测需要使用一根串口线连接主控板卡的[IOIO]口，串口登录选择波特率115200</p>
+<h5 id="1-配置ip，开启ssh，增加admin-admin登录账户"><a href="#1-配置ip，开启ssh，增加admin-admin登录账户" class="headerlink" title="1.配置ip，开启ssh，增加admin/admin登录账户"></a>1.配置ip，开启ssh，增加admin/admin登录账户</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Switch&gt; <span class="built_in">enable</span> </span><br><span class="line">Switch<span class="comment"># conf t</span></span><br><span class="line">Switch(config)<span class="comment"># management  ip address  11.11.11.200 255.255.255.0</span></span><br><span class="line">Switch(config)<span class="comment"># exit</span></span><br><span class="line">Switch<span class="comment"># write </span></span><br><span class="line">Switch<span class="comment"># conf t</span></span><br><span class="line">Switch(config)<span class="comment"># ip ssh server enable</span></span><br><span class="line">Switch<span class="comment"># copy r s</span></span><br><span class="line">Switch<span class="comment"># conf t</span></span><br><span class="line">Switch(config)<span class="comment"># username admin privilege 4 password admin</span></span><br><span class="line">Switch(config)<span class="comment"># </span></span><br><span class="line">Switch<span class="comment"># copy r s</span></span><br></pre></td></tr></table></figure>
+
+<p>端口</p>
+<h5 id="2-配置端口静态链路聚合"><a href="#2-配置端口静态链路聚合" class="headerlink" title="2.配置端口静态链路聚合"></a>2.配置端口静态链路聚合</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">Switch(config)<span class="comment"># interface   range eth-0-1 - 2</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># description to-server-1</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># static-channel-group 1</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># exi</span></span><br><span class="line">Switch(config)<span class="comment"># interface  range eth-0-3 - 4</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># description to-server-2</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># static-channel-group 2</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># exi</span></span><br><span class="line">Switch(config)<span class="comment"># interface  range  eth-0-5 - 6</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># description to-server-3      </span></span><br><span class="line">Switch(config-if-range)<span class="comment"># static-channel-group 3</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># exi</span></span><br><span class="line">Switch(config)<span class="comment"># interface  range  eth-0-7 - 8</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># description to-server-4</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># static-channel-group 4</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># exi</span></span><br><span class="line">Switch(config)<span class="comment"># interface  range  eth-0-9 - 10</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># description to-server-5</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># static-channel-group 5</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># exi</span></span><br><span class="line">Switch(config)<span class="comment"># interface  range  eth-0-11 - 12</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># description to-server-6</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># static-channel-group 6</span></span><br><span class="line">Switch(config-if-range)<span class="comment">#</span></span><br><span class="line">Switch<span class="comment">#</span></span><br><span class="line">Switch<span class="comment"># conf t</span></span><br><span class="line">Switch(config)<span class="comment"># interface  range  agg  1 - 6</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># jumboframe enable</span></span><br><span class="line">Switch(config-if-range)<span class="comment">#</span></span><br><span class="line">Switch<span class="comment">#</span></span><br><span class="line">Switch<span class="comment"># write</span></span><br><span class="line">Building configuration...</span><br><span class="line">[OK]</span><br></pre></td></tr></table></figure>
+
+<p>删除</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Switch<span class="comment"># conf t</span></span><br><span class="line">Switch(config)<span class="comment"># interface  range  eth-0-1 - 12    </span></span><br><span class="line">Switch(config-if-range)<span class="comment"># no static-channel-group</span></span><br><span class="line">Switch(config-if-range)<span class="comment">#</span></span><br><span class="line"></span><br><span class="line">Switch<span class="comment"># write</span></span><br><span class="line">Building configuration...</span><br><span class="line">[OK]</span><br><span class="line">Switch<span class="comment"># </span></span><br><span class="line">Switch<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="3-配置动态链路聚合"><a href="#3-配置动态链路聚合" class="headerlink" title="3.配置动态链路聚合"></a>3.配置动态链路聚合</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Switch(config)<span class="comment"># interface range eth-0-3 - 4</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># no jumboframe enable</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># channel-group 2 mode active</span></span><br><span class="line">Switch(config-if-range)<span class="comment"># exit</span></span><br></pre></td></tr></table></figure>
+
+<p>删除</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Switch(config-if-range)<span class="comment"># no channel-group</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="4-查看链路聚合和配置"><a href="#4-查看链路聚合和配置" class="headerlink" title="4.查看链路聚合和配置"></a>4.查看链路聚合和配置</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Switch<span class="comment"># show channel-group summary</span></span><br><span class="line">Switch<span class="comment"># show running-config</span></span><br></pre></td></tr></table></figure>
+
+<p>删除agg组</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Switch(config)<span class="comment"># no interface agg 2</span></span><br><span class="line">Switch(config)<span class="comment"># no interface agg 3</span></span><br><span class="line">Switch(config)<span class="comment"># no interface agg 4</span></span><br><span class="line">Switch(config)<span class="comment"># no interface agg 5</span></span><br><span class="line">Switch(config)<span class="comment"># no interface agg 7</span></span><br><span class="line">Switch(config)<span class="comment"># no interface agg 6</span></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/06/22/Switch_Deployment_Configuration/" data-id="cl6rxzivo000bh2a3d8ui1ij9" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-HCA_TO_IB_MODE" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/06/21/HCA_TO_IB_MODE/" class="article-date">
@@ -105,7 +160,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/21/HCA_TO_IB_MODE/" data-id="cl6gv82c60003eva3ftmwebr6" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/21/HCA_TO_IB_MODE/" data-id="cl6rxzivd0003h2a3cw281clg" class="article-share-link">Share</a>
       
       
     </footer>
@@ -148,7 +203,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/19/no_root_ssh/" data-id="cl6gv82dk000geva33219bqrc" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/19/no_root_ssh/" data-id="cl6rxzivx000hh2a3hxcpf1he" class="article-share-link">Share</a>
       
       
     </footer>
@@ -265,7 +320,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/19/CPU_Linpack_Test/" data-id="cl6gv828y0000eva3ez071w18" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/19/CPU_Linpack_Test/" data-id="cl6rxziux0000h2a3cg92gu04" class="article-share-link">Share</a>
       
       
     </footer>
@@ -358,7 +413,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/17/IB_FW_upgrade/" data-id="cl6gv82c90006eva3hicfau1o" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/17/IB_FW_upgrade/" data-id="cl6rxzivh0006h2a3cbtw6i72" class="article-share-link">Share</a>
       
       
     </footer>
@@ -411,7 +466,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/17/nfs_server/" data-id="cl6gv82dj000feva3523d2wqx" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/17/nfs_server/" data-id="cl6rxzivw000gh2a3hsnlam8u" class="article-share-link">Share</a>
       
       
     </footer>
@@ -483,7 +538,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/17/genisoimage/" data-id="cl6gv82dd000deva3569eaycj" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/17/genisoimage/" data-id="cl6rxzivt000eh2a3hs0wek68" class="article-share-link">Share</a>
       
       
     </footer>
@@ -522,7 +577,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/17/History_command_log/" data-id="cl6gv82c70004eva3dhklduwb" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/17/History_command_log/" data-id="cl6rxzivf0004h2a35g2v7rgr" class="article-share-link">Share</a>
       
       
     </footer>
@@ -561,7 +616,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/nopasswdroot/" data-id="cl6gv82dl000heva33zea8uyq" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/16/nopasswdroot/" data-id="cl6rxzivz000ih2a3bnx82o11" class="article-share-link">Share</a>
       
       
     </footer>
@@ -603,57 +658,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/nopassword/" data-id="cl6gv82dm000ieva3h2nwfl8e" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-hexo_d" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/06/16/hexo_d/" class="article-date">
-  <time datetime="2022-06-15T18:37:18.664Z" itemprop="datePublished">2022-06-16</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/06/16/hexo_d/">解决hexo d命令部署github博客时报错</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="使用-Hexo-和-GitHub-搭建博客，出现-hexo-d-报错如何解决？"><a href="#使用-Hexo-和-GitHub-搭建博客，出现-hexo-d-报错如何解决？" class="headerlink" title="使用 Hexo 和 GitHub 搭建博客，出现 hexo -d 报错如何解决？"></a>使用 Hexo 和 GitHub 搭建博客，出现 hexo -d 报错如何解决？</h2><p>报错现象：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"># On branch master</span><br><span class="line">nothing to commit, working directory clean</span><br><span class="line">Username for &#x27;https://github.com&#x27;: aerhao</span><br><span class="line">Password for &#x27;https://aerhao@github.com&#x27;:</span><br><span class="line">remote: Support for password authentication was removed on August 13, 2021. Plea                                                   se use a personal access token instead.</span><br><span class="line">remote: Please see https://github.blog/2020-12-15-token-authentication-requireme                                                   nts-for-git-operations/ for more information.</span><br><span class="line">fatal: Authentication failed for &#x27;https://github.com/aerhao/aerhao.github.io.git                                                   /&#x27;</span><br><span class="line">FATAL &#123;</span><br><span class="line">  err: Error: Spawn failed</span><br><span class="line">      at ChildProcess.&lt;anonymous&gt; (/home/blog/node_modules/hexo-util/lib/spawn.j                                                   s:51:21)</span><br><span class="line">      at ChildProcess.emit (events.js:400:28)</span><br><span class="line">      at Process.ChildProcess._handle.onexit (internal/child_process.js:282:12)                                                    &#123;</span><br><span class="line">    code: 128</span><br><span class="line">  &#125;</span><br><span class="line">&#125; Something&#x27;s wrong. Maybe you can find the solution here: %s https://hexo.io/do                                                   cs/troubleshooting.html</span><br><span class="line">root@mu01:[/home/blog]hexo d</span><br></pre></td></tr></table></figure>
-
-<p>旧配置文件：_config.yml找到Deployment：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">deploy: </span><br><span class="line">  type: git </span><br><span class="line">  repo: https://github.com/yourname/yourname.github.io.git </span><br><span class="line">  branch: main</span><br><span class="line">  其中 repo的地址修改为</span><br><span class="line">  git@github.com:yourname/yourname.github.io.git</span><br></pre></td></tr></table></figure>
-
-<p>正确的配置文件：_config.yml</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Deployment</span></span><br><span class="line"><span class="comment">## Docs: https://hexo.io/docs/one-command-deployment</span></span><br><span class="line">deploy:</span><br><span class="line">  <span class="built_in">type</span>: git</span><br><span class="line">  repo: git@github.com:aerhao/aerhao.github.io.git</span><br><span class="line">  branch: main</span><br></pre></td></tr></table></figure>
-
-<p>报错原因：</p>
-<p>因为你前面也是用的ssh-keygen生成的秘钥文件嘛，肯定测试过</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh git@github.com</span><br></pre></td></tr></table></figure>
-
-<p>所以hexo d部署时用ssh git用户登录认证会通过。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/hexo_d/" data-id="cl6gv82de000eeva32hzz3k83" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/16/nopassword/" data-id="cl6rxziw0000jh2a38txo3o03" class="article-share-link">Share</a>
       
       
     </footer>
@@ -699,6 +704,10 @@
       <ul>
         
           <li>
+            <a href="/2022/08/13/diskless_CentOS7/">HPC服务器集群配置CentOS 7.9无盘启动</a>
+          </li>
+        
+          <li>
             <a href="/2022/08/06/CentOS7_Slurm/">CentOS7.9 install Slurm</a>
           </li>
         
@@ -714,10 +723,6 @@
             <a href="/2022/07/19/PXE_RHEL7.9/">UEFI模式PXE批量安装RHEL7.9</a>
           </li>
         
-          <li>
-            <a href="/2022/07/18/rhel7.9.cfg/">rhel7.9 PXE安装所用ks文件</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -730,7 +735,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2022 zhangdonghao678@163.com<br>
+      &copy; 2022 张东豪 zhangdonghao678@163.com<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>

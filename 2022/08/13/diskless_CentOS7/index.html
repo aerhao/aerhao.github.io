@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>HPC服务器集群配置CentOS 7.9无盘启动 | AI HPC in doing we learn!</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="无盘(diskless)集群，指的是计算节点没有本地硬盘或本地硬盘没有安装操作系统。优点是管理维护方便，可节省计算节点硬盘；缺点是对服务节点的存储IO性能及之间的网络稳定性和性能要求高。计算节点配置240G SSD硬盘，无盘OS启动源安装目录在存储设备DDN高速IO文件系统上，通过稳定高带宽的IB网络PXE启动。服务节点：节点名：server内网IP：192.168.111.138无盘客户节点：节">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HPC服务器集群配置CentOS 7.9无盘启动">
+<meta property="og:url" content="http://example.com/2022/08/13/diskless_CentOS7/index.html">
+<meta property="og:site_name" content="AI HPC in doing we learn!">
+<meta property="og:description" content="无盘(diskless)集群，指的是计算节点没有本地硬盘或本地硬盘没有安装操作系统。优点是管理维护方便，可节省计算节点硬盘；缺点是对服务节点的存储IO性能及之间的网络稳定性和性能要求高。计算节点配置240G SSD硬盘，无盘OS启动源安装目录在存储设备DDN高速IO文件系统上，通过稳定高带宽的IB网络PXE启动。服务节点：节点名：server内网IP：192.168.111.138无盘客户节点：节">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-08-13T13:34:59.772Z">
+<meta property="article:modified_time" content="2022-08-13T13:34:59.772Z">
+<meta property="article:author" content="张东豪 zhangdonghao678@163.com">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="AI HPC in doing we learn!" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">AI HPC in doing we learn!</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-diskless_CentOS7" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/08/13/diskless_CentOS7/" class="article-date">
+  <time datetime="2022-08-13T13:34:59.772Z" itemprop="datePublished">2022-08-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      HPC服务器集群配置CentOS 7.9无盘启动
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>无盘(diskless)集群，指的是计算节点没有本地硬盘或本地硬盘没有安装操作系统。<br>优点是管理维护方便，可节省计算节点硬盘；缺点是对服务节点的存储IO性能及之间的网络稳定性和性能要求高。<br>计算节点配置240G SSD硬盘，无盘OS启动源安装目录在存储设备DDN高速IO文件系统上，通过稳定高带宽的IB网络PXE启动。<br>服务节点：<br>节点名：server<br>内网IP：192.168.111.138<br>无盘客户节点：<br>节点名：client1、client2<br>内网IP：192.168.111.1、192.168.111.2</p>
+<h6 id="升级系统："><a href="#升级系统：" class="headerlink" title="升级系统："></a>升级系统：</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y update</span><br></pre></td></tr></table></figure>
+
+<h6 id="安装所需要的软件："><a href="#安装所需要的软件：" class="headerlink" title="安装所需要的软件："></a>安装所需要的软件：</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install nfs-utils tftp-server xinetd dhcp syslinux dracut-network</span><br></pre></td></tr></table></figure>
+
+<h6 id="配置-etc-dracut-conf文件"><a href="#配置-etc-dracut-conf文件" class="headerlink" title="配置/etc/dracut.conf文件"></a>配置/etc/dracut.conf文件</h6><p>为后面生成initrd.img时需要打开NFS-root支持做准备，上面dracut-network包安装后在/etc/dracut.conf文件中添加：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">add_dracutmodules+=<span class="string">&quot;nfs&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h6 id="关闭SELinux、关闭NetworkManager、关闭防火墙"><a href="#关闭SELinux、关闭NetworkManager、关闭防火墙" class="headerlink" title="关闭SELinux、关闭NetworkManager、关闭防火墙"></a>关闭SELinux、关闭NetworkManager、关闭防火墙</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">修改/etc/selinux/config，设置SELINUX=disabled</span><br></pre></td></tr></table></figure>
+
+<h6 id="配置TFTP服务（通过xinetd启动）："><a href="#配置TFTP服务（通过xinetd启动）：" class="headerlink" title="配置TFTP服务（通过xinetd启动）："></a>配置TFTP服务（通过xinetd启动）：</h6><p>设置/etc/xinetd.d/tftp文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /etc/xinetd.d/tftp</span><br><span class="line"><span class="comment"># default: off</span></span><br><span class="line"><span class="comment"># description: The tftp server serves files using the trivial file transfer \</span></span><br><span class="line"><span class="comment">#       protocol.  The tftp protocol is often used to boot diskless \</span></span><br><span class="line"><span class="comment">#       workstations, download configuration files to network-aware printers, \</span></span><br><span class="line"><span class="comment">#       and to start the installation process for some operating systems.</span></span><br><span class="line">service tftp</span><br><span class="line">&#123;</span><br><span class="line">        socket_type             = dgram</span><br><span class="line">        protocol                = udp</span><br><span class="line">        <span class="built_in">wait</span>                    = <span class="built_in">yes</span></span><br><span class="line">        user                    = root</span><br><span class="line">        server                  = /usr/sbin/in.tftpd</span><br><span class="line">        server_args             = -s /var/lib/tftpboot  <span class="comment">#-s 表示用/var/lib/tftpboot作为tftp服务的根目录</span></span><br><span class="line">        <span class="built_in">disable</span>                 = no    <span class="comment">#要修改成no，以便启动</span></span><br><span class="line">        per_source              = 11</span><br><span class="line">        cps                     = 100 2</span><br><span class="line">        flags                   = IPv4</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>重启xinetd服务：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart xinetd</span><br></pre></td></tr></table></figure>
+
+<h6 id="配置NFS服务："><a href="#配置NFS服务：" class="headerlink" title="配置NFS服务："></a>配置NFS服务：</h6><p>建立客户节点存储的公共目录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> /diskless</span><br></pre></td></tr></table></figure>
+
+<p>配置NFS共享，修改/etc/exports文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/diskless 192.168.111.0/24(rw,async,no_root_squash)</span><br></pre></td></tr></table></figure>
+
+<p>重启NFS服务：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart nfs</span><br></pre></td></tr></table></figure>
+
+<p>如果NFS服务早已启动，那么可以不重启NFS服务，而是利用下面刷新配置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exportfs -ra</span><br></pre></td></tr></table></figure>
+
+<p>配置NFS服务开机自启动：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl <span class="built_in">enable</span> nfs</span><br></pre></td></tr></table></figure>
+
+<h6 id="配置DHCP服务："><a href="#配置DHCP服务：" class="headerlink" title="配置DHCP服务："></a>配置DHCP服务：</h6><p>修改/etc/dhcp/dhcpd.conf文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">[root@server ~]<span class="comment"># cat /etc/dhcp/dhcpd.conf</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># DHCP Server Configuration file.</span></span><br><span class="line"><span class="comment">#   see /usr/share/doc/dhcp*/dhcpd.conf.example</span></span><br><span class="line"><span class="comment">#   see dhcpd.conf(5) man page</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">default-lease-time 600;</span><br><span class="line">max-lease-time 7200;</span><br><span class="line">allow booting;</span><br><span class="line">allow bootp;</span><br><span class="line">option time-offset              -18000; <span class="comment"># Eastern Standard Tim</span></span><br><span class="line">option architecture-type code 93 = unsigned <span class="built_in">integer</span> 16;   <span class="comment">#这一行需要添加，否则下一步重启dhcpd服务会报错没有option architecture-type字段</span></span><br><span class="line"></span><br><span class="line">subnet 192.168.111.0 netmask 255.255.255.0 &#123;</span><br><span class="line">    option routers                  192.168.111.138;</span><br><span class="line">    option subnet-mask              255.255.255.0;</span><br><span class="line">    option time-offset              -18000;     <span class="comment"># Eastern Standard Time</span></span><br><span class="line">    range 192.168.111.1 192.168.111.100;</span><br><span class="line">&#125;</span><br><span class="line">host client1 &#123;</span><br><span class="line">    option host-name <span class="string">&quot;client1&quot;</span>; <span class="comment">#设定系统名</span></span><br><span class="line">    hardware ethernet 00:0c:29:bf:a4:d0;</span><br><span class="line">    fixed-address 192.168.111.1;</span><br><span class="line">&#125;</span><br><span class="line">host client2 &#123;</span><br><span class="line">    option host-name <span class="string">&quot;client2&quot;</span>;</span><br><span class="line">    hardware ethernet 00:0c:29:26:bb:69;</span><br><span class="line">    fixed-address 192.168.111.2;</span><br><span class="line">&#125;</span><br><span class="line">class <span class="string">&quot;pxeclients&quot;</span> &#123; <span class="comment">#PXE启动设置</span></span><br><span class="line">    match <span class="keyword">if</span> substring(option vendor-class-identifier, 0, 9) = <span class="string">&quot;PXEClient&quot;</span>;</span><br><span class="line">    next-server 192.168.111.138;</span><br><span class="line">    <span class="keyword">if</span> option architecture-type = 00:07 &#123;</span><br><span class="line">        filename <span class="string">&quot;uefi/shim.efi&quot;</span>; <span class="comment">#x86_64 UEFI引导</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        filename <span class="string">&quot;pxelinux.0&quot;</span>; <span class="comment">#传统LEGACY引导</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>重启DHCP服务：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart dhcpd</span><br></pre></td></tr></table></figure>
+
+<h6 id="设置客户节点操作系统文件系统："><a href="#设置客户节点操作系统文件系统：" class="headerlink" title="设置客户节点操作系统文件系统："></a>设置客户节点操作系统文件系统：</h6><p>客户节点需要一个完整的操作系统安装后的文件系统，可以采用某个现有的系统复制下或用yum新装一个系统：<br>（本次在VMware虚拟机实验）利用服务节点本身系统复制：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum -y install rsync</span><br><span class="line">rsync -a -e ssh --exclude=<span class="string">&#x27;/proc/*&#x27;</span> --exclude=<span class="string">&#x27;/sys/*&#x27;</span> / /diskless/root/</span><br></pre></td></tr></table></figure>
+
+<h6 id="设置客户节点启动内核："><a href="#设置客户节点启动内核：" class="headerlink" title="设置客户节点启动内核："></a>设置客户节点启动内核：</h6><p>复制现有vmlinuz文件到/var/lib/tftpboot/目录，客户节点DHCP获取到IP后会从这里通过tftp下载：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> /boot/vmlinuz-3.10.0-1160.el7.x86_64  /var/lib/tftpboot/</span><br></pre></td></tr></table></figure>
+
+<p>在/var/lib/tftpboot/目录下生成支持NFS-root的initrd文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dracut --add nfs /var/lib/tftpboot/initramfs-3.10.0-1160.el7.x86_64.img    3.10.0-1160.el7.x86_64   </span><br></pre></td></tr></table></figure>
+
+<p>设置生成的initrd文件权限为644：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> 644 /var/lib/tftpboot/initramfs-3.10.0-1160.el7.x86_64.img</span><br></pre></td></tr></table></figure>
+
+<h6 id="设置客户节点PXE引导文件："><a href="#设置客户节点PXE引导文件：" class="headerlink" title="设置客户节点PXE引导文件："></a>设置客户节点PXE引导文件：</h6><p>针对传统LEGACY启动方式：<br>复制/usr/share/syslinux/pxelinux.0文件到/var/lib/tftpboot/目录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> /usr/share/syslinux/pxelinux.0 /var/lib/tftpboot/</span><br></pre></td></tr></table></figure>
+
+<p>在TFTP根目录下建立pxelinux.cfg目录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p /var/lib/tftpboot/pxelinux.cfg</span><br></pre></td></tr></table></figure>
+
+<p>设置客户节点boot默认配置文件/var/lib/tftpboot/pxelinux.cfg/default：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@server ~]<span class="comment"># cat /var/lib/tftpboot/pxelinux.cfg/default</span></span><br><span class="line">default CentOS7.9</span><br><span class="line">label CentOS7.9</span><br><span class="line">    kernel vmlinuz-3.10.0-1160.el7.x86_64</span><br><span class="line">    append initrd=initramfs-3.10.0-1160.el7.x86_64.img  root=nfs:192.168.111.138:/diskless/root rw</span><br><span class="line">[root@server ~]<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+
+<p>针对新型UEFI启动方式：<br>下载CentOS7.9  DVD iso镜像：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mount /dev/sr0  /mnt</span><br><span class="line"><span class="built_in">cp</span> -r  /mnt/*   /centos</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rpm2cpio /centos/Packages/shim-x64-15-8.el7.x86_64.rpm   | cpio -dimv</span><br><span class="line">rpm2cpio /centos/Packages/grub2-efi-x64-2.02-0.86.el7.centos.x86_64.rpm | cpio -dimv</span><br></pre></td></tr></table></figure>
+
+<p>运行上面命令，将在当前目录生成一个boot目录，复制所需文件到/var/lib/tftpboot，之后该boot目录可删除</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> boot/efi/EFI/centos/&#123;shim.efi,grubx64.efi&#125; /var/lib/tftpboot</span><br></pre></td></tr></table></figure>
+
+<p>设置/var/lib/tftpboot/uefi/grub.cfg：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@server ~]<span class="comment"># cat /var/lib/tftpboot/uefi/grub.cfg</span></span><br><span class="line"><span class="built_in">set</span> <span class="built_in">timeout</span>=0</span><br><span class="line">  menuentry <span class="string">&#x27;CentOS 7.9&#x27;</span> &#123;</span><br><span class="line">  linuxefi  vmlinuz-3.10.0-1160.el7.x86_64 root=nfs:192.168.111.138:/diskless/root rw</span><br><span class="line">  initrdefi initramfs-3.10.0-1160.el7.x86_64.img</span><br><span class="line">&#125;</span><br><span class="line">[root@server ~]<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+
+<h6 id="设置客户节点私有目录："><a href="#设置客户节点私有目录：" class="headerlink" title="设置客户节点私有目录："></a>设置客户节点私有目录：</h6><p>除/var与/tmp目录外，基本都可以共享，因此这里仅设置/var与/tmp私有。</p>
+<p>另外设定/tmp使用客户节点的本地硬盘（无盘客户节点可以不用本地硬盘，大IO科研应用采用本地SSD硬盘，避免主存储IO压力太大）。<br>生成/diskless/nodes目录，该目录下生成以节点名命名的子目录，如client1和client2，以便存放各自的私有文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> -a /diskless/root/var /diskless/nodes/client1</span><br><span class="line"><span class="built_in">cp</span> -a /diskless/root/var /diskless/nodes/client2</span><br></pre></td></tr></table></figure>
+
+<h6 id="设置客户节点启动脚本："><a href="#设置客户节点启动脚本：" class="headerlink" title="设置客户节点启动脚本："></a>设置客户节点启动脚本：</h6><p>(为加速客户节点OS启动，不设置rc.local文件也可，都实操过）<br>修改/diskless/root/etc/rc.local文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">[root@server ~]<span class="comment"># cat /diskless/root/etc/rc.local</span></span><br><span class="line"><span class="comment">#!/bin/bash</span></span><br><span class="line"><span class="comment"># THIS FILE IS ADDED FOR COMPATIBILITY PURPOSES</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># It is highly advisable to create own systemd services or udev rules</span></span><br><span class="line"><span class="comment"># to run scripts during boot instead of using this file.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># In contrast to previous versions due to parallel execution during boot</span></span><br><span class="line"><span class="comment"># this script will NOT be run after all other services.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Please note that you must run &#x27;chmod +x /etc/rc.d/rc.local&#x27; to ensure</span></span><br><span class="line"><span class="comment"># that this script will be executed during boot.</span></span><br><span class="line"><span class="built_in">touch</span> /var/lock/subsys/local</span><br><span class="line"><span class="comment">#for DIR in var #利用客户节点启动时获取的节点名$HOSTNAME不同对应不同的服务节点上的客户节点私有目录</span></span><br><span class="line"><span class="comment">#do</span></span><br><span class="line"><span class="comment">#    mount -o rw server:/diskless/nodes/$HOSTNAME/$DIR /$DIR</span></span><br><span class="line"><span class="comment">#done</span></span><br><span class="line"><span class="comment">#mount /dev/sda /tmp</span></span><br><span class="line"><span class="comment">#if [ $? != 0 ]; then #如果加载未成功，认为该节点第一次启动，该硬盘没格式化，因此做格式化</span></span><br><span class="line"><span class="comment">#    mkfs.xfs /dev/sda</span></span><br><span class="line"><span class="comment">#    mount /dev/sda /tmp</span></span><br><span class="line"><span class="comment">#fi</span></span><br><span class="line"><span class="comment">#nisdomainname mydiskless.org #为了NIS服务</span></span><br><span class="line"><span class="comment">#dhclient &amp; #为了客户节点启动dhclient守护进程，自动更新IP，否则过10分钟左右网络会断掉</span></span><br><span class="line">[root@server ~]<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+
+<p>设置客户节点的rc.local开机自启动：<br>chroot到客户节点系统：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chroot</span> /diskless/root</span><br></pre></td></tr></table></figure>
+
+<p>为/etc/rc.d/rc.local文件增加可执行权限：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> +x /etc/rc.d/rc.local</span><br></pre></td></tr></table></figure>
+
+<p>设置成开机自启动：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl <span class="built_in">enable</span> rc-local</span><br></pre></td></tr></table></figure>
+
+<p>退出chroot环境：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+
+<h6 id="修改-diskless-root-etc-fstab"><a href="#修改-diskless-root-etc-fstab" class="headerlink" title="修改/diskless/root/etc/fstab"></a>修改/diskless/root/etc/fstab</h6><p>PXE实验中发现待启动diskless操作系统的/etc/fsbab文件分区需要全部注释</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@server ~]<span class="comment"># cat /diskless/root/etc/fstab</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># /etc/fstab</span></span><br><span class="line"><span class="comment"># Created by anaconda on Fri Jul  8 22:00:14 2022</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Accessible filesystems, by reference, are maintained under &#x27;/dev/disk&#x27;</span></span><br><span class="line"><span class="comment"># See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#/dev/mapper/centos-root /                       xfs     defaults        0 0</span></span><br><span class="line"><span class="comment">#UUID=83a31d14-9611-48dc-9895-1e3357b41f60 /boot                   xfs     defaults        0 0</span></span><br><span class="line"><span class="comment">#UUID=86D8-1BA2          /boot/efi               vfat    umask=0077,shortname=winnt 0 0</span></span><br><span class="line"><span class="comment">#/dev/mapper/centos-swap swap                    swap    defaults        0 0</span></span><br><span class="line">[root@server ~]<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+
+<p>客户节点BIOS设置为PXE网络启动，根据客户节点启动时屏幕信息以及服务节点/var/log/messages文件等信息对系统诊断，排除错误。<br>无盘节点启动后，运行df命令应显示类似下面信息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@server ~]<span class="comment"># df -h</span></span><br><span class="line">Filesystem                      Size  Used Avail Use% Mounted on</span><br><span class="line">devtmpfs                        978M     0  978M   0% /dev</span><br><span class="line">tmpfs                           991M     0  991M   0% /dev/shm</span><br><span class="line">tmpfs                           991M  9.6M  981M   1% /run</span><br><span class="line">tmpfs                           991M     0  991M   0% /sys/fs/cgroup</span><br><span class="line">192.168.111.138:/diskless/root   17G   14G  3.4G  80% /</span><br><span class="line">tmpfs                           199M     0  199M   0% /run/user/0</span><br><span class="line">[root@server ~]<span class="comment">#</span></span><br><span class="line">[root@server ~]<span class="comment"># lsblk</span></span><br><span class="line">NAME MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT</span><br><span class="line">sda    8:0    0   20G  0 disk</span><br><span class="line">sr0   11:0    1 1024M  0 rom</span><br><span class="line">[root@server ~]<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+
+<h6 id="本次实验遗留问题："><a href="#本次实验遗留问题：" class="headerlink" title="本次实验遗留问题："></a>本次实验遗留问题：</h6><p>nfs 版本4.1协议bug导致在客户节点不断看到输出报错：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@server ~]<span class="comment"># mount | grep nfs</span></span><br><span class="line">192.168.111.138:/diskless/root on / <span class="built_in">type</span> nfs4 (rw,relatime,vers=4.1,rsize=262144,wsize=262144,namlen=255,                                                             hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=192.168.111.139,local_lock=none,addr=192.168.111.13                                                             8)</span><br><span class="line">rpc_pipefs on /var/lib/nfs/rpc_pipefs <span class="built_in">type</span> rpc_pipefs (rw,relatime)</span><br><span class="line">nfsd on /proc/fs/nfsd <span class="built_in">type</span> nfsd (rw,relatime)</span><br><span class="line">[root@server ~]<span class="comment">#</span></span><br><span class="line">server kernel: NFS: nfs4_reclaim_open_state: Lock reclaim failed!</span><br><span class="line">Aug 14 02:09:31 server kernel: NFS: nfs4_reclaim_open_state: Lock reclaim failed!</span><br><span class="line">Aug 14 02:09:32 server kernel: NFS: nfs4_reclaim_open_state: Lock reclaim failed!</span><br><span class="line">Aug 14 02:09:33 server kernel: NFS: nfs4_reclaim_open_state: Lock reclaim failed!</span><br><span class="line">Aug 14 02:09:33 server kernel: NFS: nfs4_reclaim_open_state: Lock reclaim failed!</span><br></pre></td></tr></table></figure>
+
+<p>下一篇文章计划介绍如何源码安装最新版本nfs<br>建议/diskless/root/目录安装最新版本nfs</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">nfs 版本4.1客户节点挂载会报错<span class="string">&quot; nfs4_reclaim_open_state: Lock reclaim failed!&quot;</span></span><br><span class="line">nfs-utils latest versions: 2.6.2</span><br><span class="line">https://pkgs.org/download/nfs-utils</span><br><span class="line">https://src.fedoraproject.org/repo/pkgs/nfs-utils/</span><br><span class="line">https://sourceforge.net/projects/nfs/files/nfs-utils/2.6.2/</span><br><span class="line">https://vault.centos.org/8.5.2111/BaseOS/Source/SPackages/nfs-utils-2.3.3-46.el8.src.rpm</span><br></pre></td></tr></table></figure>
+
+<h6 id="本实验参照链接文章："><a href="#本实验参照链接文章：" class="headerlink" title="本实验参照链接文章："></a>本实验参照链接文章：</h6><p><a target="_blank" rel="noopener" href="http://hmli.ustc.edu.cn/doc/linux/centos7.6-diskless/">http://hmli.ustc.edu.cn/doc/linux/centos7.6-diskless/</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/08/13/diskless_CentOS7/" data-id="cl6rxzivr000dh2a3f94m6mz9" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2022/08/06/CentOS7_Slurm/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">CentOS7.9 install Slurm</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">August 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/08/13/diskless_CentOS7/">HPC服务器集群配置CentOS 7.9无盘启动</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/06/CentOS7_Slurm/">CentOS7.9 install Slurm</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/06/CentOS7_install_Slurm/">CentOS7.9安装Slurm计算调度集群</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/01/slurm1/">slurm示例</a>
+          </li>
+        
+          <li>
+            <a href="/2022/07/19/PXE_RHEL7.9/">UEFI模式PXE批量安装RHEL7.9</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2022 张东豪 zhangdonghao678@163.com<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
