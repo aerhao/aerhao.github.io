@@ -5,17 +5,17 @@
   
 
   
-  <title>管理节点禁止root用户远程ssh登录 | AI HPC in doing we learn!</title>
+  <title>管理节点CPU和内存使用率超过60%自动kill进程 | AI HPC in doing we learn!</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="编辑文件vi  &#x2F;etc&#x2F;ssh&#x2F;sshd_config把#PermitRootLogin yes改为 1PermitRootLogin no  重启sshd服务 1service sshd restart  之后如果需要远程管理管理节点，需要用普通用户登录，然后su命令切换到root用户拿到最高权限">
+  <meta name="description" content="limit.sh 12345678910111213141516171819#!&#x2F;bin&#x2F;bashsource &#x2F;etc&#x2F;profileps ar -eo user,pid,pcpu,pmem | sort -k3r | head -11 | awk -F&quot; +&quot;  &amp;#x27;BIGEN&amp;#123;	cpuLimit&#x3D;60;	memLimit&#x3D;60;&amp;#125;&amp;#123;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="管理节点禁止root用户远程ssh登录">
-<meta property="og:url" content="http://example.com/2022/06/19/no_root_ssh/index.html">
+<meta property="og:title" content="管理节点CPU和内存使用率超过60%自动kill进程">
+<meta property="og:url" content="http://example.com/2022/11/24/limit/index.html">
 <meta property="og:site_name" content="AI HPC in doing we learn!">
-<meta property="og:description" content="编辑文件vi  &#x2F;etc&#x2F;ssh&#x2F;sshd_config把#PermitRootLogin yes改为 1PermitRootLogin no  重启sshd服务 1service sshd restart  之后如果需要远程管理管理节点，需要用普通用户登录，然后su命令切换到root用户拿到最高权限">
+<meta property="og:description" content="limit.sh 12345678910111213141516171819#!&#x2F;bin&#x2F;bashsource &#x2F;etc&#x2F;profileps ar -eo user,pid,pcpu,pmem | sort -k3r | head -11 | awk -F&quot; +&quot;  &amp;#x27;BIGEN&amp;#123;	cpuLimit&#x3D;60;	memLimit&#x3D;60;&amp;#125;&amp;#123;">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2022-06-19T01:35:57.945Z">
-<meta property="article:modified_time" content="2022-06-19T01:35:57.944Z">
+<meta property="article:published_time" content="2022-11-24T05:52:23.822Z">
+<meta property="article:modified_time" content="2022-11-24T05:52:23.822Z">
 <meta property="article:author" content="张东豪 zhangdonghao678@163.com">
 <meta name="twitter:card" content="summary">
   
@@ -66,10 +66,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-no_root_ssh" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-limit" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2022/06/19/no_root_ssh/" class="article-date">
-  <time datetime="2022-06-19T01:35:57.945Z" itemprop="datePublished">2022-06-19</time>
+    <a href="/2022/11/24/limit/" class="article-date">
+  <time datetime="2022-11-24T05:52:23.822Z" itemprop="datePublished">2022-11-24</time>
 </a>
     
   </div>
@@ -80,7 +80,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      管理节点禁止root用户远程ssh登录
+      管理节点CPU和内存使用率超过60%自动kill进程
     </h1>
   
 
@@ -88,18 +88,14 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>编辑文件vi  /etc/ssh/sshd_config<br>把#PermitRootLogin yes改为</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PermitRootLogin no</span><br></pre></td></tr></table></figure>
+        <p>limit.sh</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">source /etc/profile</span><br><span class="line">ps ar -eo user,pid,pcpu,pmem | sort -k3r | head -11 | awk -F&quot; +&quot;  &#x27;</span><br><span class="line">BIGEN</span><br><span class="line">&#123;</span><br><span class="line">	cpuLimit=60;</span><br><span class="line">	memLimit=60;</span><br><span class="line">&#125;</span><br><span class="line">&#123;</span><br><span class="line">	if(NR!=1 &amp;&amp; $3&gt;=cpuLimit &amp;&amp; $1!=&quot;root&quot;)&#123;</span><br><span class="line">		printf(&quot;CPU using of PID %d is exceed 60%,it will be kill! \n&quot;,$2);</span><br><span class="line">		system(&quot;kill -9  &quot;$2);	</span><br><span class="line">	&#125;</span><br><span class="line">	else if(NR!=1 &amp;&amp; $4&gt;=memLimit &amp;&amp; $1!=&quot;root&quot;)&#123;</span><br><span class="line">		printf(&quot;MEM using of PID %d is exceed 60%,it will be kill! \n&quot;,$2);</span><br><span class="line">		system(&quot;kill -9 &quot;$2);	</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#x27;</span><br></pre></td></tr></table></figure>
 
-<p>重启sshd服务</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service sshd restart</span><br></pre></td></tr></table></figure>
-
-<p>之后如果需要远程管理管理节点，需要用普通用户登录，然后su命令切换到root用户拿到最高权限</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/19/no_root_ssh/" data-id="clauor1o2000ivea36gucbfsu" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/24/limit/" data-id="clauor1o1000hvea38p4y524c" class="article-share-link">Share</a>
       
       
     </footer>
@@ -108,19 +104,19 @@
     
 <nav id="article-nav">
   
-    <a href="/2022/06/21/HCA_TO_IB_MODE/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2022/11/24/diskless_CentOS7/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          Linux操作系统HCA卡切换为 IB 模式：
+          HPC服务器集群配置CentOS 7.9无盘启动
         
       </div>
     </a>
   
   
-    <a href="/2022/06/19/CPU_Linpack_Test/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2022/08/06/CentOS7_install_Slurm/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">CPU Linpack性能测试</div>
+      <div class="article-nav-title">CentOS7.9安装Slurm计算调度集群</div>
     </a>
   
 </nav>

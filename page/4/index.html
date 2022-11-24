@@ -5,17 +5,13 @@
   
 
   
-  <title>编译网卡rpm驱动集成到linux系统镜像 | AI HPC in doing we learn!</title>
+  <title>AI HPC in doing we learn!</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="将提前编译好的网卡rpm驱动集成到linux系统镜像中，让ISO内能集成此驱动文件，这样无论pxe还是其它的安装方式均可安装完成直接加载目标驱动。方法步骤如下：1、准备工作：a)工作目录结构： 12345&#x2F;root&#x2F;centos&#x2F;ice：存放网卡驱动&#x2F;root&#x2F;centos&#x2F;iso：存放镜像&#x2F;root&#x2F;centos&#x2F;initrd：存放initrd.img文件&#x2F;root&#x2F;centos&#x2F;liveos：">
-<meta property="og:type" content="article">
-<meta property="og:title" content="编译网卡rpm驱动集成到linux系统镜像">
-<meta property="og:url" content="http://example.com/2022/06/17/genisoimage/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="AI HPC in doing we learn!">
+<meta property="og:url" content="http://example.com/page/4/index.html">
 <meta property="og:site_name" content="AI HPC in doing we learn!">
-<meta property="og:description" content="将提前编译好的网卡rpm驱动集成到linux系统镜像中，让ISO内能集成此驱动文件，这样无论pxe还是其它的安装方式均可安装完成直接加载目标驱动。方法步骤如下：1、准备工作：a)工作目录结构： 12345&#x2F;root&#x2F;centos&#x2F;ice：存放网卡驱动&#x2F;root&#x2F;centos&#x2F;iso：存放镜像&#x2F;root&#x2F;centos&#x2F;initrd：存放initrd.img文件&#x2F;root&#x2F;centos&#x2F;liveos：">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2022-06-17T15:09:00.308Z">
-<meta property="article:modified_time" content="2022-06-17T15:09:00.308Z">
 <meta property="article:author" content="张东豪 zhangdonghao678@163.com">
 <meta name="twitter:card" content="summary">
   
@@ -66,7 +62,155 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-genisoimage" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main">
+  
+    <article id="post-IB_FW_upgrade" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/06/17/IB_FW_upgrade/" class="article-date">
+  <time datetime="2022-06-17T15:09:28.590Z" itemprop="datePublished">2022-06-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/06/17/IB_FW_upgrade/">升级IB交换机固件</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>交换机固件下载地址：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://www.mellanox.com/support/firmware/firmware-downloads</span><br></pre></td></tr></table></figure>
+
+<p>IB交换机驱动下载地址：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://www.mellanox.com/products/infiniband-drivers/linux/mlnx_ofed</span><br></pre></td></tr></table></figure>
+
+<p>#安装IB驱动MLNX_OFED_LINUX-5.3-1.0.0.1-rhel7.5-x86_64</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tar zxvf MLNX_OFED_LINUX-5.3-1.0.0.1-rhel7.5-x86_64.tgz </span><br><span class="line"><span class="built_in">cd</span> MLNX_OFED_LINUX-5.3-1.0.0.1-rhel7.5-x86_64/</span><br><span class="line">./mlnxofedinstall --all --force</span><br></pre></td></tr></table></figure>
+
+<p>#重启服务器</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reboot </span><br></pre></td></tr></table></figure>
+
+<p>#查看IP地址</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip a</span><br></pre></td></tr></table></figure>
+
+<p>#配置IB网卡的IP地址</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/sysconfig/network-scripts/</span><br></pre></td></tr></table></figure>
+
+<p>#编辑IB网口网卡配置文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">vi ifcfg-ib0</span><br><span class="line"><span class="built_in">cat</span> ifcfg-ib0</span><br><span class="line">NAME=ib0</span><br><span class="line">DEVICE=ib0</span><br><span class="line">BOOTPROTO=static</span><br><span class="line">ONBOOT=<span class="built_in">yes</span></span><br><span class="line">TYPE=InfiniBand</span><br><span class="line">IPADDR=11.11.11.200</span><br><span class="line">NETMASK=255.255.0.0 </span><br></pre></td></tr></table></figure>
+
+<p>#重启网络管理服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl  restart  network</span><br></pre></td></tr></table></figure>
+
+<p>#查看IB网卡状态</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ibstat</span><br></pre></td></tr></table></figure>
+
+<p>#管理节点启动opensmd子网管理器服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start opensmd</span><br></pre></td></tr></table></figure>
+
+<p>#查看连接到的IB交换机设备标识</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mst status</span><br><span class="line">/dev/mst/SW_MT54000_Quantum_Mellanox_Technologies_lid-0x0006</span><br><span class="line">/dev/mst/SW_MT54000_Quantum_Mellanox_Technologies_lid-0x0007</span><br><span class="line">/dev/mst/SW_MT54000_Quantum_Mellanox_Technologies_lid-0x0008</span><br><span class="line">/dev/mst/SW_MT54000_Quantum_Mellanox_Technologies_lid-0x0009</span><br><span class="line">/dev/mst/SW_MT54000_Quantum_Mellanox_Technologies_lid-0x000A</span><br><span class="line">/dev/mst/SW_MT54000_Quantum_Mellanox_Technologies_lid-0x000B</span><br></pre></td></tr></table></figure>
+
+<p>#升级IB交换机固件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mst status</span><br><span class="line">mst startus opensmd</span><br><span class="line">mst start</span><br><span class="line">mst ib add</span><br><span class="line">mst status</span><br></pre></td></tr></table></figure>
+
+<p>#查看IB交换机配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mlxconfig -d /dev/mst/SW_MT54000_Quantum_Mellanox_Technologies_lid-0x0002 query</span><br><span class="line">flint -d /dev/mst/SW_MT54000_Quantum_Mellanox_Technologies_lid-0x0002 query</span><br></pre></td></tr></table></figure>
+
+<p>#解压缩IB固件包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip fw-Quantum-rel-27_2008_2500-MQM8790-HS2X_Ax.bin.zip </span><br></pre></td></tr></table></figure>
+
+<p>#升级IB交换机固件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flint -d /dev/mst/SW_MT54000_Quantum_Mellanox_Technologies_lid-0x0002 -i fw-Quantum-rel-27_2008_2500-MQM8790-HS2X_Ax.bin burn</span><br></pre></td></tr></table></figure>
+
+<p>#重启IB交换机</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flint -d /dev/mst/SW_MT54000_Quantum_Mellanox_Technologies_lid-0x0002 swreset</span><br></pre></td></tr></table></figure>
+
+<p>#查询IB交换机固件版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">flint -d /dev/mst/SW_MT54000_Quantum_Mellanox_Technologies_lid-0x0002 query</span><br><span class="line">mlxconfig -d /dev/mst/SW_MT54000_Quantum_Mellanox_Technologies_lid-0x0002 query</span><br></pre></td></tr></table></figure>
+
+<p>#开启一分二线缆功能</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mlxconfig -d /dev/mst/SW_MT54000_Quantum_Mellanox_Technologies_lid-0x0002 <span class="built_in">set</span> SPLIT_MODE=1</span><br></pre></td></tr></table></figure>
+
+<p>#重启IB交换机查看配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">flint -d /dev/mst/SW_MT54000_Quantum_Mellanox_Technologies_lid-0x0002 swreset</span><br><span class="line">mlxconfig -d /dev/mst/SW_MT54000_Quantum_Mellanox_Technologies_lid-0x0002 query</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/06/17/IB_FW_upgrade/" data-id="clauor1np0006vea3457z6cy5" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-nfs_server" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/06/17/nfs_server/" class="article-date">
+  <time datetime="2022-06-17T15:09:09.271Z" itemprop="datePublished">2022-06-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/06/17/nfs_server/">配置NFS服务</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>##共享管理节点/data目录给计算节点</p>
+<p>server端操作：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yum -y install nfs-utils rpcbind</span><br><span class="line">systemctl start   rpcbind</span><br><span class="line">systemctl <span class="built_in">enable</span>  rpcbind</span><br><span class="line">systemctl start   nfs-server</span><br><span class="line">systemctl <span class="built_in">enable</span>  nfs-server</span><br></pre></td></tr></table></figure>
+
+<p>#建立文件/etc/exports（若已存在该文件，则先删除再重新建立）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/exports</span><br><span class="line"><span class="built_in">cat</span> /etc/exports</span><br><span class="line">/data *(rw,no_root_squash,<span class="built_in">sync</span>)   </span><br><span class="line"><span class="comment">#或者/data *(rw,insecure,no_root_squash,async)</span></span><br></pre></td></tr></table></figure>
+
+<p>#共享文件系统服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">exportfs -rv </span><br><span class="line"><span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+
+<p>client端操作<br>扫描可以使用的 server 目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">showmount -e mu01</span><br></pre></td></tr></table></figure>
+
+<p>#客户端mount挂载管理节点/data文件夹到本地/data文件夹</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mount -t nfs -o vers=3 mgmt:/data  /data</span><br></pre></td></tr></table></figure>
+
+<p>上述命令追加写入到/etc/rc.d/rc.local/中以使节点启动后自动挂载目录。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/06/17/nfs_server/" data-id="clauor1o1000gvea30afggut5" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-genisoimage" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/06/17/genisoimage/" class="article-date">
   <time datetime="2022-06-17T15:09:00.308Z" itemprop="datePublished">2022-06-17</time>
@@ -79,8 +223,8 @@
       <header class="article-header">
         
   
-    <h1 class="article-title" itemprop="name">
-      编译网卡rpm驱动集成到linux系统镜像
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/06/17/genisoimage/">编译网卡rpm驱动集成到linux系统镜像</a>
     </h1>
   
 
@@ -134,28 +278,94 @@
     </footer>
   </div>
   
-    
-<nav id="article-nav">
-  
-    <a href="/2022/06/17/nfs_server/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          配置NFS服务
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2022/06/17/History_command_log/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">记录每个用户的历史命令</div>
-    </a>
-  
-</nav>
+</article>
+
 
   
+    <article id="post-History_command_log" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/06/17/History_command_log/" class="article-date">
+  <time datetime="2022-06-16T16:05:31.178Z" itemprop="datePublished">2022-06-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/06/17/History_command_log/">记录每个用户的历史命令</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>实现记录每个用户的历史命令，保存日志到/tmp/rizhi/用户名目录下以备审计。<br>编辑/etc/profile,文件末尾追加如下内容:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">HISTFILESIZE=2000</span><br><span class="line">HISTTIMEFORMAT=<span class="string">&quot;%Y%m%d-%H%M `whoami` &quot;</span></span><br><span class="line"></span><br><span class="line">PS1=<span class="string">&quot;`whoami`@`hostname`:&quot;</span><span class="string">&#x27;[$PWD]&#x27;</span></span><br><span class="line"><span class="built_in">history</span></span><br><span class="line">USER_IP=`<span class="built_in">who</span> -u am i 2&gt;/dev/null| awk <span class="string">&#x27;&#123;print $NF&#125;&#x27;</span>|sed -e <span class="string">&#x27;s/[()]//g&#x27;</span>`</span><br><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$USER_IP</span>&quot;</span> = <span class="string">&quot;&quot;</span> ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">USER_IP=`hostname`</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="keyword">if</span> [ ! -d /tmp/rizhi ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line"><span class="built_in">mkdir</span> /tmp/rizhi</span><br><span class="line"><span class="built_in">chmod</span> 777 /tmp/rizhi</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="keyword">if</span> [ ! -d /tmp/rizhi/<span class="variable">$&#123;LOGNAME&#125;</span> ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line"><span class="built_in">mkdir</span> /tmp/rizhi/<span class="variable">$&#123;LOGNAME&#125;</span></span><br><span class="line"><span class="built_in">chmod</span> 300 /tmp/rizhi/<span class="variable">$&#123;LOGNAME&#125;</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="built_in">export</span> HISTSIZE=4096</span><br><span class="line">DT=`<span class="built_in">date</span> <span class="string">&quot;+%Y-%m-%d_%H:%M:%S&quot;</span>`</span><br><span class="line"><span class="built_in">export</span> HISTFILE=<span class="string">&quot;/tmp/rizhi/<span class="variable">$&#123;LOGNAME&#125;</span>/<span class="variable">$&#123;USER_IP&#125;</span> rizhi.<span class="variable">$DT</span>&quot;</span></span><br><span class="line"><span class="built_in">chmod</span> 600 /tmp/rizhi/<span class="variable">$&#123;LOGNAME&#125;</span>/*rizhi* 2&gt;/dev/null</span><br><span class="line"></span><br><span class="line">NODE_HOME=/usr/local/node14</span><br><span class="line">PATH=<span class="variable">$PATH</span>:<span class="variable">$NODE_HOME</span>/bin</span><br><span class="line">NODE_PATH=<span class="variable">$NODE_HOME</span>/lib/node_mudules</span><br><span class="line"><span class="built_in">export</span> PATH NODE_HOME NODE_PATH</span><br></pre></td></tr></table></figure>
+<p>source /etc/profile</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/06/17/History_command_log/" data-id="clauor1no0004vea3el6hbm8k" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
 </article>
+
+
+  
+    <article id="post-nopasswdroot" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/06/16/nopasswdroot/" class="article-date">
+  <time datetime="2022-06-16T15:56:59.226Z" itemprop="datePublished">2022-06-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/06/16/nopasswdroot/">集群环境root账号配置免密登录</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>文件名nopasswdroot.sh，需要配合hostfile文件使用<br>hostfile文件里面每行是集群一个节点主机名</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">read</span> -p <span class="string">&quot;please input rootpassword: &quot;</span> passwd</span><br><span class="line">ssh-keygen -t dsa -N <span class="string">&quot;&quot;</span> -f <span class="string">&quot;<span class="variable">$HOME</span>/.ssh/id_dsa&quot;</span></span><br><span class="line"><span class="built_in">cp</span> -r <span class="variable">$HOME</span>/.ssh/id_dsa.pub <span class="variable">$HOME</span>/.ssh/authorized_keys</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;StrictHostKeyChecking no&quot;</span> &gt;&gt; <span class="variable">$HOME</span>/.ssh/config</span><br><span class="line"><span class="built_in">chmod</span> 600 <span class="variable">$HOME</span>/.ssh/config</span><br><span class="line"><span class="built_in">chmod</span> 600 <span class="variable">$HOME</span>/.ssh/authorized_keys</span><br><span class="line"><span class="comment">#mkdir $HOME/.vnc/</span></span><br><span class="line"><span class="comment">#echo &quot;111111&quot; &gt;&gt; $HOME/.vnc/passwd</span></span><br><span class="line"><span class="comment">#chmod 600 $HOME/.vnc/passwd</span></span><br><span class="line"><span class="comment">#vncserver :9 -f $HOME/.vnc/passwd</span></span><br><span class="line"><span class="comment">#vncserver -kill :9</span></span><br><span class="line"><span class="keyword">for</span> node <span class="keyword">in</span> $(<span class="built_in">cat</span> hostfile)</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">/usr/bin/expect &lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">set force_conservative 0  ;# set to 1 to force conservative mode even if</span></span><br><span class="line"><span class="string">			  ;# script wasn&#x27;t run conservatively originally</span></span><br><span class="line"><span class="string">if &#123;\$force_conservative&#125; &#123;</span></span><br><span class="line"><span class="string">	set send_slow &#123;1 .1&#125;</span></span><br><span class="line"><span class="string">	proc send &#123;ignore arg&#125; &#123;</span></span><br><span class="line"><span class="string">		sleep .1</span></span><br><span class="line"><span class="string">		exp_send -s -- \$arg</span></span><br><span class="line"><span class="string">	&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">set timeout -1</span></span><br><span class="line"><span class="string">spawn scp -rp /root/.ssh $&#123;node&#125;:/root</span></span><br><span class="line"><span class="string">match_max 100000</span></span><br><span class="line"><span class="string">expect -exact &quot;root@$&#123;node&#125;&#x27;s password: &quot;</span></span><br><span class="line"><span class="string">send -- &quot;$passwd\r&quot;</span></span><br><span class="line"><span class="string">expect eof</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/06/16/nopasswdroot/" data-id="clauor1o2000jvea367m4beym" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/3/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/">Next &amp;raquo;</a>
+  </nav>
 
 </section>
         

@@ -10,12 +10,12 @@
   <meta name="description" content="无盘(diskless)集群，指的是计算节点没有本地硬盘或本地硬盘没有安装操作系统。优点是管理维护方便，可节省计算节点硬盘；缺点是对服务节点的存储IO性能及之间的网络稳定性和性能要求高。计算节点配置240G SSD硬盘，无盘OS启动源安装目录在存储设备DDN高速IO文件系统上，通过稳定高带宽的IB网络PXE启动。服务节点：节点名：server内网IP：192.168.111.138无盘客户节点：节">
 <meta property="og:type" content="article">
 <meta property="og:title" content="HPC服务器集群配置CentOS 7.9无盘启动">
-<meta property="og:url" content="http://example.com/2022/08/13/diskless_CentOS7/index.html">
+<meta property="og:url" content="http://example.com/2022/11/24/diskless_CentOS7/index.html">
 <meta property="og:site_name" content="AI HPC in doing we learn!">
 <meta property="og:description" content="无盘(diskless)集群，指的是计算节点没有本地硬盘或本地硬盘没有安装操作系统。优点是管理维护方便，可节省计算节点硬盘；缺点是对服务节点的存储IO性能及之间的网络稳定性和性能要求高。计算节点配置240G SSD硬盘，无盘OS启动源安装目录在存储设备DDN高速IO文件系统上，通过稳定高带宽的IB网络PXE启动。服务节点：节点名：server内网IP：192.168.111.138无盘客户节点：节">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2022-08-13T13:34:59.772Z">
-<meta property="article:modified_time" content="2022-08-13T13:34:59.772Z">
+<meta property="article:published_time" content="2022-11-24T06:06:13.875Z">
+<meta property="article:modified_time" content="2022-11-24T06:06:13.874Z">
 <meta property="article:author" content="张东豪 zhangdonghao678@163.com">
 <meta name="twitter:card" content="summary">
   
@@ -68,8 +68,8 @@
       <div class="outer">
         <section id="main"><article id="post-diskless_CentOS7" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2022/08/13/diskless_CentOS7/" class="article-date">
-  <time datetime="2022-08-13T13:34:59.772Z" itemprop="datePublished">2022-08-13</time>
+    <a href="/2022/11/24/diskless_CentOS7/" class="article-date">
+  <time datetime="2022-11-24T06:06:13.875Z" itemprop="datePublished">2022-11-24</time>
 </a>
     
   </div>
@@ -89,6 +89,8 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>无盘(diskless)集群，指的是计算节点没有本地硬盘或本地硬盘没有安装操作系统。<br>优点是管理维护方便，可节省计算节点硬盘；缺点是对服务节点的存储IO性能及之间的网络稳定性和性能要求高。<br>计算节点配置240G SSD硬盘，无盘OS启动源安装目录在存储设备DDN高速IO文件系统上，通过稳定高带宽的IB网络PXE启动。<br>服务节点：<br>节点名：server<br>内网IP：192.168.111.138<br>无盘客户节点：<br>节点名：client1、client2<br>内网IP：192.168.111.1、192.168.111.2</p>
+<span id="more"></span>
+
 <h6 id="升级系统："><a href="#升级系统：" class="headerlink" title="升级系统："></a>升级系统：</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y update</span><br></pre></td></tr></table></figure>
 
 <h6 id="安装所需要的软件："><a href="#安装所需要的软件：" class="headerlink" title="安装所需要的软件："></a>安装所需要的软件：</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install nfs-utils tftp-server xinetd dhcp syslinux dracut-network</span><br></pre></td></tr></table></figure>
@@ -193,7 +195,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/08/13/diskless_CentOS7/" data-id="cla6w9hor000di0a37jrxdjoq" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/24/diskless_CentOS7/" data-id="clauor1ny000dvea3gusd62r9" class="article-share-link">Share</a>
       
       
     </footer>
@@ -202,10 +204,19 @@
     
 <nav id="article-nav">
   
+    <a href="/2022/11/24/CentOS7_Slurm/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          CentOS7.9 install Slurm
+        
+      </div>
+    </a>
   
-    <a href="/2022/08/06/CentOS7_Slurm/" id="article-nav-older" class="article-nav-link-wrap">
+  
+    <a href="/2022/11/24/limit/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">CentOS7.9 install Slurm</div>
+      <div class="article-nav-title">管理节点CPU和内存使用率超过60%自动kill进程</div>
     </a>
   
 </nav>
@@ -229,7 +240,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">August 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">August 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li></ul>
     </div>
   </div>
 
@@ -242,11 +253,15 @@
       <ul>
         
           <li>
-            <a href="/2022/08/13/diskless_CentOS7/">HPC服务器集群配置CentOS 7.9无盘启动</a>
+            <a href="/2022/11/24/CentOS7_Slurm/">CentOS7.9 install Slurm</a>
           </li>
         
           <li>
-            <a href="/2022/08/06/CentOS7_Slurm/">CentOS7.9 install Slurm</a>
+            <a href="/2022/11/24/diskless_CentOS7/">HPC服务器集群配置CentOS 7.9无盘启动</a>
+          </li>
+        
+          <li>
+            <a href="/2022/11/24/limit/">管理节点CPU和内存使用率超过60%自动kill进程</a>
           </li>
         
           <li>
@@ -255,10 +270,6 @@
         
           <li>
             <a href="/2022/08/01/slurm1/">slurm示例</a>
-          </li>
-        
-          <li>
-            <a href="/2022/07/19/PXE_RHEL7.9/">UEFI模式PXE批量安装RHEL7.9</a>
           </li>
         
       </ul>
