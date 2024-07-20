@@ -64,6 +64,91 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-redhat7.9_docker" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2024/07/20/redhat7.9_docker/" class="article-date">
+  <time datetime="2024-07-20T07:00:00.000Z" itemprop="datePublished">2024-07-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/07/20/redhat7.9_docker/">redhat7.9理线安装docker</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h6 id="安装docker离线包"><a href="#安装docker离线包" class="headerlink" title="安装docker离线包"></a>安装docker离线包</h6><p>1、将docker安装包解压，将安装包内的全部二进制文件，copy至/usr/bin/目录；<br>2、将docker.service文件copy至/usr/lib/systemd/system/ 目录；<br>3、启动docker：systemctl start docker；<br>设置开机自启动：systemctl enable docker；<br>4、查看docker版本：docker version</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">docker version</span><br></pre></td></tr></table></figure>
+
+<h6 id="安装docker-compose"><a href="#安装docker-compose" class="headerlink" title="安装docker-compose"></a>安装docker-compose</h6><p>1、将docker-compose-linux-x86_64文件重命名为 docker-compose；<br>2、添加执行权限 chmod +x docker-compose；<br>3、将docker-compose文件 mv 至 /usr/local/bin/ 目录；<br>4、执行 docker-compose version 查看版本；</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose version</span><br></pre></td></tr></table></figure>
+
+<h6 id="安装nvidia-container-runtime："><a href="#安装nvidia-container-runtime：" class="headerlink" title="安装nvidia-container-runtime："></a>安装nvidia-container-runtime：</h6><p>1、解压 nvidia-docker2-rpm.tar.gz；<br>2、rpm -ivh或者yum install安装；<br>3、systemctl restart docker 重启docker服务；</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart docker</span><br></pre></td></tr></table></figure>
+
+<h6 id="下载docker镜像测试运行"><a href="#下载docker镜像测试运行" class="headerlink" title="下载docker镜像测试运行"></a>下载docker镜像测试运行</h6><p>编辑daemon.json 文件，添加镜像加速器的地址。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span>  ~/.docker/daemon.json</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;registry-mirrors&quot;</span>: [</span><br><span class="line">    <span class="string">&quot;https://docker.mirrors.ustc.edu.cn&quot;</span></span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h6 id="下载docker镜像测试运行-1"><a href="#下载docker镜像测试运行-1" class="headerlink" title="下载docker镜像测试运行"></a>下载docker镜像测试运行</h6><p>NGC镜像下载地址</p>
+<pre><code class="bash">https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch
+docker pull nvcr.io/nvidia/pytorch:24.06-py3
+
+docker run --gpus all --ipc=host --ulimit memlock=-1 --ulimit stack=67108864   nvcr.io/nvidia/pytorch:24.06-py3
+
+交互方式进入docker镜像
+docker run -it --gpus all --ipc=host --ulimit memlock=-1 --ulimit stack=67108864   nvcr.io/nvidia/pytorch:24.06-py3
+实测可用命令进入docker容器
+docker run -it --gpus all --ipc=host --ulimit memlock=-1 --ulimit stack=67108864   pytorch-20240719.tar:latest
+```bash
+
+
+###### 如何让系统普通用户也能使用docker命令
+将用户添加到了docker组
+sudo groupadd docker
+sudo usermod -aG docker system3
+id ieisystem3
+重启Docker服务以确保用户组的更改（普通用户属于docker组）被应用
+使用sudo systemctl restart docker来重启Docker守护进程。
+
+
+
+###### redhat7.9离线安装docker软件包
+链接：https://pan.baidu.com/s/1WK78h2tq5S6iECcu4lRhCg 
+提取码：o83k 
+
+
+###### 如果可以联网，redhat7.9建议的repo仓库文件：
+
+
+###### 下载英伟达NGC  pytorch镜像，保存为tar了。19G。有需要可用离线导入
+链接：https://pan.baidu.com/s/1rQ6PhLlnKfu9tNlCC_Dl6w
+提取码：215c 
+
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/07/20/redhat7.9_docker/" data-id="clytqxih60000kya37r967zlf" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-CentOS7_Slurm" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/11/24/CentOS7_Slurm/" class="article-date">
@@ -95,7 +180,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/24/CentOS7_Slurm/" data-id="clwbzsjfd0001sqa38lpl45rf" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/24/CentOS7_Slurm/" data-id="clytlpjq40001eoa34uf61cfc" class="article-share-link">Share</a>
       
       
     </footer>
@@ -136,7 +221,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/24/diskless_CentOS7/" data-id="clwbzsjfv000dsqa3g2wk0i8k" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/24/diskless_CentOS7/" data-id="clytlpjqd000aeoa36miig6fp" class="article-share-link">Share</a>
       
       
     </footer>
@@ -175,7 +260,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/24/limit/" data-id="clwbzsjfx000gsqa36y4i1yuk" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/24/limit/" data-id="clytlpjqg000deoa34do92ojz" class="article-share-link">Share</a>
       
       
     </footer>
@@ -216,55 +301,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/08/06/CentOS7_install_Slurm/" data-id="clwbzsjfe0002sqa33o0n6wbq" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-slurm1" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/08/01/slurm1/" class="article-date">
-  <time datetime="2022-08-01T11:25:12.059Z" itemprop="datePublished">2022-08-01</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/08/01/slurm1/">slurm示例</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> test.slurm </span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash -l</span></span><br><span class="line"><span class="comment">#SBATCH --job-name=test</span></span><br><span class="line"><span class="comment">#SBATCH --partition=cpuPartition</span></span><br><span class="line"><span class="comment">#SBATCH --output=%j.out</span></span><br><span class="line"><span class="comment">#SBATCH --error=%j.err</span></span><br><span class="line"><span class="comment">#SBATCH --nodes=1</span></span><br><span class="line"><span class="comment">#SBATCH --ntasks-per-node=2</span></span><br><span class="line"></span><br><span class="line">srun hostname &gt; ./hostfile.txt</span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> FI_PROVIDER=sockets</span><br><span class="line"><span class="built_in">source</span> /beegfs/intel2020/compilers_and_libraries/linux/bin/compilervars.sh intel64</span><br><span class="line"><span class="built_in">source</span> /beegfs/intel2020/mkl/bin/mklvars.sh intel64</span><br><span class="line"><span class="built_in">source</span> /beegfs/intel2020/impi/2019.7.217/intel64/bin/mpivars.sh</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$SLURM_NNODES</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$SLURM_NPROCS</span></span><br><span class="line"></span><br><span class="line">PROC=/beegfs/home/zhangdonghao/hello1</span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$PROC</span></span><br><span class="line"></span><br><span class="line">mpirun -genv I_MPI_FABRICS shm:ofi  -machinefile hostfile.txt -np <span class="variable">$SLURM_NPROCS</span>  <span class="variable">$PROC</span></span><br><span class="line">mpirun hostname</span><br><span class="line"></span><br><span class="line"><span class="built_in">sleep</span> 1</span><br><span class="line"></span><br><span class="line"><span class="built_in">rm</span> -rf hostfile.txt</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sbatch test.slurm   <span class="comment">#提交任务 </span></span><br><span class="line">Submitted batch job 5960    <span class="comment">#获知任务job id是5960</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sinfo    <span class="comment">#查看分区 </span></span><br><span class="line">PARTITION     AVAIL  TIMELIMIT  NODES  STATE NODELIST</span><br><span class="line">cpuPartition*    up   infinite      1    mix cpu01</span><br><span class="line">cpuPartition*    up   infinite      3  alloc cpu[06-08]</span><br><span class="line">cpuPartition*    up   infinite     12   idle cpu[02-05,09-16]</span><br><span class="line">gpuPartition     up   infinite      1    mix gpu01</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">squeue   <span class="comment">#查看任务</span></span><br><span class="line">JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)</span><br><span class="line">5960 cpuPartit     <span class="built_in">test</span> zhangdon  R       0:05      1 cpu01</span><br><span class="line">squeue </span><br><span class="line">JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> 5960.err   <span class="comment">#查看错误输出</span></span><br><span class="line"><span class="built_in">cat</span> 5960.out   <span class="comment">#查看正确输出</span></span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">/beegfs/home/zhangdonghao/hello1</span><br><span class="line">Hello World from processor cpu01, rank 1 out of 2 processor</span><br><span class="line">Hello World from processor cpu01, rank 0 out of 2 processor</span><br><span class="line">cpu01</span><br><span class="line">cpu01</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/08/01/slurm1/" data-id="clwbzsjg2000nsqa38tfx3bca" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/08/06/CentOS7_install_Slurm/" data-id="clytlpjq50002eoa38ej21lfr" class="article-share-link">Share</a>
       
       
     </footer>
@@ -297,7 +334,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">August 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">August 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li></ul>
     </div>
   </div>
 
@@ -308,6 +345,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2024/07/20/redhat7.9_docker/">redhat7.9理线安装docker</a>
+          </li>
         
           <li>
             <a href="/2022/11/24/CentOS7_Slurm/">CentOS7.9 install Slurm</a>
@@ -323,10 +364,6 @@
         
           <li>
             <a href="/2022/08/06/CentOS7_install_Slurm/">CentOS7.9安装Slurm计算调度集群</a>
-          </li>
-        
-          <li>
-            <a href="/2022/08/01/slurm1/">slurm示例</a>
           </li>
         
       </ul>

@@ -64,6 +64,45 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-nopasswdroot" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/06/16/nopasswdroot/" class="article-date">
+  <time datetime="2022-06-16T15:56:59.226Z" itemprop="datePublished">2022-06-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/06/16/nopasswdroot/">集群环境root账号配置免密登录</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>文件名nopasswdroot.sh，需要配合hostfile文件使用<br>hostfile文件里面每行是集群一个节点主机名</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">read</span> -p <span class="string">&quot;please input rootpassword: &quot;</span> passwd</span><br><span class="line">ssh-keygen -t dsa -N <span class="string">&quot;&quot;</span> -f <span class="string">&quot;<span class="variable">$HOME</span>/.ssh/id_dsa&quot;</span></span><br><span class="line"><span class="built_in">cp</span> -r <span class="variable">$HOME</span>/.ssh/id_dsa.pub <span class="variable">$HOME</span>/.ssh/authorized_keys</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;StrictHostKeyChecking no&quot;</span> &gt;&gt; <span class="variable">$HOME</span>/.ssh/config</span><br><span class="line"><span class="built_in">chmod</span> 600 <span class="variable">$HOME</span>/.ssh/config</span><br><span class="line"><span class="built_in">chmod</span> 600 <span class="variable">$HOME</span>/.ssh/authorized_keys</span><br><span class="line"><span class="comment">#mkdir $HOME/.vnc/</span></span><br><span class="line"><span class="comment">#echo &quot;111111&quot; &gt;&gt; $HOME/.vnc/passwd</span></span><br><span class="line"><span class="comment">#chmod 600 $HOME/.vnc/passwd</span></span><br><span class="line"><span class="comment">#vncserver :9 -f $HOME/.vnc/passwd</span></span><br><span class="line"><span class="comment">#vncserver -kill :9</span></span><br><span class="line"><span class="keyword">for</span> node <span class="keyword">in</span> $(<span class="built_in">cat</span> hostfile)</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">/usr/bin/expect &lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">set force_conservative 0  ;# set to 1 to force conservative mode even if</span></span><br><span class="line"><span class="string">			  ;# script wasn&#x27;t run conservatively originally</span></span><br><span class="line"><span class="string">if &#123;\$force_conservative&#125; &#123;</span></span><br><span class="line"><span class="string">	set send_slow &#123;1 .1&#125;</span></span><br><span class="line"><span class="string">	proc send &#123;ignore arg&#125; &#123;</span></span><br><span class="line"><span class="string">		sleep .1</span></span><br><span class="line"><span class="string">		exp_send -s -- \$arg</span></span><br><span class="line"><span class="string">	&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">set timeout -1</span></span><br><span class="line"><span class="string">spawn scp -rp /root/.ssh $&#123;node&#125;:/root</span></span><br><span class="line"><span class="string">match_max 100000</span></span><br><span class="line"><span class="string">expect -exact &quot;root@$&#123;node&#125;&#x27;s password: &quot;</span></span><br><span class="line"><span class="string">send -- &quot;$passwd\r&quot;</span></span><br><span class="line"><span class="string">expect eof</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/06/16/nopasswdroot/" data-id="clytlpjqk000geoa3d8ff4x5u" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-nopassword" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/06/16/nopassword/" class="article-date">
@@ -96,7 +135,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/nopassword/" data-id="clwbzsjg0000ksqa3fkt7796w" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/16/nopassword/" data-id="clytlpjql000heoa3ajj17vum" class="article-share-link">Share</a>
       
       
     </footer>
@@ -146,7 +185,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/hexo_d/" data-id="clwbzsjfw000fsqa3f1ab6pq7" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/16/hexo_d/" data-id="clytlpjqg000ceoa3e749evfn" class="article-share-link">Share</a>
       
       
     </footer>
@@ -208,7 +247,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/blog1/" data-id="clwbzsjfu000csqa3fqbgfr9z" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/16/blog1/" data-id="clytlpjqc0009eoa3gjz154py" class="article-share-link">Share</a>
       
       
     </footer>
@@ -252,7 +291,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/IB_IP/" data-id="clwbzsjfj0007sqa3b7yo4jdo" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/16/IB_IP/" data-id="clytlpjqp000neoa3eutsbxd1" class="article-share-link">Share</a>
       
       
     </footer>
@@ -285,7 +324,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">August 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">August 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li></ul>
     </div>
   </div>
 
@@ -296,6 +335,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2024/07/20/redhat7.9_docker/">redhat7.9理线安装docker</a>
+          </li>
         
           <li>
             <a href="/2022/11/24/CentOS7_Slurm/">CentOS7.9 install Slurm</a>
@@ -311,10 +354,6 @@
         
           <li>
             <a href="/2022/08/06/CentOS7_install_Slurm/">CentOS7.9安装Slurm计算调度集群</a>
-          </li>
-        
-          <li>
-            <a href="/2022/08/01/slurm1/">slurm示例</a>
           </li>
         
       </ul>

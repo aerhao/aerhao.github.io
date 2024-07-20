@@ -64,6 +64,54 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-slurm1" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/08/01/slurm1/" class="article-date">
+  <time datetime="2022-08-01T11:25:12.059Z" itemprop="datePublished">2022-08-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/08/01/slurm1/">slurm示例</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> test.slurm </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash -l</span></span><br><span class="line"><span class="comment">#SBATCH --job-name=test</span></span><br><span class="line"><span class="comment">#SBATCH --partition=cpuPartition</span></span><br><span class="line"><span class="comment">#SBATCH --output=%j.out</span></span><br><span class="line"><span class="comment">#SBATCH --error=%j.err</span></span><br><span class="line"><span class="comment">#SBATCH --nodes=1</span></span><br><span class="line"><span class="comment">#SBATCH --ntasks-per-node=2</span></span><br><span class="line"></span><br><span class="line">srun hostname &gt; ./hostfile.txt</span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> FI_PROVIDER=sockets</span><br><span class="line"><span class="built_in">source</span> /beegfs/intel2020/compilers_and_libraries/linux/bin/compilervars.sh intel64</span><br><span class="line"><span class="built_in">source</span> /beegfs/intel2020/mkl/bin/mklvars.sh intel64</span><br><span class="line"><span class="built_in">source</span> /beegfs/intel2020/impi/2019.7.217/intel64/bin/mpivars.sh</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$SLURM_NNODES</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$SLURM_NPROCS</span></span><br><span class="line"></span><br><span class="line">PROC=/beegfs/home/zhangdonghao/hello1</span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$PROC</span></span><br><span class="line"></span><br><span class="line">mpirun -genv I_MPI_FABRICS shm:ofi  -machinefile hostfile.txt -np <span class="variable">$SLURM_NPROCS</span>  <span class="variable">$PROC</span></span><br><span class="line">mpirun hostname</span><br><span class="line"></span><br><span class="line"><span class="built_in">sleep</span> 1</span><br><span class="line"></span><br><span class="line"><span class="built_in">rm</span> -rf hostfile.txt</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sbatch test.slurm   <span class="comment">#提交任务 </span></span><br><span class="line">Submitted batch job 5960    <span class="comment">#获知任务job id是5960</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sinfo    <span class="comment">#查看分区 </span></span><br><span class="line">PARTITION     AVAIL  TIMELIMIT  NODES  STATE NODELIST</span><br><span class="line">cpuPartition*    up   infinite      1    mix cpu01</span><br><span class="line">cpuPartition*    up   infinite      3  alloc cpu[06-08]</span><br><span class="line">cpuPartition*    up   infinite     12   idle cpu[02-05,09-16]</span><br><span class="line">gpuPartition     up   infinite      1    mix gpu01</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">squeue   <span class="comment">#查看任务</span></span><br><span class="line">JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)</span><br><span class="line">5960 cpuPartit     <span class="built_in">test</span> zhangdon  R       0:05      1 cpu01</span><br><span class="line">squeue </span><br><span class="line">JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> 5960.err   <span class="comment">#查看错误输出</span></span><br><span class="line"><span class="built_in">cat</span> 5960.out   <span class="comment">#查看正确输出</span></span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">/beegfs/home/zhangdonghao/hello1</span><br><span class="line">Hello World from processor cpu01, rank 1 out of 2 processor</span><br><span class="line">Hello World from processor cpu01, rank 0 out of 2 processor</span><br><span class="line">cpu01</span><br><span class="line">cpu01</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/08/01/slurm1/" data-id="clytlpjqn000keoa360nz3gm1" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-PXE_RHEL7.9" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/07/19/PXE_RHEL7.9/" class="article-date">
@@ -143,7 +191,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/07/19/PXE_RHEL7.9/" data-id="clwbzsjfm000asqa37itnbsnh" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/07/19/PXE_RHEL7.9/" data-id="clytlpjqa0007eoa34js54d4n" class="article-share-link">Share</a>
       
       
     </footer>
@@ -181,7 +229,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/07/18/rhel7.9.cfg/" data-id="clwbzsjg1000msqa34ln10dt8" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/07/18/rhel7.9.cfg/" data-id="clytlpjqm000jeoa3gppi65uk" class="article-share-link">Share</a>
       
       
     </footer>
@@ -224,7 +272,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/25/reset_password_root/" data-id="clwbzsjg1000lsqa34h6i25e1" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/25/reset_password_root/" data-id="clytlpjql000ieoa32o6lg65s" class="article-share-link">Share</a>
       
       
     </footer>
@@ -288,61 +336,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/23/IB_8700_setting/" data-id="clwbzsjfh0005sqa38eugcr93" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Mattermost_Install" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/06/23/Mattermost_Install/" class="article-date">
-  <time datetime="2022-06-23T15:38:20.000Z" itemprop="datePublished">2022-06-23</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/06/23/Mattermost_Install/">安装Mattermost预览版本</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>基于操作系统CentOS7<br>配置yum源安装docker</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install docker</span><br></pre></td></tr></table></figure>
-
-<p>启动docker和设置开机自启</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl start docker</span><br><span class="line">systemctl <span class="built_in">enable</span> docker</span><br></pre></td></tr></table></figure>
-
-<p>编辑配置文件使用docker镜像加速源</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/docker/daemon.json</span><br><span class="line"><span class="built_in">cat</span> /etc/docker/daemon.json</span><br><span class="line">&#123;</span><br><span class="line"> <span class="string">&quot;registry-mirrors&quot;</span> : [</span><br><span class="line">   <span class="string">&quot;https://mirror.ccs.tencentyun.com&quot;</span>,</span><br><span class="line">   <span class="string">&quot;http://registry.docker-cn.com&quot;</span>,</span><br><span class="line">   <span class="string">&quot;http://docker.mirrors.ustc.edu.cn&quot;</span>,</span><br><span class="line">   <span class="string">&quot;http://hub-mirror.c.163.com&quot;</span></span><br><span class="line"> ],</span><br><span class="line"> <span class="string">&quot;insecure-registries&quot;</span> : [</span><br><span class="line">   <span class="string">&quot;registry.docker-cn.com&quot;</span>,</span><br><span class="line">   <span class="string">&quot;docker.mirrors.ustc.edu.cn&quot;</span></span><br><span class="line"> ],</span><br><span class="line"> <span class="string">&quot;debug&quot;</span> : <span class="literal">true</span>,</span><br><span class="line"> <span class="string">&quot;experimental&quot;</span> : <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>一键安装mattermost-预览镜像，并启动容器映射8065端口到宿主机8065端口</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name mattermost-preview -d --publish 8065:8065 mattermost/mattermost-preview</span><br></pre></td></tr></table></figure>
-
-<p>查看是否启动了docker容器</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps</span><br></pre></td></tr></table></figure>
-
-<p>浏览器登陆http://宿主机IP:8065/和初始化配置</p>
-<p>基于操作系统Ubuntu 20.04 LTS安装Mattermost：（待补充）</p>
-<p>云端创建Mattermost资源：（待补充）</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/23/Mattermost_Install/" data-id="clwbzsjfl0009sqa399ky2mg9" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/06/23/IB_8700_setting/" data-id="clytlpjqn000leoa3fckugx6f" class="article-share-link">Share</a>
       
       
     </footer>
@@ -375,7 +369,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">August 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">August 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li></ul>
     </div>
   </div>
 
@@ -386,6 +380,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2024/07/20/redhat7.9_docker/">redhat7.9理线安装docker</a>
+          </li>
         
           <li>
             <a href="/2022/11/24/CentOS7_Slurm/">CentOS7.9 install Slurm</a>
@@ -401,10 +399,6 @@
         
           <li>
             <a href="/2022/08/06/CentOS7_install_Slurm/">CentOS7.9安装Slurm计算调度集群</a>
-          </li>
-        
-          <li>
-            <a href="/2022/08/01/slurm1/">slurm示例</a>
           </li>
         
       </ul>
