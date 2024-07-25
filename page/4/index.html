@@ -64,6 +64,49 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-no_root_ssh" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/06/19/no_root_ssh/" class="article-date">
+  <time datetime="2022-06-19T01:35:57.945Z" itemprop="datePublished">2022-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/06/19/no_root_ssh/">管理节点禁止root用户远程ssh登录</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>编辑文件vi  /etc/ssh/sshd_config<br>把#PermitRootLogin yes改为</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PermitRootLogin no</span><br></pre></td></tr></table></figure>
+
+<p>重启sshd服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service sshd restart</span><br></pre></td></tr></table></figure>
+
+<p>之后如果需要远程管理管理节点，需要用普通用户登录，然后su命令切换到root用户拿到最高权限</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/06/19/no_root_ssh/" data-id="clz10566x000iiga3homk93yg" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-CPU_Linpack_Test" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/06/19/CPU_Linpack_Test/" class="article-date">
@@ -399,50 +442,11 @@
 
 
   
-    <article id="post-History_command_log" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/06/17/History_command_log/" class="article-date">
-  <time datetime="2022-06-16T16:05:31.178Z" itemprop="datePublished">2022-06-17</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/06/17/History_command_log/">记录每个用户的历史命令</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>实现记录每个用户的历史命令，保存日志到/tmp/rizhi/用户名目录下以备审计。<br>编辑/etc/profile,文件末尾追加如下内容:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">HISTFILESIZE=2000</span><br><span class="line">HISTTIMEFORMAT=<span class="string">&quot;%Y%m%d-%H%M `whoami` &quot;</span></span><br><span class="line"></span><br><span class="line">PS1=<span class="string">&quot;`whoami`@`hostname`:&quot;</span><span class="string">&#x27;[$PWD]&#x27;</span></span><br><span class="line"><span class="built_in">history</span></span><br><span class="line">USER_IP=`<span class="built_in">who</span> -u am i 2&gt;/dev/null| awk <span class="string">&#x27;&#123;print $NF&#125;&#x27;</span>|sed -e <span class="string">&#x27;s/[()]//g&#x27;</span>`</span><br><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$USER_IP</span>&quot;</span> = <span class="string">&quot;&quot;</span> ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">USER_IP=`hostname`</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="keyword">if</span> [ ! -d /tmp/rizhi ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line"><span class="built_in">mkdir</span> /tmp/rizhi</span><br><span class="line"><span class="built_in">chmod</span> 777 /tmp/rizhi</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="keyword">if</span> [ ! -d /tmp/rizhi/<span class="variable">$&#123;LOGNAME&#125;</span> ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line"><span class="built_in">mkdir</span> /tmp/rizhi/<span class="variable">$&#123;LOGNAME&#125;</span></span><br><span class="line"><span class="built_in">chmod</span> 300 /tmp/rizhi/<span class="variable">$&#123;LOGNAME&#125;</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="built_in">export</span> HISTSIZE=4096</span><br><span class="line">DT=`<span class="built_in">date</span> <span class="string">&quot;+%Y-%m-%d_%H:%M:%S&quot;</span>`</span><br><span class="line"><span class="built_in">export</span> HISTFILE=<span class="string">&quot;/tmp/rizhi/<span class="variable">$&#123;LOGNAME&#125;</span>/<span class="variable">$&#123;USER_IP&#125;</span> rizhi.<span class="variable">$DT</span>&quot;</span></span><br><span class="line"><span class="built_in">chmod</span> 600 /tmp/rizhi/<span class="variable">$&#123;LOGNAME&#125;</span>/*rizhi* 2&gt;/dev/null</span><br><span class="line"></span><br><span class="line">NODE_HOME=/usr/local/node14</span><br><span class="line">PATH=<span class="variable">$PATH</span>:<span class="variable">$NODE_HOME</span>/bin</span><br><span class="line">NODE_PATH=<span class="variable">$NODE_HOME</span>/lib/node_mudules</span><br><span class="line"><span class="built_in">export</span> PATH NODE_HOME NODE_PATH</span><br></pre></td></tr></table></figure>
-<p>source /etc/profile</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/17/History_command_log/" data-id="clz1056660004iga33d7h68rh" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/3/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/">Next &amp;raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/3/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/5/">Next &amp;raquo;</a>
   </nav>
 
 </section>
@@ -474,6 +478,10 @@
       <ul>
         
           <li>
+            <a href="/2024/07/25/NCCL/">NCCL</a>
+          </li>
+        
+          <li>
             <a href="/2024/07/20/redhat7.9_docker/">redhat7.9离线安装docker</a>
           </li>
         
@@ -487,10 +495,6 @@
         
           <li>
             <a href="/2022/11/24/limit/">管理节点CPU和内存使用率超过60%自动kill进程</a>
-          </li>
-        
-          <li>
-            <a href="/2022/08/06/CentOS7_install_Slurm/">CentOS7.9安装Slurm计算调度集群</a>
           </li>
         
       </ul>

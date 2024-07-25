@@ -64,6 +64,47 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-CentOS7_install_Slurm" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/08/06/CentOS7_install_Slurm/" class="article-date">
+  <time datetime="2022-08-05T19:38:38.592Z" itemprop="datePublished">2022-08-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/08/06/CentOS7_install_Slurm/">CentOS7.9安装Slurm计算调度集群</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">服务器配置：</span><br><span class="line">1个管理节点control，多个计算节点c1、c2</span><br><span class="line">sda盘安装操作系统标准分区</span><br><span class="line">sdb盘*T，可以挂载/home目录，普通用户家目录使用</span><br><span class="line"></span><br><span class="line">安装系统：CentOS（英文版）</span><br><span class="line"><span class="comment"># cat /etc/redhat-release</span></span><br><span class="line">CentOS Linux release 7.9.2009 (Core)</span><br><span class="line"><span class="comment"># uname -r</span></span><br><span class="line">3.10.0-1160.el7.x86_64</span><br><span class="line"></span><br><span class="line">安装软件：NIS、NFS、NTP</span><br><span class="line">Slurm作业管理系统slurm-22.05.2.tar</span><br><span class="line">munge-0.5.15.tar</span><br><span class="line">mysql80-community-release-el7-6.noarch</span><br></pre></td></tr></table></figure>
+        
+          <p class="article-more-link">
+            <a href="/2022/08/06/CentOS7_install_Slurm/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/08/06/CentOS7_install_Slurm/" data-id="clz1056640002iga3darbbkz6" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-slurm1" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/08/01/slurm1/" class="article-date">
@@ -282,75 +323,11 @@
 
 
   
-    <article id="post-IB_8700_setting" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/06/23/IB_8700_setting/" class="article-date">
-  <time datetime="2022-06-23T15:39:25.697Z" itemprop="datePublished">2022-06-23</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/06/23/IB_8700_setting/">配置8700 IB交换机</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>串口线连接8700 IB交换机IOIO口（串口），<br>我习惯使用mobax软件使用串口协议，波特率选择115200</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Mellanox MLNX-OS Switch Management</span><br><span class="line">switch-9f6fce login: admin</span><br></pre></td></tr></table></figure>
-
-<p>出厂默认密码是admin</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Password:</span><br><span class="line">Last login: Mon May 23 08:46:03 on ttyS0</span><br><span class="line">Mellanox Switch</span><br></pre></td></tr></table></figure>
-
-<p>普通模式</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">switch-9f6fce [standalone: master] &gt;</span><br></pre></td></tr></table></figure>
-
-<p>查看命令帮助</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">switch-9f6fce [standalone: master] &gt; ?</span><br></pre></td></tr></table></figure>
-
-<p>进入特权模式</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">switch-9f6fce [standalone: master] &gt;<span class="built_in">enable</span></span><br></pre></td></tr></table></figure>
-
-<p>进入配置终端模式</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">switch-9f6fce [standalone: master] <span class="comment"># configure terminal</span></span><br></pre></td></tr></table></figure>
-
-<p>启动ib 子网管理器</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">switch-9f6fce [standalone: master] <span class="comment"># ib sm</span></span><br></pre></td></tr></table></figure>
-
-<p>查看ib 子网管理器是否启动</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">switch-9f6fce [standalone: master] (config) <span class="comment"># show ib sm</span></span><br><span class="line"><span class="built_in">enable</span></span><br></pre></td></tr></table></figure>
-
-<p>保存当前运行的配置</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">switch-9f6fce [standalone: master] (config) <span class="comment"># write memory</span></span><br></pre></td></tr></table></figure>
-
-<p>Mgmt管理口默认是自动获得IP地址，通过dhcp server分配IP地址后用<a target="_blank" rel="noopener" href="https://ip登录/">https://IP登录</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/23/IB_8700_setting/" data-id="clz1056670005iga36s628yip" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/">Next &amp;raquo;</a>
+    <a class="extend prev" rel="prev" href="/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/">Next &amp;raquo;</a>
   </nav>
 
 </section>
@@ -382,6 +359,10 @@
       <ul>
         
           <li>
+            <a href="/2024/07/25/NCCL/">NCCL</a>
+          </li>
+        
+          <li>
             <a href="/2024/07/20/redhat7.9_docker/">redhat7.9离线安装docker</a>
           </li>
         
@@ -395,10 +376,6 @@
         
           <li>
             <a href="/2022/11/24/limit/">管理节点CPU和内存使用率超过60%自动kill进程</a>
-          </li>
-        
-          <li>
-            <a href="/2022/08/06/CentOS7_install_Slurm/">CentOS7.9安装Slurm计算调度集群</a>
           </li>
         
       </ul>

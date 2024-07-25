@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>NCCL | AI HPC in doing we learn!</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Here’s the content of your document converted into Markdown format: NF5688M7 机型 A800 GPU NCCL 测试步骤一、基础环境 默认GPU卡状态正常，通过nvidia-smi能正常打印基本信息，待测GPU无占用。 IB卡通过ibstat能正常打印基本信息且显示State: Active。 待测机器之间可以免密登录。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NCCL">
+<meta property="og:url" content="http://example.com/2024/07/25/NCCL/index.html">
+<meta property="og:site_name" content="AI HPC in doing we learn!">
+<meta property="og:description" content="Here’s the content of your document converted into Markdown format: NF5688M7 机型 A800 GPU NCCL 测试步骤一、基础环境 默认GPU卡状态正常，通过nvidia-smi能正常打印基本信息，待测GPU无占用。 IB卡通过ibstat能正常打印基本信息且显示State: Active。 待测机器之间可以免密登录。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-07-25T08:28:00.000Z">
+<meta property="article:modified_time" content="2024-07-25T08:47:57.784Z">
+<meta property="article:author" content="张东豪 zhangdonghao678@163.com">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="AI HPC in doing we learn!" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">AI HPC in doing we learn!</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-NCCL" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2024/07/25/NCCL/" class="article-date">
+  <time datetime="2024-07-25T08:28:00.000Z" itemprop="datePublished">2024-07-25</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      NCCL
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Here’s the content of your document converted into Markdown format:</p>
+<h1 id="NF5688M7-机型-A800-GPU-NCCL-测试步骤"><a href="#NF5688M7-机型-A800-GPU-NCCL-测试步骤" class="headerlink" title="NF5688M7 机型 A800 GPU NCCL 测试步骤"></a>NF5688M7 机型 A800 GPU NCCL 测试步骤</h1><h2 id="一、基础环境"><a href="#一、基础环境" class="headerlink" title="一、基础环境"></a>一、基础环境</h2><ul>
+<li>默认GPU卡状态正常，通过<code>nvidia-smi</code>能正常打印基本信息，待测GPU无占用。</li>
+<li>IB卡通过<code>ibstat</code>能正常打印基本信息且显示State: Active。</li>
+<li>待测机器之间可以免密登录。</li>
+<li><strong>机型</strong>: NF5688-M7</li>
+<li><strong>GPU</strong>: A800 * 8</li>
+<li><strong>IB卡</strong>: MCX653105A-HDAT * 8</li>
+<li><strong>系统</strong>: CentOS7.9</li>
+<li><strong>GPU驱动版本</strong>: 535.183.06</li>
+<li><strong>CUDA版本</strong>: 12.4</li>
+</ul>
+<h2 id="二、安装基础测试软件包"><a href="#二、安装基础测试软件包" class="headerlink" title="二、安装基础测试软件包"></a>二、安装基础测试软件包</h2><h3 id="安装-NVIDIA-HPC-SDK"><a href="#安装-NVIDIA-HPC-SDK" class="headerlink" title="安装 NVIDIA HPC SDK"></a>安装 NVIDIA HPC SDK</h3><ol>
+<li>下载安装包:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://developer.download.nvidia.com/hpc-sdk/24.5/nvhpc_2024_245_Linux_x86_64_cuda_12.4.tar.gz</span><br></pre></td></tr></table></figure></li>
+<li>解压缩:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar xpzf nvhpc_2024_245_Linux_x86_64_cuda_12.4.tar.gz</span><br></pre></td></tr></table></figure></li>
+<li>执行安装命令:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvhpc_2024_245_Linux_x86_64_cuda_12.4/install</span><br></pre></td></tr></table></figure></li>
+<li>加载环境变量:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">export PATH=/home/software/nvidia/hpc_sdk/Linux_x86_64/24.5/compilers/bin:$PATH</span><br><span class="line">export MANPATH=/home/software/nvidia/hpc_sdk/Linux_x86_64/24.5/compilers/man:$MANPATH</span><br><span class="line">export PATH=/home/software/nvidia/hpc_sdk/Linux_x86_64/24.5/comm_libs/mpi/bin:$PATH</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="安装-OpenMPI"><a href="#安装-OpenMPI" class="headerlink" title="安装 OpenMPI"></a>安装 OpenMPI</h3><ol>
+<li>下载源码包:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://www.open-mpi.org/software/ompi/v5.0/downloads/openmpi-5.0.3.tar.bz2</span><br></pre></td></tr></table></figure></li>
+<li>编译安装:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mkdir /home/software/openmpi-5.0.3</span><br><span class="line">ssh g82</span><br><span class="line">cd /home/sourcecode/openmpi-5.0.3/</span><br><span class="line">./configure --prefix=/home/software/openmpi-5.0.3 --with-cuda</span><br><span class="line">make -j</span><br><span class="line">make install</span><br></pre></td></tr></table></figure></li>
+<li>加载环境变量:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">export MPI_HOME=/home/software/openmpi-5.0.3/</span><br><span class="line">export PATH=$MPI_HOME/bin:$PATH</span><br><span class="line">export LD_LIBRARY_PATH=$MPI_HOME/lib:$LD_LIBRARY_PATH</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="安装-NCCL"><a href="#安装-NCCL" class="headerlink" title="安装 NCCL"></a>安装 NCCL</h3><ol>
+<li>下载源码包:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/nvidia/nccl.git</span><br></pre></td></tr></table></figure></li>
+<li>编译:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum -y install rpm-build rpmdevtools</span><br><span class="line">make pkg.redhat.build</span><br></pre></td></tr></table></figure></li>
+<li>安装:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd build/pkg/rpm/</span><br><span class="line">rpm -ivh libnccl-*</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="安装-NCCL-Tests"><a href="#安装-NCCL-Tests" class="headerlink" title="安装 NCCL-Tests"></a>安装 NCCL-Tests</h3><ol>
+<li>下载源码包:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/nvidia/nccl-tests.git</span><br></pre></td></tr></table></figure></li>
+<li>编译:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd nccl-tests</span><br><span class="line">make MPI=1 MPI_HOME=/home/software/openmpi-5.0.3/ CUDA_HOME=/usr/local/cuda</span><br></pre></td></tr></table></figure></li>
+<li>复制编译好的安装包到共享存储目录下:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp -r nccl-tests /home/software/nvidia/</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="三、开始测试"><a href="#三、开始测试" class="headerlink" title="三、开始测试"></a>三、开始测试</h2><h3 id="1、单机测试"><a href="#1、单机测试" class="headerlink" title="1、单机测试"></a>1、单机测试</h3><p>在 <code>/home/software/nvidia/nccl-tests</code> 目录下执行:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mpirun -np 8 ./build/all_reduce_perf -b 8 -e 128M -f 2 -g 1</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法1：使用-NVIDIA-HPC-SDK"><a href="#方法1：使用-NVIDIA-HPC-SDK" class="headerlink" title="方法1：使用 NVIDIA HPC SDK"></a>方法1：使用 NVIDIA HPC SDK</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">export PATH=/home/software/nvidia/hpc_sdk/Linux_x86_64/24.5/compilers/bin:$PATH</span><br><span class="line">export MANPATH=/home/software/nvidia/hpc_sdk/Linux_x86_64/24.5/compilers/man:$MANPATH</span><br><span class="line">export PATH=/home/software/nvidia/hpc_sdk/Linux_x86_64/24.5/comm_libs/mpi/bin:$PATH</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法2：使用-OpenMPI"><a href="#方法2：使用-OpenMPI" class="headerlink" title="方法2：使用 OpenMPI"></a>方法2：使用 OpenMPI</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">export MPI_HOME=/home/software/openmpi-5.0.3/</span><br><span class="line">export PATH=$MPI_HOME/bin:$PATH</span><br><span class="line">export LD_LIBRARY_PATH=$MPI_HOME/lib:$LD_LIBRARY_PATH</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、多机测试"><a href="#2、多机测试" class="headerlink" title="2、多机测试"></a>2、多机测试</h3><p>在 <code>nccl-tests</code> 目录下:</p>
+<ol>
+<li>新建 <code>myhosts</code> 文件，将待测各节点 IP 写入 <code>myhosts</code> 文件中。</li>
+<li>执行测试命令:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mpirun --allow-run-as-root --machinefile /home/software/nvidia/nccl-tests-master/myhosts -N 1 -x LD_LIBRARY_PATH -x NCCL_DEBUG=INFO -x NCCL_IB_HCA=mlx5_0,mlx5_1,mlx5_2,mlx5_3,mlx5_4,mlx5_6,mlx5_7,mlx5_8 ./build/all_reduce_perf -b 8 -e 2G -w 20 -n 1000 -f 2 -g 8 | tee NCCL.log</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="3、测试结果分析"><a href="#3、测试结果分析" class="headerlink" title="3、测试结果分析"></a>3、测试结果分析</h3><ul>
+<li>本次测试 NCCL 理论值为单机总带宽即 200 Gb/s。</li>
+<li>效率 = 156.10 / 200 = 78%。</li>
+<li><strong>备注</strong>:<ul>
+<li>in-place 下的 busbw 一列的最后一行标黄部分即为实测 NCCL 带宽值</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/07/25/NCCL/" data-id="clz116sul0000lja32u42dahf" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2024/07/20/redhat7.9_docker/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">redhat7.9离线安装docker</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">August 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/07/25/NCCL/">NCCL</a>
+          </li>
+        
+          <li>
+            <a href="/2024/07/20/redhat7.9_docker/">redhat7.9离线安装docker</a>
+          </li>
+        
+          <li>
+            <a href="/2022/11/24/CentOS7_Slurm/">CentOS7.9 install Slurm</a>
+          </li>
+        
+          <li>
+            <a href="/2022/11/24/diskless_CentOS7/">HPC服务器集群配置CentOS 7.9无盘启动</a>
+          </li>
+        
+          <li>
+            <a href="/2022/11/24/limit/">管理节点CPU和内存使用率超过60%自动kill进程</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2024 张东豪 zhangdonghao678@163.com<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

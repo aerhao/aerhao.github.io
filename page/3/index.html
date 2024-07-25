@@ -64,6 +64,70 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-IB_8700_setting" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/06/23/IB_8700_setting/" class="article-date">
+  <time datetime="2022-06-23T15:39:25.697Z" itemprop="datePublished">2022-06-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/06/23/IB_8700_setting/">配置8700 IB交换机</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>串口线连接8700 IB交换机IOIO口（串口），<br>我习惯使用mobax软件使用串口协议，波特率选择115200</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Mellanox MLNX-OS Switch Management</span><br><span class="line">switch-9f6fce login: admin</span><br></pre></td></tr></table></figure>
+
+<p>出厂默认密码是admin</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Password:</span><br><span class="line">Last login: Mon May 23 08:46:03 on ttyS0</span><br><span class="line">Mellanox Switch</span><br></pre></td></tr></table></figure>
+
+<p>普通模式</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">switch-9f6fce [standalone: master] &gt;</span><br></pre></td></tr></table></figure>
+
+<p>查看命令帮助</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">switch-9f6fce [standalone: master] &gt; ?</span><br></pre></td></tr></table></figure>
+
+<p>进入特权模式</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">switch-9f6fce [standalone: master] &gt;<span class="built_in">enable</span></span><br></pre></td></tr></table></figure>
+
+<p>进入配置终端模式</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">switch-9f6fce [standalone: master] <span class="comment"># configure terminal</span></span><br></pre></td></tr></table></figure>
+
+<p>启动ib 子网管理器</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">switch-9f6fce [standalone: master] <span class="comment"># ib sm</span></span><br></pre></td></tr></table></figure>
+
+<p>查看ib 子网管理器是否启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">switch-9f6fce [standalone: master] (config) <span class="comment"># show ib sm</span></span><br><span class="line"><span class="built_in">enable</span></span><br></pre></td></tr></table></figure>
+
+<p>保存当前运行的配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">switch-9f6fce [standalone: master] (config) <span class="comment"># write memory</span></span><br></pre></td></tr></table></figure>
+
+<p>Mgmt管理口默认是自动获得IP地址，通过dhcp server分配IP地址后用<a target="_blank" rel="noopener" href="https://ip登录/">https://IP登录</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/06/23/IB_8700_setting/" data-id="clz1056670005iga36s628yip" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Mattermost_Install" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/06/23/Mattermost_Install/" class="article-date">
@@ -274,54 +338,11 @@
 
 
   
-    <article id="post-no_root_ssh" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/06/19/no_root_ssh/" class="article-date">
-  <time datetime="2022-06-19T01:35:57.945Z" itemprop="datePublished">2022-06-19</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/06/19/no_root_ssh/">管理节点禁止root用户远程ssh登录</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>编辑文件vi  /etc/ssh/sshd_config<br>把#PermitRootLogin yes改为</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PermitRootLogin no</span><br></pre></td></tr></table></figure>
-
-<p>重启sshd服务</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service sshd restart</span><br></pre></td></tr></table></figure>
-
-<p>之后如果需要远程管理管理节点，需要用普通用户登录，然后su命令切换到root用户拿到最高权限</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/19/no_root_ssh/" data-id="clz10566x000iiga3homk93yg" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/2/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/">Next &amp;raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/2/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/4/">Next &amp;raquo;</a>
   </nav>
 
 </section>
@@ -353,6 +374,10 @@
       <ul>
         
           <li>
+            <a href="/2024/07/25/NCCL/">NCCL</a>
+          </li>
+        
+          <li>
             <a href="/2024/07/20/redhat7.9_docker/">redhat7.9离线安装docker</a>
           </li>
         
@@ -366,10 +391,6 @@
         
           <li>
             <a href="/2022/11/24/limit/">管理节点CPU和内存使用率超过60%自动kill进程</a>
-          </li>
-        
-          <li>
-            <a href="/2022/08/06/CentOS7_install_Slurm/">CentOS7.9安装Slurm计算调度集群</a>
           </li>
         
       </ul>

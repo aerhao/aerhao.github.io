@@ -64,6 +64,95 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-NCCL" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2024/07/25/NCCL/" class="article-date">
+  <time datetime="2024-07-25T08:28:00.000Z" itemprop="datePublished">2024-07-25</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/07/25/NCCL/">NCCL</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Here’s the content of your document converted into Markdown format:</p>
+<h1 id="NF5688M7-机型-A800-GPU-NCCL-测试步骤"><a href="#NF5688M7-机型-A800-GPU-NCCL-测试步骤" class="headerlink" title="NF5688M7 机型 A800 GPU NCCL 测试步骤"></a>NF5688M7 机型 A800 GPU NCCL 测试步骤</h1><h2 id="一、基础环境"><a href="#一、基础环境" class="headerlink" title="一、基础环境"></a>一、基础环境</h2><ul>
+<li>默认GPU卡状态正常，通过<code>nvidia-smi</code>能正常打印基本信息，待测GPU无占用。</li>
+<li>IB卡通过<code>ibstat</code>能正常打印基本信息且显示State: Active。</li>
+<li>待测机器之间可以免密登录。</li>
+<li><strong>机型</strong>: NF5688-M7</li>
+<li><strong>GPU</strong>: A800 * 8</li>
+<li><strong>IB卡</strong>: MCX653105A-HDAT * 8</li>
+<li><strong>系统</strong>: CentOS7.9</li>
+<li><strong>GPU驱动版本</strong>: 535.183.06</li>
+<li><strong>CUDA版本</strong>: 12.4</li>
+</ul>
+<h2 id="二、安装基础测试软件包"><a href="#二、安装基础测试软件包" class="headerlink" title="二、安装基础测试软件包"></a>二、安装基础测试软件包</h2><h3 id="安装-NVIDIA-HPC-SDK"><a href="#安装-NVIDIA-HPC-SDK" class="headerlink" title="安装 NVIDIA HPC SDK"></a>安装 NVIDIA HPC SDK</h3><ol>
+<li>下载安装包:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://developer.download.nvidia.com/hpc-sdk/24.5/nvhpc_2024_245_Linux_x86_64_cuda_12.4.tar.gz</span><br></pre></td></tr></table></figure></li>
+<li>解压缩:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar xpzf nvhpc_2024_245_Linux_x86_64_cuda_12.4.tar.gz</span><br></pre></td></tr></table></figure></li>
+<li>执行安装命令:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvhpc_2024_245_Linux_x86_64_cuda_12.4/install</span><br></pre></td></tr></table></figure></li>
+<li>加载环境变量:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">export PATH=/home/software/nvidia/hpc_sdk/Linux_x86_64/24.5/compilers/bin:$PATH</span><br><span class="line">export MANPATH=/home/software/nvidia/hpc_sdk/Linux_x86_64/24.5/compilers/man:$MANPATH</span><br><span class="line">export PATH=/home/software/nvidia/hpc_sdk/Linux_x86_64/24.5/comm_libs/mpi/bin:$PATH</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="安装-OpenMPI"><a href="#安装-OpenMPI" class="headerlink" title="安装 OpenMPI"></a>安装 OpenMPI</h3><ol>
+<li>下载源码包:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://www.open-mpi.org/software/ompi/v5.0/downloads/openmpi-5.0.3.tar.bz2</span><br></pre></td></tr></table></figure></li>
+<li>编译安装:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mkdir /home/software/openmpi-5.0.3</span><br><span class="line">ssh g82</span><br><span class="line">cd /home/sourcecode/openmpi-5.0.3/</span><br><span class="line">./configure --prefix=/home/software/openmpi-5.0.3 --with-cuda</span><br><span class="line">make -j</span><br><span class="line">make install</span><br></pre></td></tr></table></figure></li>
+<li>加载环境变量:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">export MPI_HOME=/home/software/openmpi-5.0.3/</span><br><span class="line">export PATH=$MPI_HOME/bin:$PATH</span><br><span class="line">export LD_LIBRARY_PATH=$MPI_HOME/lib:$LD_LIBRARY_PATH</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="安装-NCCL"><a href="#安装-NCCL" class="headerlink" title="安装 NCCL"></a>安装 NCCL</h3><ol>
+<li>下载源码包:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/nvidia/nccl.git</span><br></pre></td></tr></table></figure></li>
+<li>编译:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum -y install rpm-build rpmdevtools</span><br><span class="line">make pkg.redhat.build</span><br></pre></td></tr></table></figure></li>
+<li>安装:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd build/pkg/rpm/</span><br><span class="line">rpm -ivh libnccl-*</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="安装-NCCL-Tests"><a href="#安装-NCCL-Tests" class="headerlink" title="安装 NCCL-Tests"></a>安装 NCCL-Tests</h3><ol>
+<li>下载源码包:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/nvidia/nccl-tests.git</span><br></pre></td></tr></table></figure></li>
+<li>编译:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd nccl-tests</span><br><span class="line">make MPI=1 MPI_HOME=/home/software/openmpi-5.0.3/ CUDA_HOME=/usr/local/cuda</span><br></pre></td></tr></table></figure></li>
+<li>复制编译好的安装包到共享存储目录下:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp -r nccl-tests /home/software/nvidia/</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="三、开始测试"><a href="#三、开始测试" class="headerlink" title="三、开始测试"></a>三、开始测试</h2><h3 id="1、单机测试"><a href="#1、单机测试" class="headerlink" title="1、单机测试"></a>1、单机测试</h3><p>在 <code>/home/software/nvidia/nccl-tests</code> 目录下执行:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mpirun -np 8 ./build/all_reduce_perf -b 8 -e 128M -f 2 -g 1</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法1：使用-NVIDIA-HPC-SDK"><a href="#方法1：使用-NVIDIA-HPC-SDK" class="headerlink" title="方法1：使用 NVIDIA HPC SDK"></a>方法1：使用 NVIDIA HPC SDK</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">export PATH=/home/software/nvidia/hpc_sdk/Linux_x86_64/24.5/compilers/bin:$PATH</span><br><span class="line">export MANPATH=/home/software/nvidia/hpc_sdk/Linux_x86_64/24.5/compilers/man:$MANPATH</span><br><span class="line">export PATH=/home/software/nvidia/hpc_sdk/Linux_x86_64/24.5/comm_libs/mpi/bin:$PATH</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法2：使用-OpenMPI"><a href="#方法2：使用-OpenMPI" class="headerlink" title="方法2：使用 OpenMPI"></a>方法2：使用 OpenMPI</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">export MPI_HOME=/home/software/openmpi-5.0.3/</span><br><span class="line">export PATH=$MPI_HOME/bin:$PATH</span><br><span class="line">export LD_LIBRARY_PATH=$MPI_HOME/lib:$LD_LIBRARY_PATH</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、多机测试"><a href="#2、多机测试" class="headerlink" title="2、多机测试"></a>2、多机测试</h3><p>在 <code>nccl-tests</code> 目录下:</p>
+<ol>
+<li>新建 <code>myhosts</code> 文件，将待测各节点 IP 写入 <code>myhosts</code> 文件中。</li>
+<li>执行测试命令:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mpirun --allow-run-as-root --machinefile /home/software/nvidia/nccl-tests-master/myhosts -N 1 -x LD_LIBRARY_PATH -x NCCL_DEBUG=INFO -x NCCL_IB_HCA=mlx5_0,mlx5_1,mlx5_2,mlx5_3,mlx5_4,mlx5_6,mlx5_7,mlx5_8 ./build/all_reduce_perf -b 8 -e 2G -w 20 -n 1000 -f 2 -g 8 | tee NCCL.log</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="3、测试结果分析"><a href="#3、测试结果分析" class="headerlink" title="3、测试结果分析"></a>3、测试结果分析</h3><ul>
+<li>本次测试 NCCL 理论值为单机总带宽即 200 Gb/s。</li>
+<li>效率 = 156.10 / 200 = 78%。</li>
+<li><strong>备注</strong>:<ul>
+<li>in-place 下的 busbw 一列的最后一行标黄部分即为实测 NCCL 带宽值</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/07/25/NCCL/" data-id="clz116sul0000lja32u42dahf" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-redhat7.9_docker" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2024/07/20/redhat7.9_docker/" class="article-date">
@@ -270,52 +359,11 @@ id  test10
 
 
   
-    <article id="post-CentOS7_install_Slurm" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/08/06/CentOS7_install_Slurm/" class="article-date">
-  <time datetime="2022-08-05T19:38:38.592Z" itemprop="datePublished">2022-08-06</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/08/06/CentOS7_install_Slurm/">CentOS7.9安装Slurm计算调度集群</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">服务器配置：</span><br><span class="line">1个管理节点control，多个计算节点c1、c2</span><br><span class="line">sda盘安装操作系统标准分区</span><br><span class="line">sdb盘*T，可以挂载/home目录，普通用户家目录使用</span><br><span class="line"></span><br><span class="line">安装系统：CentOS（英文版）</span><br><span class="line"><span class="comment"># cat /etc/redhat-release</span></span><br><span class="line">CentOS Linux release 7.9.2009 (Core)</span><br><span class="line"><span class="comment"># uname -r</span></span><br><span class="line">3.10.0-1160.el7.x86_64</span><br><span class="line"></span><br><span class="line">安装软件：NIS、NFS、NTP</span><br><span class="line">Slurm作业管理系统slurm-22.05.2.tar</span><br><span class="line">munge-0.5.15.tar</span><br><span class="line">mysql80-community-release-el7-6.noarch</span><br></pre></td></tr></table></figure>
-        
-          <p class="article-more-link">
-            <a href="/2022/08/06/CentOS7_install_Slurm/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/08/06/CentOS7_install_Slurm/" data-id="clz1056640002iga3darbbkz6" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
     
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
   </nav>
 
 </section>
@@ -347,6 +395,10 @@ id  test10
       <ul>
         
           <li>
+            <a href="/2024/07/25/NCCL/">NCCL</a>
+          </li>
+        
+          <li>
             <a href="/2024/07/20/redhat7.9_docker/">redhat7.9离线安装docker</a>
           </li>
         
@@ -360,10 +412,6 @@ id  test10
         
           <li>
             <a href="/2022/11/24/limit/">管理节点CPU和内存使用率超过60%自动kill进程</a>
-          </li>
-        
-          <li>
-            <a href="/2022/08/06/CentOS7_install_Slurm/">CentOS7.9安装Slurm计算调度集群</a>
           </li>
         
       </ul>
