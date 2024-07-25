@@ -5,17 +5,17 @@
   
 
   
-  <title>redhat7.9理线安装docker | AI HPC in doing we learn!</title>
+  <title>redhat7.9离线安装docker | AI HPC in doing we learn!</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="安装docker离线包1、将docker安装包解压，将安装包内的全部二进制文件，copy至&#x2F;usr&#x2F;bin&#x2F;目录；2、将docker.service文件copy至&#x2F;usr&#x2F;lib&#x2F;systemd&#x2F;system&#x2F; 目录；3、启动docker：systemctl start docker；设置开机自启动：systemctl enable docker；4、查看docker版本：docker versi">
 <meta property="og:type" content="article">
-<meta property="og:title" content="redhat7.9理线安装docker">
+<meta property="og:title" content="redhat7.9离线安装docker">
 <meta property="og:url" content="http://example.com/2024/07/20/redhat7.9_docker/index.html">
 <meta property="og:site_name" content="AI HPC in doing we learn!">
 <meta property="og:description" content="安装docker离线包1、将docker安装包解压，将安装包内的全部二进制文件，copy至&#x2F;usr&#x2F;bin&#x2F;目录；2、将docker.service文件copy至&#x2F;usr&#x2F;lib&#x2F;systemd&#x2F;system&#x2F; 目录；3、启动docker：systemctl start docker；设置开机自启动：systemctl enable docker；4、查看docker版本：docker versi">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-07-20T07:00:00.000Z">
-<meta property="article:modified_time" content="2024-07-20T06:26:30.221Z">
+<meta property="article:modified_time" content="2024-07-25T08:18:35.292Z">
 <meta property="article:author" content="张东豪 zhangdonghao678@163.com">
 <meta name="twitter:card" content="summary">
   
@@ -80,7 +80,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      redhat7.9理线安装docker
+      redhat7.9离线安装docker
     </h1>
   
 
@@ -89,13 +89,13 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h6 id="安装docker离线包"><a href="#安装docker离线包" class="headerlink" title="安装docker离线包"></a>安装docker离线包</h6><p>1、将docker安装包解压，将安装包内的全部二进制文件，copy至/usr/bin/目录；<br>2、将docker.service文件copy至/usr/lib/systemd/system/ 目录；<br>3、启动docker：systemctl start docker；<br>设置开机自启动：systemctl enable docker；<br>4、查看docker版本：docker version</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">docker version</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> docker/</span><br><span class="line">unzip redhat7.9安装docker离线软安装包.zip</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line"><span class="built_in">cd</span> redhat7.9安装docker离线软安装包/</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line">tar -zxvf docker-26.1.2.tgz</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line"><span class="built_in">cp</span> -r docker/* /usr/bin/</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line"><span class="built_in">cp</span> docker.service /usr/lib/systemd/system/</span><br><span class="line">systemctl start docker</span><br><span class="line">systemctl <span class="built_in">enable</span> docker</span><br><span class="line">systemctl status docker</span><br><span class="line"><span class="built_in">cd</span></span><br><span class="line">docker --version</span><br></pre></td></tr></table></figure>
 
 <h6 id="安装docker-compose"><a href="#安装docker-compose" class="headerlink" title="安装docker-compose"></a>安装docker-compose</h6><p>1、将docker-compose-linux-x86_64文件重命名为 docker-compose；<br>2、添加执行权限 chmod +x docker-compose；<br>3、将docker-compose文件 mv 至 /usr/local/bin/ 目录；<br>4、执行 docker-compose version 查看版本；</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose version</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> docker/redhat7.9安装docker离线软安装包/</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line"><span class="built_in">cp</span> docker-compose-linux-x86_64 docker-compose</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line"><span class="built_in">chmod</span> +x docker-compose</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line"><span class="built_in">cp</span> docker-compose  /usr/local/bin/</span><br><span class="line">docker-compose version</span><br></pre></td></tr></table></figure>
 
 <h6 id="安装nvidia-container-runtime："><a href="#安装nvidia-container-runtime：" class="headerlink" title="安装nvidia-container-runtime："></a>安装nvidia-container-runtime：</h6><p>1、解压 nvidia-docker2-rpm.tar.gz；<br>2、rpm -ivh或者yum install安装；<br>3、systemctl restart docker 重启docker服务；</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart docker</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf nvidia-docker2-rpm.tar.gz</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line"><span class="built_in">ls</span> root/</span><br><span class="line"><span class="built_in">ls</span> root/rpm/</span><br><span class="line"><span class="built_in">cd</span> root/rpm/</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line">rpm -ivh libnvidia-container* nvidia-*</span><br><span class="line">systemctl restart docker</span><br><span class="line">systemctl status docker</span><br></pre></td></tr></table></figure>
 
 <h6 id="下载docker镜像测试运行"><a href="#下载docker镜像测试运行" class="headerlink" title="下载docker镜像测试运行"></a>下载docker镜像测试运行</h6><p>编辑daemon.json 文件，添加镜像加速器的地址。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span>  ~/.docker/daemon.json</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;registry-mirrors&quot;</span>: [</span><br><span class="line">    <span class="string">&quot;https://docker.mirrors.ustc.edu.cn&quot;</span></span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -117,8 +117,8 @@ docker run -it --gpus all --ipc=host --ulimit memlock=-1 --ulimit stack=67108864
 ###### 如何让系统普通用户也能使用docker命令
 将用户添加到了docker组
 sudo groupadd docker
-sudo usermod -aG docker system3
-id ieisystem3
+sudo usermod -aG docker test10
+id  test10
 重启Docker服务以确保用户组的更改（普通用户属于docker组）被应用
 使用sudo systemctl restart docker来重启Docker守护进程。
 
@@ -141,7 +141,7 @@ id ieisystem3
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/07/20/redhat7.9_docker/" data-id="clytqxih60000kya37r967zlf" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2024/07/20/redhat7.9_docker/" data-id="clz105670000liga33hp00l2w" class="article-share-link">Share</a>
       
       
     </footer>
@@ -190,7 +190,7 @@ id ieisystem3
       <ul>
         
           <li>
-            <a href="/2024/07/20/redhat7.9_docker/">redhat7.9理线安装docker</a>
+            <a href="/2024/07/20/redhat7.9_docker/">redhat7.9离线安装docker</a>
           </li>
         
           <li>
