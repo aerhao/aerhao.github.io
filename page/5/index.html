@@ -64,6 +64,78 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-genisoimage" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/06/17/genisoimage/" class="article-date">
+  <time datetime="2022-06-17T15:09:00.308Z" itemprop="datePublished">2022-06-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/06/17/genisoimage/">编译网卡rpm驱动集成到linux系统镜像</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>将提前编译好的网卡rpm驱动集成到linux系统镜像中，让ISO内能集成此驱动文件，<br>这样无论pxe还是其它的安装方式均可安装完成直接加载目标驱动。<br>方法步骤如下：<br>1、准备工作：<br>a)工作目录结构：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/root/centos/ice：存放网卡驱动</span><br><span class="line">/root/centos/iso：存放镜像</span><br><span class="line">/root/centos/initrd：存放initrd.img文件</span><br><span class="line">/root/centos/liveos：存放LiveOS文件</span><br><span class="line">/root/centos/kernel：存放kernel和linux-firmware rpm包</span><br></pre></td></tr></table></figure>
+
+<p>b)创建相应的目录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p /root/centos/ice</span><br><span class="line"><span class="built_in">mkdir</span> /root/centos/iso</span><br><span class="line"><span class="built_in">mkdir</span> /root/centos/initrd</span><br><span class="line"><span class="built_in">mkdir</span> /root/centos/liveos</span><br><span class="line"><span class="built_in">mkdir</span> /root/centos/kernel</span><br></pre></td></tr></table></figure>
+
+<p>c)准备工具文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> ice-1.5.8.tar.gz /root/centos/ice</span><br><span class="line"><span class="built_in">cp</span> rpmrebuild-2.16.tar.gz  /root/centos/kernel</span><br></pre></td></tr></table></figure>
+
+<p>2、准备镜像文件：<br>d)挂载镜像：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mount -o loop CentOS-7-x86_64-DVD-2009.iso /mnt</span><br></pre></td></tr></table></figure>
+
+<p>e)将镜像文件copy到工作目录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -a /mnt/*  /root/centos/iso</span><br></pre></td></tr></table></figure>
+
+<p>3、编译网卡驱动：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost centos]<span class="comment"># cd ice/</span></span><br><span class="line">[root@localhost ice]<span class="comment"># rpmbuild -tb ice-1.5.8.tar.gz</span></span><br><span class="line">[root@localhost ice]<span class="comment"># mkdir tmp</span></span><br><span class="line">[root@localhost ice]<span class="comment"># cd tmp/</span></span><br><span class="line">[root@localhost tmp]<span class="comment"># rpm2cpio /root/rpmbuild/RPMS/x86_64/ice-1.5.8-1.x86_64.rpm | cpio -idv</span></span><br><span class="line">[root@localhost tmp]<span class="comment"># cd ..</span></span><br><span class="line">[root@localhost ice]<span class="comment"># ls</span></span><br><span class="line">ice-1.5.8.tar.gz  tmp</span><br><span class="line">[root@localhost ice]<span class="comment"># cp tmp/lib/modules/3.10.0-1160.el7.x86_64/updates/drivers/net/ethernet/intel/ice/ice.ko .</span></span><br><span class="line">[root@localhost ice]<span class="comment"># xz -zk ice.ko </span></span><br><span class="line">[root@localhost ice]<span class="comment"># cp -a tmp/lib/firmware/updates/intel/ice/ddp .</span></span><br><span class="line">[root@localhost ice]<span class="comment"># ls -hl</span></span><br><span class="line">total 33M</span><br><span class="line">drwxr-xr-x. 2 root root   60 Nov 14 22:09 ddp</span><br><span class="line">-rw-r--r--. 1 root root 977K Nov 14 22:07 ice-1.5.8.tar.gz</span><br><span class="line">-rw-r--r--. 1 root root  29M Nov 14 22:10 ice.ko</span><br><span class="line">-rw-r--r--. 1 root root 3.9M Nov 14 22:10 ice.ko.xz</span><br><span class="line">drwxr-xr-x. 4 root root   28 Nov 14 22:09 tmp</span><br></pre></td></tr></table></figure>
+
+<p>4、将网卡驱动加入initrd.img文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ice]<span class="comment"># cd ../initrd/</span></span><br><span class="line">[root@localhost initrd]<span class="comment"># cp /root/centos/iso/isolinux/initrd.img .</span></span><br><span class="line">[root@localhost initrd]<span class="comment"># mkdir tmp</span></span><br><span class="line">[root@localhost initrd]<span class="comment"># cd tmp/</span></span><br><span class="line">[root@localhost tmp]<span class="comment"># xz -dc &lt; ../initrd.img | cpio -idmv</span></span><br><span class="line">[root@localhost tmp]<span class="comment"># cp ../../ice/ice.ko.xz usr/lib/modules/3.10.0-1160.el7.x86_64/kernel/drivers/net/ethernet/intel/ice/</span></span><br><span class="line"><span class="built_in">cp</span>: overwrite ‘usr/lib/modules/3.10.0-1160.el7.x86_64/kernel/drivers/net/ethernet/intel/ice/ice.ko.xz’? y</span><br><span class="line">[root@localhost tmp]<span class="comment"># cd ..</span></span><br><span class="line">[root@localhost initrd]<span class="comment"># chroot tmp/</span></span><br><span class="line">bash-4.2<span class="comment"># depmod -a</span></span><br><span class="line">bash-4.2<span class="comment"># exit</span></span><br><span class="line"><span class="built_in">exit</span></span><br><span class="line">[root@localhost initrd]<span class="comment"># cd tmp/</span></span><br><span class="line">[root@localhost tmp]<span class="comment"># find . 2&gt;/dev/null | cpio -c -o | xz -9 --format=xz --check=crc32 &gt; ../initrd-ice.img</span></span><br><span class="line">333167 blocks</span><br><span class="line">[root@localhost tmp]<span class="comment"># cd ..</span></span><br><span class="line">[root@localhost initrd]<span class="comment"># ls</span></span><br><span class="line">initrd-ice.img  initrd.img  tmp</span><br><span class="line">[root@localhost initrd]<span class="comment"># ls -hl</span></span><br><span class="line">total 107M</span><br><span class="line">-rw-r--r--.  1 root root 54M Nov 14 22:14 initrd-ice.img</span><br><span class="line">-rw-r--r--.  1 root root 54M Nov 14 22:11 initrd.img</span><br><span class="line">drwxr-xr-x. 12 root root 216 Nov 14 22:12 tmp</span><br><span class="line">[root@localhost initrd]<span class="comment"># cp initrd-ice.img /root/centos/iso/isolinux/initrd.img </span></span><br><span class="line"><span class="built_in">cp</span>: overwrite ‘/root/centos/iso/isolinux/initrd.img’? y</span><br><span class="line">[root@localhost initrd]<span class="comment"># cp initrd-ice.img /root/centos/iso/images/pxeboot/initrd.img </span></span><br><span class="line"><span class="built_in">cp</span>: overwrite ‘/root/centos/iso/images/pxeboot/initrd.img’? y</span><br></pre></td></tr></table></figure>
+
+<p>5、将网卡驱动加入LiveOS文件（如果不用镜像安装，可以不做）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost initrd]<span class="comment"># cd ../liveos/</span></span><br><span class="line">[root@localhost liveos]<span class="comment"># cp /root/centos/iso/LiveOS/squashfs.img .</span></span><br><span class="line">[root@localhost liveos]<span class="comment"># unsquashfs squashfs.img </span></span><br><span class="line">Parallel unsquashfs: Using 8 processors</span><br><span class="line">1 inodes (16384 blocks) to write</span><br><span class="line">[root@localhost liveos]<span class="comment"># mkdir rootfs</span></span><br><span class="line">[root@localhost liveos]<span class="comment"># mount squashfs-root/LiveOS/rootfs.img rootfs/</span></span><br><span class="line">[root@localhost liveos]<span class="comment"># cp /root/centos/ice/ice.ko.xz rootfs/usr/lib/modules/3.10.0-1160.el7.x86_64/kernel/drivers/net/ethernet/intel/ice/</span></span><br><span class="line"><span class="built_in">cp</span>: overwrite ‘rootfs/usr/lib/modules/3.10.0-1160.el7.x86_64/kernel/drivers/net/ethernet/intel/ice/ice.ko.xz’? y</span><br><span class="line">[root@localhost liveos]<span class="comment"># mkdir -p rootfs/usr/lib/firmware/updates/intel/ice</span></span><br><span class="line">[root@localhost liveos]<span class="comment"># cp -a /root/centos/ice/ddp rootfs/usr/lib/firmware/updates/intel/ice/</span></span><br><span class="line">[root@localhost liveos]<span class="comment"># chroot rootfs/</span></span><br><span class="line">bash-4.2<span class="comment"># depmod -a</span></span><br><span class="line">bash-4.2<span class="comment"># exit</span></span><br><span class="line"><span class="built_in">exit</span></span><br><span class="line">[root@localhost liveos]<span class="comment"># umount rootfs/</span></span><br><span class="line">[root@localhost liveos]<span class="comment"># mksquashfs squashfs-root/ newsquashfs.img -comp xz -b 131072 -Xbcj x86 -Xdict-size 131072</span></span><br><span class="line">Parallel mksquashfs: Using 8 processors</span><br><span class="line">Creating 4.0 filesystem on newsquashfs.img, block size 131072.</span><br><span class="line">[root@localhost liveos]<span class="comment"># cp newsquashfs.img /root/centos/iso/LiveOS/squashfs.img </span></span><br><span class="line"><span class="built_in">cp</span>: overwrite ‘/root/centos/iso/LiveOS/squashfs.img’? y</span><br></pre></td></tr></table></figure>
+
+<p>6、将驱动加入kernel rpm包：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost liveos]<span class="comment"># cd ../kernel/</span></span><br><span class="line">[root@localhost kernel]<span class="comment"># cp -r rpmrebuild .</span></span><br><span class="line">[root@localhost kernel]<span class="comment"># cp /root/centos/iso/Packages/kernel-3.10.0-1160.el7.x86_64.rpm .</span></span><br><span class="line">[root@localhost kernel]<span class="comment"># mkdir tmp</span></span><br><span class="line">[root@localhost kernel]<span class="comment"># cd tmp/</span></span><br><span class="line">[root@localhost tmp]<span class="comment"># rpm2cpio ../kernel-3.10.0-1160.el7.x86_64.rpm | cpio -idv</span></span><br><span class="line">[root@localhost tmp]<span class="comment"># cp /root/centos/ice/ice.ko.xz lib/modules/3.10.0-1160.el7.x86_64/kernel/drivers/net/ethernet/intel/ice/</span></span><br><span class="line"><span class="built_in">cp</span>: overwrite ‘lib/modules/3.10.0-1160.el7.x86_64/kernel/drivers/net/ethernet/intel/ice/ice.ko.xz’? y</span><br><span class="line">[root@localhost tmp]<span class="comment"># cd ..</span></span><br><span class="line">[root@localhost kernel]<span class="comment"># rpm -qa | grep kernel-3.10.0-1160</span></span><br><span class="line">kernel-3.10.0-1160.el7.x86_64</span><br><span class="line">[root@localhost kernel]<span class="comment"># ./rpmrebuild/rpmrebuild.sh -s kernel.sepc kernel-3.10.0-1160.el7.x86_64</span></span><br><span class="line">(GenRpmQf) remove tag line ENHANCESFLAGS</span><br><span class="line">(GenRpmQf) remove tag line ENHANCESNAME</span><br><span class="line">(GenRpmQf) remove tag line ENHANCESVERSION</span><br><span class="line">(GenRpmQf) remove tag line SUGGESTSFLAGS</span><br><span class="line">(GenRpmQf) remove tag line SUGGESTSNAME</span><br><span class="line">(GenRpmQf) remove tag line SUGGESTSVERSION</span><br><span class="line">[root@localhost kernel]<span class="comment"># rpmbuild -ba --buildroot /root/centos/kernel/tmp/ kernel.sepc </span></span><br><span class="line">Processing files: kernel-3.10.0-1160.el7.x86_64</span><br><span class="line">warning: Explicit %attr() mode not applicaple to symlink: /root/centos/kernel/tmp/lib/modules/3.10.0-1160.el7.x86_64/build</span><br><span class="line">warning: Explicit %attr() mode not applicaple to symlink: /root/centos/kernel/tmp/lib/modules/3.10.0-1160.el7.x86_64/source</span><br><span class="line">[root@localhost kernel]<span class="comment"># cp /root/rpmbuild/RPMS/x86_64/kernel-3.10.0-1160.el7.x86_64.rpm /root/centos/iso/Packages/</span></span><br><span class="line"><span class="built_in">cp</span>: overwrite ‘/root/centos/iso/Packages/kernel-3.10.0-1160.el7.x86_64.rpm’? y</span><br></pre></td></tr></table></figure>
+
+<p>7、将网卡ddp加入到linux-firmware包：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost kernel]<span class="comment"># cp /root/centos/iso/Packages/linux-firmware-20200421-79.git78c0348.el7.noarch.rpm .</span></span><br><span class="line">[root@localhost kernel]<span class="comment"># mkdir tmp &amp;&amp; cd tmp</span></span><br><span class="line">[root@localhost tmp]<span class="comment"># rpm2cpio ../linux-firmware-20200421-79.git78c0348.el7.noarch.rpm | cpio -idv</span></span><br><span class="line">[root@localhost tmp]<span class="comment"># mkdir -p usr/lib/firmware/updates/intel/ice</span></span><br><span class="line">[root@localhost tmp]<span class="comment"># cp -a /root/centos/ice/ddp usr/lib/firmware/updates/intel/ice/</span></span><br><span class="line">[root@localhost tmp]<span class="comment"># cd ..</span></span><br><span class="line">[root@localhost kernel]<span class="comment"># rpm -qa | grep linux-firmware</span></span><br><span class="line">linux-firmware-20200421-79.git78c0348.el7.noarch</span><br><span class="line">[root@localhost kernel]<span class="comment"># ./rpmrebuild/rpmrebuild.sh -s linux-firmware.spec linux-firmware-20200421-79.git78c0348.el7.noarch</span></span><br><span class="line">(GenRpmQf) remove tag line ENHANCESFLAGS</span><br><span class="line">(GenRpmQf) remove tag line ENHANCESNAME</span><br><span class="line">(GenRpmQf) remove tag line ENHANCESVERSION</span><br><span class="line">(GenRpmQf) remove tag line SUGGESTSFLAGS</span><br><span class="line">(GenRpmQf) remove tag line SUGGESTSNAME</span><br><span class="line">(GenRpmQf) remove tag line SUGGESTSVERSION</span><br><span class="line">[root@localhost kernel]<span class="comment"># rpmbuild -ba --buildroot /root/centos/kernel/tmp linux-firmware.spec </span></span><br><span class="line">Processing files: linux-firmware-20200421-79.git78c0348.el7.noarch</span><br><span class="line">warning: Explicit %attr() mode not applicaple to symlink: /root/centos/kernel/tmp/usr/lib/firmware/a300_pfp.fw</span><br><span class="line">[root@localhost kernel]<span class="comment"># cp /root/rpmbuild/RPMS/noarch/linux-firmware-20200421-79.git78c0348.el7.noarch.rpm /root/centos/iso/Packages/</span></span><br><span class="line"><span class="built_in">cp</span>: overwrite ‘/root/centos/iso/Packages/linux-firmware-20200421-79.git78c0348.el7.noarch.rpm’? y</span><br></pre></td></tr></table></figure>
+
+<p>8、生成iso文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost iso]<span class="comment"># genisoimage -joliet-long -V &#x27;CentOS 7 x86_64&#x27; -o CentOS-7u9-ice.iso -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -R -J -v -cache-inodes -T -eltorito-alt-boot -e images/efiboot.img -no-emul-boot /root/centos/iso</span></span><br><span class="line">I: -input-charset not specified, using utf-8 (detected <span class="keyword">in</span> locale settings)</span><br><span class="line">genisoimage 1.1.11 (Linux)</span><br><span class="line">Scanning /root/centos/iso</span><br><span class="line">Scanning /root/centos/iso/EFI</span><br><span class="line">Scanning /root/centos/iso/EFI/BOOT</span><br></pre></td></tr></table></figure>
+
+<p>9、ISO文件生成在</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/root/centos/iso/CentOS-7u9-ice.iso</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/06/17/genisoimage/" data-id="clz10566t000eiga3cki6ftfg" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-History_command_log" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/06/17/History_command_log/" class="article-date">
@@ -234,68 +306,6 @@
 
 
   
-    <article id="post-blog1" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/06/16/blog1/" class="article-date">
-  <time datetime="2022-06-15T18:36:19.231Z" itemprop="datePublished">2022-06-16</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/06/16/blog1/">AI HPC学习资料网址</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="AI和HPC学习实践笔记"><a href="#AI和HPC学习实践笔记" class="headerlink" title="AI和HPC学习实践笔记"></a><center>AI和HPC学习实践笔记</center></h1><h2 id="书山有路勤为径，学海无涯苦作舟"><a href="#书山有路勤为径，学海无涯苦作舟" class="headerlink" title="书山有路勤为径，学海无涯苦作舟"></a><p align="right">书山有路勤为径，学海无涯苦作舟</p></h2><h3 id="常用网址："><a href="#常用网址：" class="headerlink" title="常用网址："></a><p align="left">常用网址：</p></h3><ul>
-<li><p>863高性能计算机评测中心<br><a target="_blank" rel="noopener" href="http://hpctest.cs.tsinghua.edu.cn/programs.html">http://hpctest.cs.tsinghua.edu.cn/programs.html</a></p>
-</li>
-<li><p>英特尔产品规格处理器<br><a target="_blank" rel="noopener" href="https://ark.intel.com/content/www/cn/zh/ark.html#@Processors">https://ark.intel.com/content/www/cn/zh/ark.html#@Processors</a></p>
-</li>
-<li><p>高性能计算 Linpack 基准测试<br><a target="_blank" rel="noopener" href="http://www.netlib.org/benchmark/hpl/">http://www.netlib.org/benchmark/hpl/</a><br><a target="_blank" rel="noopener" href="http://hpctest.cs.tsinghua.edu.cn/programs.html">http://hpctest.cs.tsinghua.edu.cn/programs.html</a><br><a target="_blank" rel="noopener" href="https://www.hpcg-benchmark.org/software/index.html">https://www.hpcg-benchmark.org/software/index.html</a></p>
-</li>
-<li><p>IB交换机配置命令<br><a target="_blank" rel="noopener" href="https://docs.nvidia.com/networking/display/MLNXOSv3101110">https://docs.nvidia.com/networking/display/MLNXOSv3101110</a><br>交换机固件下载地址：<a target="_blank" rel="noopener" href="https://www.mellanox.com/support/firmware/firmware-downloads">https://www.mellanox.com/support/firmware/firmware-downloads</a><br>IB交换机驱动下载地址：​<a target="_blank" rel="noopener" href="https://www.mellanox.com/products/infiniband-drivers/linux/mlnx_ofed">https://www.mellanox.com/products/infiniband-drivers/linux/mlnx_ofed</a></p>
-</li>
-<li><p>英伟达HPC SDK<br><a target="_blank" rel="noopener" href="https://docs.nvidia.com/hpc-sdk/index.html">https://docs.nvidia.com/hpc-sdk/index.html</a></p>
-</li>
-<li><p>NVIDIA Docker<br><a target="_blank" rel="noopener" href="https://catalog.ngc.nvidia.com/">https://catalog.ngc.nvidia.com/</a></p>
-</li>
-<li><p>Docker Hub 是世界上创建、管理和交付容器最简单方法<br><a target="_blank" rel="noopener" href="https://hub.docker.com/">https://hub.docker.com/</a><br>docker仓库<br><a target="_blank" rel="noopener" href="https://catalog.ngc.nvidia.com/">https://catalog.ngc.nvidia.com/</a><br><a target="_blank" rel="noopener" href="https://hub.docker.com/">https://hub.docker.com/</a></p>
-</li>
-<li><p>Python并行编程<br><a target="_blank" rel="noopener" href="https://python-parallel-programmning-cookbook.readthedocs.io/zh_CN/latest/index.html">https://python-parallel-programmning-cookbook.readthedocs.io/zh_CN/latest/index.html</a></p>
-</li>
-<li><p>MNIST 数据库<br><a target="_blank" rel="noopener" href="http://scc.ustc.edu.cn/389/list.htm">http://scc.ustc.edu.cn/389/list.htm</a><br><a target="_blank" rel="noopener" href="http://yann.lecun.com/exdb/mnist/">http://yann.lecun.com/exdb/mnist/</a></p>
-</li>
-<li><p>Slurm资源管理与作业调度系统安装配置<br><a target="_blank" rel="noopener" href="http://hmli.ustc.edu.cn/doc/linux/slurm-install/slurm-install.html">http://hmli.ustc.edu.cn/doc/linux/slurm-install/slurm-install.html</a><br><a target="_blank" rel="noopener" href="https://www.schedmd.com/archives.php">https://www.schedmd.com/archives.php</a><br><a target="_blank" rel="noopener" href="https://www.tcl.tk/software/tcltk/download.html">https://www.tcl.tk/software/tcltk/download.html</a><br><a target="_blank" rel="noopener" href="https://southgreenplatform.github.io/trainings/hpc/slurminstallation/">https://southgreenplatform.github.io/trainings/hpc/slurminstallation/</a><br><a target="_blank" rel="noopener" href="https://slurm.schedmd.com/quickstart_admin.html">https://slurm.schedmd.com/quickstart_admin.html</a></p>
-</li>
-<li><p>MPICH是消息传递接口 (MPI)标准的高性能和广泛可移植的实现<br><a target="_blank" rel="noopener" href="https://www.mpich.org/">https://www.mpich.org/</a><br><a target="_blank" rel="noopener" href="https://www.open-mpi.org/software/ompi/v4.0/">https://www.open-mpi.org/software/ompi/v4.0/</a><br><a target="_blank" rel="noopener" href="https://www.open-mpi.org/">https://www.open-mpi.org/</a><br><a target="_blank" rel="noopener" href="https://www.mpich.org/downloads/">https://www.mpich.org/downloads/</a></p>
-</li>
-<li><p>李会民：中国科学技术大学<br><a target="_blank" rel="noopener" href="https://hmli.ustc.edu.cn/doc/?cat=linux&amp;title=Linux%E7%B3%BB%E7%BB%9F">https://hmli.ustc.edu.cn/doc/?cat=linux&amp;title=Linux%E7%B3%BB%E7%BB%9F</a></p>
-</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/blog1/" data-id="clz10566s000ciga34txd62lb" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -332,6 +342,10 @@
       <ul>
         
           <li>
+            <a href="/2024/07/26/Rocky9_slurm/">Rocky9.4安装slurm超算集群</a>
+          </li>
+        
+          <li>
             <a href="/2024/07/25/NCCL/">NCCL</a>
           </li>
         
@@ -345,10 +359,6 @@
         
           <li>
             <a href="/2022/11/24/diskless_CentOS7/">HPC服务器集群配置CentOS 7.9无盘启动</a>
-          </li>
-        
-          <li>
-            <a href="/2022/11/24/limit/">管理节点CPU和内存使用率超过60%自动kill进程</a>
           </li>
         
       </ul>

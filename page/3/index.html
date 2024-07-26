@@ -64,6 +64,49 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-reset_password_root" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/06/25/reset_password_root/" class="article-date">
+  <time datetime="2022-06-24T18:33:50.613Z" itemprop="datePublished">2022-06-25</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/06/25/reset_password_root/">RHEL8重置root管理员密码</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>(1）在RHEL ８中，选择“活动”→“终端”命令，然后在打开的终端中输入如下命令。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@Server01 ~]<span class="comment"># cat /etc/redhat-release</span></span><br><span class="line">Red Hat Enterprise Linux release 8.2 (Ootpa)</span><br></pre></td></tr></table></figure>
+
+<p>(2）在终端输入“reboot”，或者单击右上角的关机按钮 ，选择“重启”按钮，重启Linux系统主机并出现引导界面时，按“e”键进入内核编辑界面。</p>
+<p>(3）在linux参数这行的最后面追加“rd.break”参数，然后按下“Ctrl + X”组合键来运行修改过的内核程序。</p>
+<p>(4）大约30秒过后，进入系统的紧急救援模式。依次输入以下命令，等待系统重启操作完毕，然后就可以使用新密码来登录Linux系统了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">switch_root:/<span class="comment"># mount -o remount,rw    /sysroot</span></span><br><span class="line">switch_root:/<span class="comment"># chroot   /sysroot</span></span><br><span class="line">sh-4.4<span class="comment"># passwd</span></span><br><span class="line">输入新密码</span><br><span class="line">再次输入新密码</span><br><span class="line">sh-4.4<span class="comment"># exit</span></span><br><span class="line">switch_root:/<span class="comment"># reboot</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/06/25/reset_password_root/" data-id="clz105670000miga31pzd7etw" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-IB_8700_setting" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/06/23/IB_8700_setting/" class="article-date">
@@ -287,57 +330,6 @@
 
 
   
-    <article id="post-HCA_TO_IB_MODE" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/06/21/HCA_TO_IB_MODE/" class="article-date">
-  <time datetime="2022-06-20T17:25:30.336Z" itemprop="datePublished">2022-06-21</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/06/21/HCA_TO_IB_MODE/">Linux操作系统HCA卡切换为 IB 模式：</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mst start</span><br><span class="line">mst status</span><br></pre></td></tr></table></figure>
-
-<p>单口卡：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mlxconfig -d /dev/mst/mt4115_pciconf0 <span class="built_in">set</span> LINK_TYPE_P1=ib KEEP_ETH_LINK_UP_P1=1</span><br></pre></td></tr></table></figure>
-
-<p>双口卡：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mlxconfig -d /dev/mst/mt4115_pciconf0 <span class="built_in">set</span> LINK_TYPE_P1=ib KEEP_IB_LINK_UP_P1=1 KEEP_IB_LINK_UP_P2=1</span><br></pre></td></tr></table></figure>
-
-<p>切换工作模式后重启服务器</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#reboot</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>备注：</p>
-<p>/dev/mst/mt4115_pciconf0   这个名称需要更换成mst status实际看到的/dev设备名</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/21/HCA_TO_IB_MODE/" data-id="clz1056650003iga32dxt6zj5" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -374,6 +366,10 @@
       <ul>
         
           <li>
+            <a href="/2024/07/26/Rocky9_slurm/">Rocky9.4安装slurm超算集群</a>
+          </li>
+        
+          <li>
             <a href="/2024/07/25/NCCL/">NCCL</a>
           </li>
         
@@ -387,10 +383,6 @@
         
           <li>
             <a href="/2022/11/24/diskless_CentOS7/">HPC服务器集群配置CentOS 7.9无盘启动</a>
-          </li>
-        
-          <li>
-            <a href="/2022/11/24/limit/">管理节点CPU和内存使用率超过60%自动kill进程</a>
           </li>
         
       </ul>

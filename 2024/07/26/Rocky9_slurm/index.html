@@ -5,13 +5,17 @@
   
 
   
-  <title>AI HPC in doing we learn!</title>
+  <title>Rocky9.4安装slurm超算集群 | AI HPC in doing we learn!</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="AI HPC in doing we learn!">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="Rocky Linux 安装 Slurm 调度超算集群系统信息 操作系统: Rocky Linux 9.4 (Blue Onyx) 内核版本: 5.14.0-427.22.1.el9_4.x86_64  磁盘布局 sda: sda1: 1GB &#x2F;boot&#x2F;efi sda2: 1GB &#x2F;boot sda3: 244.9GB &#x2F; sda4: 32GB [SWAP]   sdb: 可以挂载至 &#x2F;home">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Rocky9.4安装slurm超算集群">
+<meta property="og:url" content="http://example.com/2024/07/26/Rocky9_slurm/index.html">
 <meta property="og:site_name" content="AI HPC in doing we learn!">
+<meta property="og:description" content="Rocky Linux 安装 Slurm 调度超算集群系统信息 操作系统: Rocky Linux 9.4 (Blue Onyx) 内核版本: 5.14.0-427.22.1.el9_4.x86_64  磁盘布局 sda: sda1: 1GB &#x2F;boot&#x2F;efi sda2: 1GB &#x2F;boot sda3: 244.9GB &#x2F; sda4: 32GB [SWAP]   sdb: 可以挂载至 &#x2F;home">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-07-26T13:35:00.000Z">
+<meta property="article:modified_time" content="2024-07-26T14:01:34.864Z">
 <meta property="article:author" content="张东豪 zhangdonghao678@163.com">
 <meta name="twitter:card" content="summary">
   
@@ -62,9 +66,7 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-Rocky9_slurm" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-Rocky9_slurm" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2024/07/26/Rocky9_slurm/" class="article-date">
   <time datetime="2024-07-26T13:35:00.000Z" itemprop="datePublished">2024-07-26</time>
@@ -77,8 +79,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/07/26/Rocky9_slurm/">Rocky9.4安装slurm超算集群</a>
+    <h1 class="article-title" itemprop="name">
+      Rocky9.4安装slurm超算集群
     </h1>
   
 
@@ -189,271 +191,19 @@
     </footer>
   </div>
   
-</article>
-
-
+    
+<nav id="article-nav">
   
-    <article id="post-NCCL" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2024/07/25/NCCL/" class="article-date">
-  <time datetime="2024-07-25T08:28:00.000Z" itemprop="datePublished">2024-07-25</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/07/25/NCCL/">NCCL</a>
-    </h1>
+    <a href="/2024/07/25/NCCL/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">NCCL</div>
+    </a>
   
+</nav>
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="NF5688M7-机型-A800-GPU-NCCL-测试步骤"><a href="#NF5688M7-机型-A800-GPU-NCCL-测试步骤" class="headerlink" title="NF5688M7 机型 A800 GPU NCCL 测试步骤"></a>NF5688M7 机型 A800 GPU NCCL 测试步骤</h1><h2 id="一、基础环境"><a href="#一、基础环境" class="headerlink" title="一、基础环境"></a>一、基础环境</h2><ul>
-<li>默认GPU卡状态正常，通过<code>nvidia-smi</code>能正常打印基本信息，待测GPU无占用。</li>
-<li>IB卡通过<code>ibstat</code>能正常打印基本信息且显示State: Active。</li>
-<li>待测机器之间可以免密登录。</li>
-<li><strong>机型</strong>: NF5688-M7</li>
-<li><strong>GPU</strong>: A800 * 8</li>
-<li><strong>IB卡</strong>: MCX653105A-HDAT * 8</li>
-<li><strong>系统</strong>: CentOS7.9</li>
-<li><strong>GPU驱动版本</strong>: 535.183.06</li>
-<li><strong>CUDA版本</strong>: 12.4</li>
-</ul>
-<h2 id="二、安装基础测试软件包"><a href="#二、安装基础测试软件包" class="headerlink" title="二、安装基础测试软件包"></a>二、安装基础测试软件包</h2><h3 id="安装-NVIDIA-HPC-SDK"><a href="#安装-NVIDIA-HPC-SDK" class="headerlink" title="安装 NVIDIA HPC SDK"></a>安装 NVIDIA HPC SDK</h3><ol>
-<li>下载安装包:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://developer.download.nvidia.com/hpc-sdk/24.5/nvhpc_2024_245_Linux_x86_64_cuda_12.4.tar.gz</span><br></pre></td></tr></table></figure></li>
-<li>解压缩:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar xpzf nvhpc_2024_245_Linux_x86_64_cuda_12.4.tar.gz</span><br></pre></td></tr></table></figure></li>
-<li>执行安装命令:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvhpc_2024_245_Linux_x86_64_cuda_12.4/install</span><br></pre></td></tr></table></figure></li>
-<li>加载环境变量:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">export PATH=/home/software/nvidia/hpc_sdk/Linux_x86_64/24.5/compilers/bin:$PATH</span><br><span class="line">export MANPATH=/home/software/nvidia/hpc_sdk/Linux_x86_64/24.5/compilers/man:$MANPATH</span><br><span class="line">export PATH=/home/software/nvidia/hpc_sdk/Linux_x86_64/24.5/comm_libs/mpi/bin:$PATH</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h3 id="安装-OpenMPI"><a href="#安装-OpenMPI" class="headerlink" title="安装 OpenMPI"></a>安装 OpenMPI</h3><ol>
-<li>下载源码包:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://www.open-mpi.org/software/ompi/v5.0/downloads/openmpi-5.0.3.tar.bz2</span><br></pre></td></tr></table></figure></li>
-<li>编译安装:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mkdir /home/software/openmpi-5.0.3</span><br><span class="line">ssh g82</span><br><span class="line">cd /home/sourcecode/openmpi-5.0.3/</span><br><span class="line">./configure --prefix=/home/software/openmpi-5.0.3 --with-cuda</span><br><span class="line">make -j</span><br><span class="line">make install</span><br></pre></td></tr></table></figure></li>
-<li>加载环境变量:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">export MPI_HOME=/home/software/openmpi-5.0.3/</span><br><span class="line">export PATH=$MPI_HOME/bin:$PATH</span><br><span class="line">export LD_LIBRARY_PATH=$MPI_HOME/lib:$LD_LIBRARY_PATH</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h3 id="安装-NCCL"><a href="#安装-NCCL" class="headerlink" title="安装 NCCL"></a>安装 NCCL</h3><ol>
-<li>下载源码包:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/nvidia/nccl.git</span><br></pre></td></tr></table></figure></li>
-<li>编译:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum -y install rpm-build rpmdevtools</span><br><span class="line">make pkg.redhat.build</span><br></pre></td></tr></table></figure></li>
-<li>安装:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd build/pkg/rpm/</span><br><span class="line">rpm -ivh libnccl-*</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h3 id="安装-NCCL-Tests"><a href="#安装-NCCL-Tests" class="headerlink" title="安装 NCCL-Tests"></a>安装 NCCL-Tests</h3><ol>
-<li>下载源码包:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/nvidia/nccl-tests.git</span><br></pre></td></tr></table></figure></li>
-<li>编译:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd nccl-tests</span><br><span class="line">make MPI=1 MPI_HOME=/home/software/openmpi-5.0.3/ CUDA_HOME=/usr/local/cuda</span><br></pre></td></tr></table></figure></li>
-<li>复制编译好的安装包到共享存储目录下:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp -r nccl-tests /home/software/nvidia/</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h2 id="三、开始测试"><a href="#三、开始测试" class="headerlink" title="三、开始测试"></a>三、开始测试</h2><h3 id="1、单机测试"><a href="#1、单机测试" class="headerlink" title="1、单机测试"></a>1、单机测试</h3><p>在 <code>/home/software/nvidia/nccl-tests</code> 目录下执行:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mpirun -np 8 ./build/all_reduce_perf -b 8 -e 128M -f 2 -g 1</span><br></pre></td></tr></table></figure>
-
-<h4 id="方法1：使用-NVIDIA-HPC-SDK"><a href="#方法1：使用-NVIDIA-HPC-SDK" class="headerlink" title="方法1：使用 NVIDIA HPC SDK"></a>方法1：使用 NVIDIA HPC SDK</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">export PATH=/home/software/nvidia/hpc_sdk/Linux_x86_64/24.5/compilers/bin:$PATH</span><br><span class="line">export MANPATH=/home/software/nvidia/hpc_sdk/Linux_x86_64/24.5/compilers/man:$MANPATH</span><br><span class="line">export PATH=/home/software/nvidia/hpc_sdk/Linux_x86_64/24.5/comm_libs/mpi/bin:$PATH</span><br></pre></td></tr></table></figure>
-
-<h4 id="方法2：使用-OpenMPI"><a href="#方法2：使用-OpenMPI" class="headerlink" title="方法2：使用 OpenMPI"></a>方法2：使用 OpenMPI</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">export MPI_HOME=/home/software/openmpi-5.0.3/</span><br><span class="line">export PATH=$MPI_HOME/bin:$PATH</span><br><span class="line">export LD_LIBRARY_PATH=$MPI_HOME/lib:$LD_LIBRARY_PATH</span><br></pre></td></tr></table></figure>
-
-<h3 id="2、多机测试"><a href="#2、多机测试" class="headerlink" title="2、多机测试"></a>2、多机测试</h3><p>在 <code>nccl-tests</code> 目录下:</p>
-<ol>
-<li>新建 <code>myhosts</code> 文件，将待测各节点 IP 写入 <code>myhosts</code> 文件中。</li>
-<li>执行测试命令:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mpirun --allow-run-as-root --machinefile /home/software/nvidia/nccl-tests-master/myhosts -N 1 -x LD_LIBRARY_PATH -x NCCL_DEBUG=INFO -x NCCL_IB_HCA=mlx5_0,mlx5_1,mlx5_2,mlx5_3,mlx5_4,mlx5_6,mlx5_7,mlx5_8 ./build/all_reduce_perf -b 8 -e 2G -w 20 -n 1000 -f 2 -g 8 | tee NCCL.log</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h3 id="3、测试结果分析"><a href="#3、测试结果分析" class="headerlink" title="3、测试结果分析"></a>3、测试结果分析</h3><ul>
-<li>本次测试 NCCL 理论值为单机总带宽即 200 Gb/s。</li>
-<li>效率 = 156.10 / 200 = 78%。</li>
-<li><strong>备注</strong>:<ul>
-<li>in-place 下的 busbw 一列的最后一行标黄部分即为实测 NCCL 带宽值</li>
-</ul>
-</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/07/25/NCCL/" data-id="clz116sul0000lja32u42dahf" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
   
 </article>
-
-
-  
-    <article id="post-redhat7.9_docker" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2024/07/20/redhat7.9_docker/" class="article-date">
-  <time datetime="2024-07-20T07:00:00.000Z" itemprop="datePublished">2024-07-20</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/07/20/redhat7.9_docker/">redhat7.9离线安装docker</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h6 id="安装docker离线包"><a href="#安装docker离线包" class="headerlink" title="安装docker离线包"></a>安装docker离线包</h6><p>1、将docker安装包解压，将安装包内的全部二进制文件，copy至/usr/bin/目录；<br>2、将docker.service文件copy至/usr/lib/systemd/system/ 目录；<br>3、启动docker：systemctl start docker；<br>设置开机自启动：systemctl enable docker；<br>4、查看docker版本：docker version</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> docker/</span><br><span class="line">unzip redhat7.9安装docker离线软安装包.zip</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line"><span class="built_in">cd</span> redhat7.9安装docker离线软安装包/</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line">tar -zxvf docker-26.1.2.tgz</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line"><span class="built_in">cp</span> -r docker/* /usr/bin/</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line"><span class="built_in">cp</span> docker.service /usr/lib/systemd/system/</span><br><span class="line">systemctl start docker</span><br><span class="line">systemctl <span class="built_in">enable</span> docker</span><br><span class="line">systemctl status docker</span><br><span class="line"><span class="built_in">cd</span></span><br><span class="line">docker --version</span><br></pre></td></tr></table></figure>
-
-<h6 id="安装docker-compose"><a href="#安装docker-compose" class="headerlink" title="安装docker-compose"></a>安装docker-compose</h6><p>1、将docker-compose-linux-x86_64文件重命名为 docker-compose；<br>2、添加执行权限 chmod +x docker-compose；<br>3、将docker-compose文件 mv 至 /usr/local/bin/ 目录；<br>4、执行 docker-compose version 查看版本；</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> docker/redhat7.9安装docker离线软安装包/</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line"><span class="built_in">cp</span> docker-compose-linux-x86_64 docker-compose</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line"><span class="built_in">chmod</span> +x docker-compose</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line"><span class="built_in">cp</span> docker-compose  /usr/local/bin/</span><br><span class="line">docker-compose version</span><br></pre></td></tr></table></figure>
-
-<h6 id="安装nvidia-container-runtime："><a href="#安装nvidia-container-runtime：" class="headerlink" title="安装nvidia-container-runtime："></a>安装nvidia-container-runtime：</h6><p>1、解压 nvidia-docker2-rpm.tar.gz；<br>2、rpm -ivh或者yum install安装；<br>3、systemctl restart docker 重启docker服务；</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf nvidia-docker2-rpm.tar.gz</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line"><span class="built_in">ls</span> root/</span><br><span class="line"><span class="built_in">ls</span> root/rpm/</span><br><span class="line"><span class="built_in">cd</span> root/rpm/</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line">rpm -ivh libnvidia-container* nvidia-*</span><br><span class="line">systemctl restart docker</span><br><span class="line">systemctl status docker</span><br></pre></td></tr></table></figure>
-
-<h6 id="下载docker镜像测试运行"><a href="#下载docker镜像测试运行" class="headerlink" title="下载docker镜像测试运行"></a>下载docker镜像测试运行</h6><p>编辑daemon.json 文件，添加镜像加速器的地址。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span>  ~/.docker/daemon.json</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;registry-mirrors&quot;</span>: [</span><br><span class="line">    <span class="string">&quot;https://docker.mirrors.ustc.edu.cn&quot;</span></span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h6 id="下载docker镜像测试运行-1"><a href="#下载docker镜像测试运行-1" class="headerlink" title="下载docker镜像测试运行"></a>下载docker镜像测试运行</h6><p>NGC镜像下载地址</p>
-<pre><code class="bash">https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch
-docker pull nvcr.io/nvidia/pytorch:24.06-py3
-
-docker run --gpus all --ipc=host --ulimit memlock=-1 --ulimit stack=67108864   nvcr.io/nvidia/pytorch:24.06-py3
-
-交互方式进入docker镜像
-docker run -it --gpus all --ipc=host --ulimit memlock=-1 --ulimit stack=67108864   nvcr.io/nvidia/pytorch:24.06-py3
-实测可用命令进入docker容器
-docker run -it --gpus all --ipc=host --ulimit memlock=-1 --ulimit stack=67108864   pytorch-20240719.tar:latest
-```bash
-
-
-###### 如何让系统普通用户也能使用docker命令
-将用户添加到了docker组
-sudo groupadd docker
-sudo usermod -aG docker test10
-id  test10
-重启Docker服务以确保用户组的更改（普通用户属于docker组）被应用
-使用sudo systemctl restart docker来重启Docker守护进程。
-
-
-
-###### redhat7.9离线安装docker软件包
-链接：https://pan.baidu.com/s/1WK78h2tq5S6iECcu4lRhCg 
-提取码：o83k 
-
-
-###### 如果可以联网，redhat7.9建议的repo仓库文件：
-
-
-###### 下载英伟达NGC  pytorch镜像，保存为tar了。19G。有需要可用离线导入
-链接：https://pan.baidu.com/s/1rQ6PhLlnKfu9tNlCC_Dl6w
-提取码：215c 
-
-</code></pre>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/07/20/redhat7.9_docker/" data-id="clz105670000liga33hp00l2w" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-CentOS7_Slurm" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/11/24/CentOS7_Slurm/" class="article-date">
-  <time datetime="2022-11-24T06:07:57.575Z" itemprop="datePublished">2022-11-24</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/11/24/CentOS7_Slurm/">CentOS7.9 install Slurm</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="计算节点使用无配置-configless-模式启动slurmd服务"><a href="#计算节点使用无配置-configless-模式启动slurmd服务" class="headerlink" title="计算节点使用无配置(configless)模式启动slurmd服务"></a>计算节点使用无配置(configless)模式启动slurmd服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">项目设备：</span><br><span class="line">sda盘安装操作系统标准分区</span><br><span class="line">sdb盘*T，可以挂载/home目录，普通用户家目录使用</span><br><span class="line">安装系统：</span><br><span class="line">[root@admin ~]<span class="comment"># cat /etc/redhat-release</span></span><br><span class="line">CentOS Linux release 7.9.2009 (Core)</span><br><span class="line">[root@admin ~]<span class="comment"># uname -r</span></span><br><span class="line">3.10.0-1160.el7.x86_64</span><br><span class="line">安装软件：</span><br><span class="line">Slurm作业管理系统slurm-22.05.2.tar.bz2</span><br><span class="line">MySQL8</span><br><span class="line">Munge</span><br></pre></td></tr></table></figure>
-        
-          <p class="article-more-link">
-            <a href="/2022/11/24/CentOS7_Slurm/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/24/CentOS7_Slurm/" data-id="clz1056620001iga35fprfitq" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-diskless_CentOS7" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/11/24/diskless_CentOS7/" class="article-date">
-  <time datetime="2022-11-24T06:06:13.875Z" itemprop="datePublished">2022-11-24</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/11/24/diskless_CentOS7/">HPC服务器集群配置CentOS 7.9无盘启动</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>无盘(diskless)集群，指的是计算节点没有本地硬盘或本地硬盘没有安装操作系统。<br>优点是管理维护方便，可节省计算节点硬盘；缺点是对服务节点的存储IO性能及之间的网络稳定性和性能要求高。<br>计算节点配置240G SSD硬盘，无盘OS启动源安装目录在存储设备DDN高速IO文件系统上，通过稳定高带宽的IB网络PXE启动。<br>服务节点：<br>节点名：server<br>内网IP：192.168.111.138<br>无盘客户节点：<br>节点名：client1、client2<br>内网IP：192.168.111.1、192.168.111.2</p>
-        
-          <p class="article-more-link">
-            <a href="/2022/11/24/diskless_CentOS7/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/24/diskless_CentOS7/" data-id="clz10566s000diga31bxv4elx" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-
-
-  <nav id="page-nav">
-    
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
-  </nav>
 
 </section>
         

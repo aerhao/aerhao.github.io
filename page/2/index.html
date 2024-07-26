@@ -64,6 +64,45 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-limit" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/11/24/limit/" class="article-date">
+  <time datetime="2022-11-24T05:52:23.822Z" itemprop="datePublished">2022-11-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/11/24/limit/">管理节点CPU和内存使用率超过60%自动kill进程</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>limit.sh</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">source /etc/profile</span><br><span class="line">ps ar -eo user,pid,pcpu,pmem | sort -k3r | head -11 | awk -F&quot; +&quot;  &#x27;</span><br><span class="line">BIGEN</span><br><span class="line">&#123;</span><br><span class="line">	cpuLimit=60;</span><br><span class="line">	memLimit=60;</span><br><span class="line">&#125;</span><br><span class="line">&#123;</span><br><span class="line">	if(NR!=1 &amp;&amp; $3&gt;=cpuLimit &amp;&amp; $1!=&quot;root&quot;)&#123;</span><br><span class="line">		printf(&quot;CPU using of PID %d is exceed 60%,it will be kill! \n&quot;,$2);</span><br><span class="line">		system(&quot;kill -9  &quot;$2);	</span><br><span class="line">	&#125;</span><br><span class="line">	else if(NR!=1 &amp;&amp; $4&gt;=memLimit &amp;&amp; $1!=&quot;root&quot;)&#123;</span><br><span class="line">		printf(&quot;MEM using of PID %d is exceed 60%,it will be kill! \n&quot;,$2);</span><br><span class="line">		system(&quot;kill -9 &quot;$2);	</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#x27;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/11/24/limit/" data-id="clz10566u000giga3bb6hdhlv" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-CentOS7_install_Slurm" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/08/06/CentOS7_install_Slurm/" class="article-date">
@@ -280,49 +319,6 @@
 
 
   
-    <article id="post-reset_password_root" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/06/25/reset_password_root/" class="article-date">
-  <time datetime="2022-06-24T18:33:50.613Z" itemprop="datePublished">2022-06-25</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/06/25/reset_password_root/">RHEL8重置root管理员密码</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>(1）在RHEL ８中，选择“活动”→“终端”命令，然后在打开的终端中输入如下命令。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@Server01 ~]<span class="comment"># cat /etc/redhat-release</span></span><br><span class="line">Red Hat Enterprise Linux release 8.2 (Ootpa)</span><br></pre></td></tr></table></figure>
-
-<p>(2）在终端输入“reboot”，或者单击右上角的关机按钮 ，选择“重启”按钮，重启Linux系统主机并出现引导界面时，按“e”键进入内核编辑界面。</p>
-<p>(3）在linux参数这行的最后面追加“rd.break”参数，然后按下“Ctrl + X”组合键来运行修改过的内核程序。</p>
-<p>(4）大约30秒过后，进入系统的紧急救援模式。依次输入以下命令，等待系统重启操作完毕，然后就可以使用新密码来登录Linux系统了。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">switch_root:/<span class="comment"># mount -o remount,rw    /sysroot</span></span><br><span class="line">switch_root:/<span class="comment"># chroot   /sysroot</span></span><br><span class="line">sh-4.4<span class="comment"># passwd</span></span><br><span class="line">输入新密码</span><br><span class="line">再次输入新密码</span><br><span class="line">sh-4.4<span class="comment"># exit</span></span><br><span class="line">switch_root:/<span class="comment"># reboot</span></span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/25/reset_password_root/" data-id="clz105670000miga31pzd7etw" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -359,6 +355,10 @@
       <ul>
         
           <li>
+            <a href="/2024/07/26/Rocky9_slurm/">Rocky9.4安装slurm超算集群</a>
+          </li>
+        
+          <li>
             <a href="/2024/07/25/NCCL/">NCCL</a>
           </li>
         
@@ -372,10 +372,6 @@
         
           <li>
             <a href="/2022/11/24/diskless_CentOS7/">HPC服务器集群配置CentOS 7.9无盘启动</a>
-          </li>
-        
-          <li>
-            <a href="/2022/11/24/limit/">管理节点CPU和内存使用率超过60%自动kill进程</a>
           </li>
         
       </ul>
