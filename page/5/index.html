@@ -64,6 +64,59 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-nfs_server" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/06/17/nfs_server/" class="article-date">
+  <time datetime="2022-06-17T15:09:09.271Z" itemprop="datePublished">2022-06-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/06/17/nfs_server/">配置NFS服务</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>##共享管理节点/data目录给计算节点</p>
+<p>server端操作：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yum -y install nfs-utils rpcbind</span><br><span class="line">systemctl start   rpcbind</span><br><span class="line">systemctl <span class="built_in">enable</span>  rpcbind</span><br><span class="line">systemctl start   nfs-server</span><br><span class="line">systemctl <span class="built_in">enable</span>  nfs-server</span><br></pre></td></tr></table></figure>
+
+<p>#建立文件/etc/exports（若已存在该文件，则先删除再重新建立）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/exports</span><br><span class="line"><span class="built_in">cat</span> /etc/exports</span><br><span class="line">/data *(rw,no_root_squash,<span class="built_in">sync</span>)   </span><br><span class="line"><span class="comment">#或者/data *(rw,insecure,no_root_squash,async)</span></span><br></pre></td></tr></table></figure>
+
+<p>#共享文件系统服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">exportfs -rv </span><br><span class="line"><span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+
+<p>client端操作<br>扫描可以使用的 server 目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">showmount -e mu01</span><br></pre></td></tr></table></figure>
+
+<p>#客户端mount挂载管理节点/data文件夹到本地/data文件夹</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mount -t nfs -o vers=3 mgmt:/data  /data</span><br></pre></td></tr></table></figure>
+
+<p>上述命令追加写入到/etc/rc.d/rc.local/中以使节点启动后自动挂载目录。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/06/17/nfs_server/" data-id="clz10566w000higa3e9migwrj" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-genisoimage" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/06/17/genisoimage/" class="article-date">
@@ -256,56 +309,6 @@
 
 
   
-    <article id="post-hexo_d" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/06/16/hexo_d/" class="article-date">
-  <time datetime="2022-06-15T18:37:18.664Z" itemprop="datePublished">2022-06-16</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/06/16/hexo_d/">解决hexo d命令部署github博客时报错</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="使用-Hexo-和-GitHub-搭建博客，出现-hexo-d-报错如何解决？"><a href="#使用-Hexo-和-GitHub-搭建博客，出现-hexo-d-报错如何解决？" class="headerlink" title="使用 Hexo 和 GitHub 搭建博客，出现 hexo -d 报错如何解决？"></a>使用 Hexo 和 GitHub 搭建博客，出现 hexo -d 报错如何解决？</h2><p>报错现象：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"># On branch master</span><br><span class="line">nothing to commit, working directory clean</span><br><span class="line">Username for &#x27;https://github.com&#x27;: aerhao</span><br><span class="line">Password for &#x27;https://aerhao@github.com&#x27;:</span><br><span class="line">remote: Support for password authentication was removed on August 13, 2021. Plea                                                   se use a personal access token instead.</span><br><span class="line">remote: Please see https://github.blog/2020-12-15-token-authentication-requireme                                                   nts-for-git-operations/ for more information.</span><br><span class="line">fatal: Authentication failed for &#x27;https://github.com/aerhao/aerhao.github.io.git                                                   /&#x27;</span><br><span class="line">FATAL &#123;</span><br><span class="line">  err: Error: Spawn failed</span><br><span class="line">      at ChildProcess.&lt;anonymous&gt; (/home/blog/node_modules/hexo-util/lib/spawn.j                                                   s:51:21)</span><br><span class="line">      at ChildProcess.emit (events.js:400:28)</span><br><span class="line">      at Process.ChildProcess._handle.onexit (internal/child_process.js:282:12)                                                    &#123;</span><br><span class="line">    code: 128</span><br><span class="line">  &#125;</span><br><span class="line">&#125; Something&#x27;s wrong. Maybe you can find the solution here: %s https://hexo.io/do                                                   cs/troubleshooting.html</span><br><span class="line">root@mu01:[/home/blog]hexo d</span><br></pre></td></tr></table></figure>
-
-<p>旧配置文件：_config.yml找到Deployment：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">deploy: </span><br><span class="line">  type: git </span><br><span class="line">  repo: https://github.com/yourname/yourname.github.io.git </span><br><span class="line">  branch: main</span><br><span class="line">  其中 repo的地址修改为</span><br><span class="line">  git@github.com:yourname/yourname.github.io.git</span><br></pre></td></tr></table></figure>
-
-<p>正确的配置文件：_config.yml</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Deployment</span></span><br><span class="line"><span class="comment">## Docs: https://hexo.io/docs/one-command-deployment</span></span><br><span class="line">deploy:</span><br><span class="line">  <span class="built_in">type</span>: git</span><br><span class="line">  repo: git@github.com:aerhao/aerhao.github.io.git</span><br><span class="line">  branch: main</span><br></pre></td></tr></table></figure>
-
-<p>报错原因：</p>
-<p>因为你前面也是用的ssh-keygen生成的秘钥文件嘛，肯定测试过</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh git@github.com</span><br></pre></td></tr></table></figure>
-
-<p>所以hexo d部署时用ssh git用户登录认证会通过。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/16/hexo_d/" data-id="clz10566t000figa325av0w3l" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -342,6 +345,10 @@
       <ul>
         
           <li>
+            <a href="/2024/07/27/A800/">Pytorch检查GPU卡状态正常</a>
+          </li>
+        
+          <li>
             <a href="/2024/07/26/Rocky9_slurm/">Rocky9.4安装slurm超算集群</a>
           </li>
         
@@ -355,10 +362,6 @@
         
           <li>
             <a href="/2022/11/24/CentOS7_Slurm/">CentOS7.9 install Slurm</a>
-          </li>
-        
-          <li>
-            <a href="/2022/11/24/diskless_CentOS7/">HPC服务器集群配置CentOS 7.9无盘启动</a>
           </li>
         
       </ul>
