@@ -64,6 +64,47 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-CentOS7_Slurm" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/11/24/CentOS7_Slurm/" class="article-date">
+  <time datetime="2022-11-24T06:07:57.575Z" itemprop="datePublished">2022-11-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/11/24/CentOS7_Slurm/">CentOS7.9 install Slurm</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="计算节点使用无配置-configless-模式启动slurmd服务"><a href="#计算节点使用无配置-configless-模式启动slurmd服务" class="headerlink" title="计算节点使用无配置(configless)模式启动slurmd服务"></a>计算节点使用无配置(configless)模式启动slurmd服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">项目设备：</span><br><span class="line">sda盘安装操作系统标准分区</span><br><span class="line">sdb盘*T，可以挂载/home目录，普通用户家目录使用</span><br><span class="line">安装系统：</span><br><span class="line">[root@admin ~]<span class="comment"># cat /etc/redhat-release</span></span><br><span class="line">CentOS Linux release 7.9.2009 (Core)</span><br><span class="line">[root@admin ~]<span class="comment"># uname -r</span></span><br><span class="line">3.10.0-1160.el7.x86_64</span><br><span class="line">安装软件：</span><br><span class="line">Slurm作业管理系统slurm-22.05.2.tar.bz2</span><br><span class="line">MySQL8</span><br><span class="line">Munge</span><br></pre></td></tr></table></figure>
+        
+          <p class="article-more-link">
+            <a href="/2022/11/24/CentOS7_Slurm/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/11/24/CentOS7_Slurm/" data-id="clz1056620001iga35fprfitq" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-diskless_CentOS7" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/11/24/diskless_CentOS7/" class="article-date">
@@ -233,95 +274,6 @@
 
 
   
-    <article id="post-PXE_RHEL7.9" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/07/19/PXE_RHEL7.9/" class="article-date">
-  <time datetime="2022-07-18T16:28:01.731Z" itemprop="datePublished">2022-07-19</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/07/19/PXE_RHEL7.9/">UEFI模式PXE批量安装RHEL7.9</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>安装步骤<br>1<br>1.1 yum配置本地源<br>　　在/etc/yum.repos.d/下备份所有系统repo文件，并创建新的repo文件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">　　[root@mu01~]<span class="comment">#cat &gt; /etc/yum.repos.d/local.repo &lt;&lt;EOF</span></span><br><span class="line">　　[rhel79]</span><br><span class="line">　　name=RedHat7.9</span><br><span class="line">　　baseurl=file:///mnt</span><br><span class="line">　　enabled=1</span><br><span class="line">　　gpgcheck=0</span><br></pre></td></tr></table></figure>
-
-<p>　　然后将iso镜像文件挂载到/mnt下</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">　　mount –o loop rhel-server-7.9-x86_64-dvd.iso /mnt</span><br></pre></td></tr></table></figure>
-
-<p>2.2 TFTP安装<br>1  yum安装相关包 xinetd tftp tftp-server</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum install xinetd -y</span><br><span class="line">yum install tftp -y</span><br><span class="line">yum install tftp-server  -y</span><br></pre></td></tr></table></figure>
-
-<p>2  配置tftp服务<br>查看xinetd状态</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># systemctl status xinetd</span></span><br><span class="line">● xinetd.service - Xinetd A Powerful Replacement For Inetd</span><br><span class="line">   Loaded: loaded (/usr/lib/systemd/system/xinetd.service; enabled; vendor preset: enabled)</span><br><span class="line">   Active: inactive (dead)</span><br><span class="line">[root@localhost ~]<span class="comment"># systemctl start xinetd</span></span><br><span class="line">[root@localhost ~]<span class="comment"># systemctl status xinetd</span></span><br><span class="line">● xinetd.service - Xinetd A Powerful Replacement For Inetd</span><br><span class="line">   Loaded: loaded (/usr/lib/systemd/system/xinetd.service; enabled; vendor preset: enabled)</span><br><span class="line">   Active: active (running) since Mon 2018-03-12 09:43:00 CST; 1s ago</span><br><span class="line">  Process: 6321 ExecStart=/usr/sbin/xinetd -stayalive -pidfile /var/run/xinetd.pid </span><br></pre></td></tr></table></figure>
-
-<p>修改/etc/xinetd.d/tftp文件，将其中的disable=yes改为disable=no。开启TFTP服务<br>-s /var/lib/tftpboot是TFTP服务器的根目录，开启服务。修改后的文件如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># default: off</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># description: The tftp server serves files using the trivial file transfer \</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#       protocol.  The tftp protocol is often used to boot diskless \</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#       workstations, download configuration files to network-aware printers, \</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#       and to start the installation process for some operating systems.</span></span><br><span class="line"></span><br><span class="line">service tftp</span><br><span class="line">&#123;</span><br><span class="line">        socket_type             = dgram</span><br><span class="line">        protocol                = udp</span><br><span class="line">        <span class="built_in">wait</span>                    = <span class="built_in">yes</span></span><br><span class="line">        user                    = root</span><br><span class="line">        server                  = /usr/sbin/in.tftpd</span><br><span class="line">        server_args             = -s /var/lib/tftpboot</span><br><span class="line">        <span class="built_in">disable</span>                 = no</span><br><span class="line">        per_source              = 11</span><br><span class="line">        cps                     = 100 2</span><br><span class="line">        flags                   = IPv4</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>查看tftp状态</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@mu01 xinetd.d]<span class="comment"># systemctl status tftp.service</span></span><br><span class="line">● tftp.service - Tftp Server</span><br><span class="line">   Loaded: loaded (/usr/lib/systemd/system/tftp.service; indirect; vendor preset: disabled)</span><br><span class="line">   Active: inactive (dead)</span><br><span class="line">[root@mu01 ~]<span class="comment"># systemctl start tftp</span></span><br><span class="line">[root@mu01 ~]<span class="comment"># systemctl status tftp</span></span><br><span class="line">● tftp.service - Tftp Server</span><br><span class="line">   Loaded: loaded (/usr/lib/systemd/system/tftp.service; indirect; vendor preset: disabled)</span><br><span class="line">   Active: active (running) since Mon 2018-03-12 09:49:43 CST; 1s ago</span><br></pre></td></tr></table></figure>
-
-<p>查看端口</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost xinetd.d]<span class="comment"># netstat -a|grep tftp                        </span></span><br><span class="line">udp6       0      0 [::]:tftp               [::]:                             </span><br><span class="line">[root@localhost xinetd.d]<span class="comment">#</span></span><br></pre></td></tr></table></figure>
-
-<p>验证服务<br>在/var/lib/tftpboot下vi tt.c,然后通过tftp下载到/home/test目录</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">　　[root@mu01 tftpboot]<span class="comment"># vi tt.c</span></span><br><span class="line">　　[root@mu01 tftpboot]<span class="comment"># cd /home</span></span><br><span class="line">　　[root@mu01 home]<span class="comment"># mkdir test</span></span><br><span class="line">　　[root@mu01 home]<span class="comment"># cd test</span></span><br><span class="line">　　[root@mu01 <span class="built_in">test</span>]<span class="comment"># tftp 192.168.9.138</span></span><br><span class="line">　　tftp&gt; get tt.c</span><br><span class="line">　　tftp&gt; q</span><br><span class="line">　　[root@mu01 <span class="built_in">test</span>]<span class="comment"># ls</span></span><br><span class="line">　　tt.c</span><br></pre></td></tr></table></figure>
-
-<p>将rhel79.zip解压后，将其中所有文件拷贝到/var/lib/tftpboot下，文件具体信息如下： 注意efidefault需要x权限</p>
-<p>2.3 DHCP服务安装<br>1 yum安装dhcp </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install dhcp -y</span><br></pre></td></tr></table></figure>
-
-<p> 配置dhcp服务<br>按照最简配置，复制如下信息到dhcpd.conf文件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/dhcp/dhcpd.conf</span><br><span class="line"><span class="comment">#</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># DHCP Server Configuration file.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#   see /usr/share/doc/dhcp/dhcpd.conf.example</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#   see dhcpd.conf(5) man page</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">authoritative;</span><br><span class="line">ddns-update-style none;</span><br><span class="line">option user-class <span class="string">&quot;tsddss.hpsd.langchao.com&quot;</span>;</span><br><span class="line">option vendor-class-identifier <span class="string">&quot;tsddss.hpsd.langchao.com&quot;</span>;</span><br><span class="line">default-lease-time 600;</span><br><span class="line">max-lease-time 7200;</span><br><span class="line"></span><br><span class="line">option space PXE; </span><br><span class="line">option PXE.mtftp-ip code 1 = ip-address; </span><br><span class="line">option PXE.mtftp-cport code 2 = unsigned <span class="built_in">integer</span> 16; </span><br><span class="line">option PXE.mtftp-sport code 3 = unsigned <span class="built_in">integer</span> 16;</span><br><span class="line">option PXE.mtftp-tmout code 4 = unsigned <span class="built_in">integer</span> 8; </span><br><span class="line">option PXE.mtftp-delay code 5 = unsigned <span class="built_in">integer</span> 8; </span><br><span class="line">option PXE.discovery-control code 6 = unsigned <span class="built_in">integer</span> 8;</span><br><span class="line">option PXE.discovery-mcast-addr code 7 = ip-address;</span><br><span class="line">option <span class="built_in">arch</span> code 93 = unsigned <span class="built_in">integer</span> 16; </span><br><span class="line">subnet 12.12.12.0 netmask 255.255.255.0 &#123; </span><br><span class="line">	range 12.12.12.1 12.12.12.250;</span><br><span class="line">	next-server 12.12.12.253;</span><br><span class="line">	class <span class="string">&quot;pxeclients&quot;</span> &#123; </span><br><span class="line">		match <span class="keyword">if</span> substring (option vendor-class-identifier, 0, 9) = <span class="string">&quot;PXEClient&quot;</span>; </span><br><span class="line">		<span class="keyword">if</span> option <span class="built_in">arch</span> = 00:02 </span><br><span class="line">		&#123; </span><br><span class="line">			filename <span class="string">&quot;ia64/elilo.efi&quot;</span>; </span><br><span class="line">		&#125; </span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> option <span class="built_in">arch</span> = 00:06 </span><br><span class="line">		&#123; </span><br><span class="line">			filename <span class="string">&quot;X86PC/bootia32.efi&quot;</span>; </span><br><span class="line">		&#125; </span><br><span class="line">		<span class="keyword">if</span> option <span class="built_in">arch</span> = 00:07 </span><br><span class="line">		&#123; </span><br><span class="line"></span><br><span class="line">			filename <span class="string">&quot;BOOTX64.efi&quot;</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> </span><br><span class="line">		&#123; </span><br><span class="line">			filename <span class="string">&quot;pxelinux.0&quot;</span>; </span><br><span class="line">	</span><br><span class="line">		&#125;</span><br><span class="line">	&#125; </span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>完成后重启dhcp服务</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@mu01 dhcp]<span class="comment"># systemctl start dhcpd</span></span><br><span class="line">[root@mu01 dhcp]<span class="comment"># systemctl status dhcpd</span></span><br><span class="line">● dhcpd.service - DHCPv4 Server Daemon</span><br><span class="line">   Loaded: loaded (/usr/lib/systemd/system/dhcpd.service; disabled; vendor preset: disabled)</span><br><span class="line">   Active: active (running) since Mon 2018-03-12 09:58:06 CST; 1min 52s ago</span><br><span class="line">     Docs: man:dhcpd(8)</span><br><span class="line">           man:dhcpd.conf(5)</span><br></pre></td></tr></table></figure>
-
-<p>最后检查dhcp服务状态，67端口开了就表示正常</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@mu01 dhcp]<span class="comment"># netstat -nlp|grep dhcp</span></span><br></pre></td></tr></table></figure>
-
-<p>2.4安装httpd<br>1安装httpd</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum istall httpd -y</span><br></pre></td></tr></table></figure>
-
-<p>2 查看状态</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@mu01 dhcp]<span class="comment"># systemctl status httpd</span></span><br><span class="line">● httpd.service - The Apache HTTP Server</span><br><span class="line">   Loaded: loaded (/etc/systemd/system/httpd.service; disabled; vendor preset: disabled)</span><br><span class="line">   Active: inactive (dead)</span><br><span class="line">[root@mu01 dhcp]<span class="comment"># systemctl start httpd</span></span><br><span class="line">[root@mu01 dhcp]<span class="comment"># systemctl status httpd</span></span><br><span class="line">● httpd.service - The Apache HTTP Server</span><br><span class="line">   Loaded: loaded (/etc/systemd/system/httpd.service; disabled; vendor preset: disabled)</span><br><span class="line">   Active: active (running) since Mon 2018-03-12 10:13:52 CST; 3s ago</span><br></pre></td></tr></table></figure>
-
-<p>检查http是否可用<br>首先将iso文件挂载到/var/www/html/rhel79下，</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@mu01 html]<span class="comment"># pwd</span></span><br><span class="line">/var/www/html</span><br><span class="line">[root@mu01 html]<span class="comment"># mkdir rhel79</span></span><br><span class="line">[root@mu01 html]<span class="comment"># mount -o loop rhel-server-7.9-x86_64-dvd.iso /var/www/html/rhel79</span></span><br><span class="line">mount: /dev/loop0 is write-protected, mounting read-only</span><br></pre></td></tr></table></figure>
-
-<p>然后在浏览器输入ip查看挂载的镜像是否可用</p>
-<p>同时，将uefi的ks文件拷贝到/var/www/html下，同时根据现场需要修改ks文件内ip及分区信息</p>
-<p>如果碰到http无法打开网页的情况，考虑把http目录下关于security的文件备份移动到其他路径（将activated_rules下的所有文件备份到其他目录），重启后重新连接</p>
-<p>2.5 PXE安装<br>　　将rhel79.zip压缩包文件解压到ftp根目录，将BOOTX64.efi efidefault跟/pxelinuxcfg/efidefault增加x权限<br>　　rhel79.zip压缩包内有RedHat7.9系统下vmlinuz 和initrd.img文件，如果需要安装7.系统，挂载7.镜像后，将7.系统内的vmlinuz和initrd.img拷贝到tftp根目录下即可<br>efidefault内容如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@mu01 tftpboot]<span class="comment"># vi /var/lib/tftpboot/pxelinux.cfg/efidefault</span></span><br><span class="line"></span><br><span class="line">default=10</span><br><span class="line"><span class="built_in">timeout</span>=15</span><br><span class="line">splashimage=(nd)/splash.xpm.gz </span><br><span class="line"></span><br><span class="line">lable 10</span><br><span class="line">	title Install RHEL-7.9-x86_64 (UEFI)</span><br><span class="line">	root (nd)</span><br><span class="line">	kernel /vmlinuz ksdevice=<span class="built_in">link</span> ks=http://12.12.12.19/rhel79.cfg  ip=dhcp</span><br><span class="line">	initrd /initrd.img</span><br></pre></td></tr></table></figure>
-
-<p>配置完成后，将客户端BIOS修改为UEFI模式，重启即可开始PXE灌装</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/07/19/PXE_RHEL7.9/" data-id="clz10566p000aiga3f9aialy6" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -358,6 +310,10 @@
       <ul>
         
           <li>
+            <a href="/2024/07/27/ubuntu_slurm/">Ubuntu安装slurm超算集群</a>
+          </li>
+        
+          <li>
             <a href="/2024/07/27/A800/">Pytorch检查GPU卡状态正常</a>
           </li>
         
@@ -371,10 +327,6 @@
         
           <li>
             <a href="/2024/07/20/redhat7.9_docker/">redhat7.9离线安装docker</a>
-          </li>
-        
-          <li>
-            <a href="/2022/11/24/CentOS7_Slurm/">CentOS7.9 install Slurm</a>
           </li>
         
       </ul>

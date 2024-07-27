@@ -5,13 +5,17 @@
   
 
   
-  <title>AI HPC in doing we learn!</title>
+  <title>Ubuntu安装slurm超算集群 | AI HPC in doing we learn!</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="AI HPC in doing we learn!">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="硬件配置   CPU 和内存:     硬盘分区:    IP 信息: 网卡配置文件12345678910111213141516171819# This is the network config written by &amp;#x27;subiquity&amp;#x27;network:  ethernets:    eno1:      addresses:      - 10.0.0.242&#x2F;24">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ubuntu安装slurm超算集群">
+<meta property="og:url" content="http://example.com/2024/07/27/ubuntu_slurm/index.html">
 <meta property="og:site_name" content="AI HPC in doing we learn!">
+<meta property="og:description" content="硬件配置   CPU 和内存:     硬盘分区:    IP 信息: 网卡配置文件12345678910111213141516171819# This is the network config written by &amp;#x27;subiquity&amp;#x27;network:  ethernets:    eno1:      addresses:      - 10.0.0.242&#x2F;24">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-07-27T09:00:00.000Z">
+<meta property="article:modified_time" content="2024-07-27T09:32:54.768Z">
 <meta property="article:author" content="张东豪 zhangdonghao678@163.com">
 <meta name="twitter:card" content="summary">
   
@@ -62,9 +66,7 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-ubuntu_slurm" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-ubuntu_slurm" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2024/07/27/ubuntu_slurm/" class="article-date">
   <time datetime="2024-07-27T09:00:00.000Z" itemprop="datePublished">2024-07-27</time>
@@ -77,8 +79,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/07/27/ubuntu_slurm/">Ubuntu安装slurm超算集群</a>
+    <h1 class="article-title" itemprop="name">
+      Ubuntu安装slurm超算集群
     </h1>
   
 
@@ -153,351 +155,19 @@
     </footer>
   </div>
   
-</article>
-
-
+    
+<nav id="article-nav">
   
-    <article id="post-A800" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2024/07/27/A800/" class="article-date">
-  <time datetime="2024-07-27T08:30:00.000Z" itemprop="datePublished">2024-07-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/07/27/A800/">Pytorch检查GPU卡状态正常</a>
-    </h1>
+    <a href="/2024/07/27/A800/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Pytorch检查GPU卡状态正常</div>
+    </a>
   
+</nav>
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="Pytorch检查GPU卡状态正常"><a href="#Pytorch检查GPU卡状态正常" class="headerlink" title="Pytorch检查GPU卡状态正常"></a>Pytorch检查GPU卡状态正常</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">(base) [test10@g01 ~]$ cat 1.py</span><br><span class="line">import torch</span><br><span class="line">import socket</span><br><span class="line">host_name = socket.gethostname()</span><br><span class="line">print(&#x27;本机主机名是:%s&#x27;%host_name)</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">检查是否有GPU可用</span></span><br><span class="line">if torch.cuda.is_available():</span><br><span class="line">    # 获取GPU设备的数量</span><br><span class="line">    num_gpus = torch.cuda.device_count()</span><br><span class="line">    print(f&quot;可用的GPU数量: &#123;num_gpus&#125;&quot;)</span><br><span class="line"></span><br><span class="line">    # 遍历所有可用的GPU设备</span><br><span class="line">    for i in range(num_gpus):</span><br><span class="line">        # 获取GPU设备的名字</span><br><span class="line">        gpu_name = torch.cuda.get_device_name(i)</span><br><span class="line">        print(f&quot;GPU &#123;i&#125;: &#123;gpu_name&#125;&quot;)</span><br><span class="line">else:</span><br><span class="line">    print(&quot;没有找到可用的GPU&quot;)</span><br><span class="line"></span><br><span class="line">host_name = socket.gethostname()</span><br><span class="line">print(&#x27;本机主机名是:%s&#x27;%host_name)</span><br><span class="line">exit()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">(base) [test10@g01 ~]$ python 1.py</span><br><span class="line">本机主机名是:g01</span><br><span class="line">可用的GPU数量: 8</span><br><span class="line">GPU 0: NVIDIA A800-SXM4-80GB</span><br><span class="line">GPU 1: NVIDIA A800-SXM4-80GB</span><br><span class="line">GPU 2: NVIDIA A800-SXM4-80GB</span><br><span class="line">GPU 3: NVIDIA A800-SXM4-80GB</span><br><span class="line">GPU 4: NVIDIA A800-SXM4-80GB</span><br><span class="line">GPU 5: NVIDIA A800-SXM4-80GB</span><br><span class="line">GPU 6: NVIDIA A800-SXM4-80GB</span><br><span class="line">GPU 7: NVIDIA A800-SXM4-80GB</span><br><span class="line">本机主机名是:g01</span><br><span class="line">(base) [test10@g01 ~]$</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/07/27/A800/" data-id="clz3w0ocw0000gla35lige665" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
   
 </article>
-
-
-  
-    <article id="post-Rocky9_slurm" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2024/07/26/Rocky9_slurm/" class="article-date">
-  <time datetime="2024-07-26T13:35:00.000Z" itemprop="datePublished">2024-07-26</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/07/26/Rocky9_slurm/">Rocky9.4安装slurm超算集群</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="Rocky-Linux-安装-Slurm-调度超算集群"><a href="#Rocky-Linux-安装-Slurm-调度超算集群" class="headerlink" title="Rocky Linux 安装 Slurm 调度超算集群"></a>Rocky Linux 安装 Slurm 调度超算集群</h3><h4 id="系统信息"><a href="#系统信息" class="headerlink" title="系统信息"></a>系统信息</h4><ul>
-<li><strong>操作系统</strong>: Rocky Linux 9.4 (Blue Onyx)</li>
-<li><strong>内核版本</strong>: 5.14.0-427.22.1.el9_4.x86_64</li>
-</ul>
-<h4 id="磁盘布局"><a href="#磁盘布局" class="headerlink" title="磁盘布局"></a>磁盘布局</h4><ul>
-<li><strong>sda</strong>:<ul>
-<li>sda1: 1GB /boot/efi</li>
-<li>sda2: 1GB /boot</li>
-<li>sda3: 244.9GB /</li>
-<li>sda4: 32GB [SWAP]</li>
-</ul>
-</li>
-<li><strong>sdb</strong>: 可以挂载至 <code>/home</code> 目录供普通用户使用</li>
-</ul>
-<h4 id="网络配置"><a href="#网络配置" class="headerlink" title="网络配置"></a>网络配置</h4><ul>
-<li>使用 <code>nmtui</code> 命令配置网络</li>
-<li>关闭防火墙与 SELinux<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop firewalld</span><br><span class="line">systemctl <span class="built_in">disable</span> firewalld</span><br><span class="line">setenforce 0</span><br><span class="line">sed -i <span class="string">&#x27;s/enabled/disabled/g&#x27;</span> /etc/selinux/config</span><br></pre></td></tr></table></figure></li>
-<li>修改主机名称<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@admin ~]<span class="comment"># cat /etc/hostname</span></span><br></pre></td></tr></table></figure></li>
-<li>修改 hosts 文件以映射主机名到 IP 地址<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@mu01 ~]<span class="comment"># cat /etc/hosts</span></span><br><span class="line">127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4</span><br><span class="line">::1         localhost localhost.localdomain localhost6 localhost6.localdomain6</span><br><span class="line">192.168.8.100   mu01</span><br><span class="line">192.168.8.101   cu01</span><br><span class="line">192.168.8.102   cu02</span><br><span class="line">192.168.8.103   cu03</span><br><span class="line">192.168.8.104   cu04</span><br><span class="line">192.168.8.105   cu05</span><br><span class="line">192.168.8.106   cu06</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h4 id="安装-Slurm-作业管理系统"><a href="#安装-Slurm-作业管理系统" class="headerlink" title="安装 Slurm 作业管理系统"></a>安装 Slurm 作业管理系统</h4><ul>
-<li><strong>控制节点</strong>: mu01</li>
-<li><strong>计算节点</strong>: cu01-cu19</li>
-</ul>
-<h4 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h4><ol>
-<li><p><strong>安装操作系统</strong></p>
-<ul>
-<li>使用 Ventoy 刻录 Rocky 9.4 镜像</li>
-</ul>
-</li>
-<li><p><strong>配置网络、主机名、免密 SSH</strong></p>
-</li>
-<li><p><strong>NFS共享管理节点存储sdb盘</strong></p>
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># yum install nfs-utils rpcbind -y</span></span><br><span class="line"><span class="comment"># systemctl enable rpcbind</span></span><br><span class="line"><span class="comment"># systemctl enable nfs-server</span></span><br><span class="line">enble换成start来开启服务</span><br><span class="line"><span class="comment"># systemctl start rpcbind</span></span><br><span class="line"><span class="comment"># systemctl start nfs-server</span></span><br><span class="line">vim /etc/exports共享管理节点/home目录和/opt目录</span><br><span class="line"><span class="comment">#添加 /home 192.168.145.0/24(rw,sync,no_root_squash) </span></span><br><span class="line">[root@admin ~]<span class="comment"># cat /etc/exports</span></span><br><span class="line">/home   192.168.8.0/24(rw,<span class="built_in">sync</span>,no_root_squash)</span><br><span class="line">/opt    192.168.8.0/24(rw,<span class="built_in">sync</span>,no_root_squash)</span><br><span class="line">/data   192.168.8.0/24(rw,<span class="built_in">sync</span>,no_root_squash)</span><br><span class="line"></span><br><span class="line">使配置生效</span><br><span class="line"><span class="comment"># exportfs -a</span></span><br><span class="line">共享/home文件夹</span><br><span class="line">客户端node1挂载</span><br><span class="line"><span class="comment"># yum install nfs-utils  -y</span></span><br><span class="line">检查服务器共享目录</span><br><span class="line">showmount -e 服务器地址</span><br><span class="line"><span class="comment"># showmount -e admin</span></span><br><span class="line">Export list <span class="keyword">for</span> admin:</span><br><span class="line">/opt  192.168.111.0/24</span><br><span class="line">/home 192.168.111.0/24</span><br><span class="line">开机挂载共享存储</span><br><span class="line"><span class="comment"># vim /etc/rc.local</span></span><br><span class="line"><span class="comment"># cat /etc/rc.local</span></span><br><span class="line">[root@cu02 ~]<span class="comment"># cat /etc/rc.local</span></span><br><span class="line">mount 192.168.8.100:/home/   /home/</span><br><span class="line">mount 192.168.8.100:/opt/    /opt/</span><br><span class="line">mount 192.168.8.100:/data/   /data/</span><br><span class="line"><span class="comment"># chmod +x  /etc/rc.local</span></span><br></pre></td></tr></table></figure></li>
-<li><p><strong>配置集群账号ID一致</strong></p>
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">创建普通用户登录做登录测试验证</span><br><span class="line">mu01  useradd  zhangsan</span><br><span class="line">useradd  zhangsan   -d  /data/zhangsan</span><br><span class="line"></span><br><span class="line">新创建用户后，需要把管理节点passwd group文件同步到其他CPU计算节点</span><br><span class="line">scp  -r  /etc/passwd*   root@cu*:/etc/</span><br><span class="line">scp  -r  /etc/group*   root@cu*:/etc/</span><br><span class="line"> </span><br><span class="line">[root@mu01 ~]<span class="comment"># for i in `cat cpu`;do scp /etc/passwd*  root@$i:/etc/  ;done</span></span><br><span class="line">[root@mu01 ~]<span class="comment"># for i in `cat cpu`;do scp /etc/group*  root@$i:/etc/  ;done</span></span><br><span class="line"></span><br><span class="line">如果普通用户需要ssh登录CU计算节点，需要passwd设置初始密码</span><br><span class="line"><span class="built_in">echo</span> “新密码”|passwd --stdin 用户名</span><br><span class="line"><span class="built_in">echo</span>  “111111”|passwd --stdin  test001</span><br><span class="line">[root@mu01 ~]<span class="comment"># pssh -P -h cpu  &quot;  echo  &#x27;121314*5*6*718191&#x27; |passwd --stdin test001    &quot;</span></span><br><span class="line"></span><br><span class="line">ssh集群之间互相登录的时候免输入<span class="built_in">yes</span></span><br><span class="line">vim /etc/ssh/sshd_config</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li><p><strong>安装munge（管理节点和计算节点都安装）</strong></p>
-<ul>
-<li>MUNGE创建和验证凭据的身份验证服务。<br>它允许一个进程在具有共同用户的主机中验证另一个进程的 UID 和 GID。这些主机形成一个由共享密钥定义的安全域。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">下载munge</span><br><span class="line">https://github.com/dun/munge/releases/tag/munge-0.5.15</span><br><span class="line">[root@admin sourcecode]<span class="comment"># wget  https://github.com/dun/munge/releases/download/munge-0.5.15/munge-0.5.15.tar.xz</span></span><br><span class="line">安装rpm构建工具，用来构建rpm安装包</span><br><span class="line">[root@admin ~]<span class="comment"># yum install -y rpmdevtools  gcc bzip2-devel openssl-devel zlib-devel</span></span><br><span class="line">通过构建工具生成rpm安装包</span><br><span class="line">rpmbuild -tb --without verify munge-0.5.15.tar.xz</span><br><span class="line">使用rpm命令安装生成的安装包(构建好的rpm安装包默认在/root/rpbbuild/RPMS/x86_64/</span><br><span class="line">安装所有munge rpm包</span><br><span class="line">[root@admin x86_64]<span class="comment"># pwd</span></span><br><span class="line">/root/rpmbuild/RPMS/x86_64</span><br><span class="line">[root@admin x86_64]<span class="comment"># rpm -ivh munge-</span></span><br><span class="line">munge-0.5.15-1.el7.x86_64.rpm            munge-devel-0.5.15-1.el7.x86_64.rpm</span><br><span class="line">munge-debuginfo-0.5.15-1.el7.x86_64.rpm  munge-libs-0.5.15-1.el7.x86_64.rpm</span><br><span class="line">[root@admin x86_64]<span class="comment"># rpm -ivh munge-*</span></span><br><span class="line">rpm -ivh munge*</span><br><span class="line"> </span><br><span class="line">生成munge.key</span><br><span class="line">[root@admin ~]<span class="comment"># mungekey -v</span></span><br><span class="line">将生成的munge.key拷贝到计算节点/etc/munge，并更改munge.key的归属用户和组</span><br><span class="line">生成munge.key</span><br><span class="line">[root@admin ~]<span class="comment"># chmod 0600 /etc/munge/munge.key</span></span><br><span class="line">[root@admin ~]<span class="comment"># chown -R munge.munge /etc/munge/munge.key</span></span><br><span class="line">启动munge服务</span><br><span class="line">[root@admin ~]<span class="comment"># systemctl start munge</span></span><br><span class="line">[root@admin ~]<span class="comment"># systemctl status munge</span></span><br><span class="line">功能测试munge -n | ssh 客户端主机名 unmunge</span><br><span class="line">[root@admin ~]<span class="comment"># munge -n  |  ssh node1 unmunge</span></span><br><span class="line">STATUS:          Success (0)</span><br><span class="line">ENCODE_HOST:     admin (192.168.111.128)</span><br><span class="line">ENCODE_TIME:     2022-08-05 19:31:20 +0800 (1659699080)</span><br><span class="line">DECODE_TIME:     2022-08-05 19:31:21 +0800 (1659699081)</span><br><span class="line">TTL:             300</span><br><span class="line">CIPHER:          aes128 (4)</span><br><span class="line">MAC:             sha256 (5)</span><br><span class="line">ZIP:             none (0)</span><br><span class="line">UID:             root (0)</span><br><span class="line">GID:             root (0)</span><br><span class="line">LENGTH:          0</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-</ul>
-</li>
-<li><p><strong>使用chronyd时间服务器（每台都要安装）</strong></p>
-<ul>
-<li>Chronyd是一种网络时间协议（NTP）的实现，可以作为NTP客户端和服务器<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@cu02 ~]<span class="comment"># cat /etc/chrony.conf</span></span><br><span class="line">pool 192.168.8.100 iburst</span><br><span class="line">sourcedir /run/chrony-dhcp</span><br><span class="line">driftfile /var/lib/chrony/drift</span><br><span class="line">makestep 1.0 3</span><br><span class="line">rtcsync</span><br><span class="line">allow 192.168.8.0/24</span><br><span class="line">keyfile /etc/chrony.keys</span><br><span class="line">ntsdumpdir /var/lib/chrony</span><br><span class="line">leapsectz right/UTC</span><br><span class="line">logdir /var/log/chrony</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-</ul>
-</li>
-<li><p><strong>管理节点安装Mariadb</strong></p>
-<ul>
-<li>MariaDB Server 是一个通用的开源关系数据库管理系统。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@admin ~]<span class="comment"># mysql -u root -p&#x27;AlphaZhang1!&#x27;</span></span><br><span class="line">mysql&gt; show databases;</span><br><span class="line">生成slurm用户，以便该用户操作slurm_acct_db数据库，其密码是AlphaZhang1！</span><br><span class="line">mysql&gt; create user <span class="string">&#x27;slurm&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> identified by <span class="string">&#x27;AlphaZhang1！&#x27;</span>;</span><br><span class="line"> </span><br><span class="line">生成账户数据库slurm_acct_db</span><br><span class="line">mysql&gt; create database slurm_acct_db;</span><br><span class="line">赋予slurm从本机localhost采用密码AlphaZhang1！登录具备操作slurm_acct_db数据下所有表的全部权限</span><br><span class="line">mysql&gt; grant all on slurm_acct_db.* TO <span class="string">&#x27;slurm&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span>  with grant option;</span><br><span class="line">生成作业信息数据库slurm_jobcomp_db</span><br><span class="line">mysql&gt; create database slurm_jobcomp_db;</span><br><span class="line">赋予slurm从本机localhost采用密码AlphaZhang1！登录具备操作slurm_jobcomp_db数据下所有表的全部权限</span><br><span class="line">mysql&gt; grant all on slurm_jobcomp_db.* TO <span class="string">&#x27;slurm&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span>  with grant option;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-</ul>
-</li>
-<li><p><strong>安装 Slurm</strong></p>
-<ul>
-<li>前提：<br>时间同步（chronyd），创建slurm用户，用户id和用户组id在各个计算节点一致；<br>安装了munge<br>在控制器和每个节点创建同一个用户slurm<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">slurm下载地址</span><br><span class="line">https://www.schedmd.com/downloads.php</span><br><span class="line">[root@admin sourcecode]<span class="comment"># wget https://download.schedmd.com/slurm/slurm-24.05.2.tar.bz2</span></span><br><span class="line">安装cgroup插件</span><br><span class="line">在构建rpm前安装好hwloc,在安装slurm后需要配置cgroup.conf</span><br><span class="line">yum install hwloc*</span><br><span class="line"> </span><br><span class="line">构建slurm rpm安装包</span><br><span class="line">rpmbuild -ta slurm*.tar.bz2</span><br><span class="line">[root@admin sourcecode]<span class="comment"># rpmbuild -ta slurm-22.05.2.tar.bz2</span></span><br><span class="line">构建是可能会提示需要安装某个依赖，安装依赖后重新构建</span><br><span class="line">yum -y install python3 readline-devel  perl  pam-devel  perl*</span><br><span class="line"></span><br><span class="line">rpmbuild -ta slurm*.tar.bz2</span><br><span class="line">生成的rpm包目录，安装所有slurm rpm包</span><br><span class="line">[root@admin sourcecode]<span class="comment"># cd /root/rpmbuild/RPMS/x86_64/</span></span><br><span class="line">yum install slurm*</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-</ul>
-</li>
-<li><p><strong>配置 Slurm</strong></p>
-<ul>
-<li><strong><code>slurm.conf</code> 配置文件</strong><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br></pre></td><td class="code"><pre><span class="line">[root@mu01 ~]<span class="comment"># cat /etc/slurm/slurm.conf</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Example slurm.conf file. Please run configurator.html</span></span><br><span class="line"><span class="comment"># (in doc/html) to build a configuration file customized</span></span><br><span class="line"><span class="comment"># for your environment.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># slurm.conf file generated by configurator.html.</span></span><br><span class="line"><span class="comment"># Put this file on all nodes of your cluster.</span></span><br><span class="line"><span class="comment"># See the slurm.conf man page for more information.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">ClusterName=hpccluster</span><br><span class="line">SlurmctldHost=mu01</span><br><span class="line"><span class="comment">#SlurmctldHost=</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#DisableRootJobs=NO</span></span><br><span class="line"><span class="comment">#EnforcePartLimits=NO</span></span><br><span class="line"><span class="comment">#Epilog=</span></span><br><span class="line"><span class="comment">#EpilogSlurmctld=</span></span><br><span class="line"><span class="comment">#FirstJobId=1</span></span><br><span class="line"><span class="comment">#MaxJobId=67043328</span></span><br><span class="line"><span class="comment">#GresTypes=</span></span><br><span class="line"><span class="comment">#GroupUpdateForce=0</span></span><br><span class="line"><span class="comment">#GroupUpdateTime=600</span></span><br><span class="line"><span class="comment">#JobFileAppend=0</span></span><br><span class="line"><span class="comment">#JobRequeue=1</span></span><br><span class="line"><span class="comment">#JobSubmitPlugins=lua</span></span><br><span class="line"><span class="comment">#KillOnBadExit=0</span></span><br><span class="line"><span class="comment">#LaunchType=launch/slurm</span></span><br><span class="line"><span class="comment">#Licenses=foo*4,bar</span></span><br><span class="line"><span class="comment">#MailProg=/bin/mail</span></span><br><span class="line"><span class="comment">#MaxJobCount=10000</span></span><br><span class="line"><span class="comment">#MaxStepCount=40000</span></span><br><span class="line"><span class="comment">#MaxTasksPerNode=512</span></span><br><span class="line"><span class="comment">#MpiDefault=MPI-PMI2</span></span><br><span class="line">MpiDefault=none</span><br><span class="line"><span class="comment">#MpiParams=ports=#-#</span></span><br><span class="line"><span class="comment">#PluginDir=</span></span><br><span class="line"><span class="comment">#PlugStackConfig=</span></span><br><span class="line"><span class="comment">#PrivateData=jobs</span></span><br><span class="line"><span class="comment">#ProctrackType=proctrack/cgroup</span></span><br><span class="line">ProctrackType=proctrack/cgroup</span><br><span class="line"><span class="comment">#Prolog=</span></span><br><span class="line"><span class="comment">#PrologFlags=</span></span><br><span class="line"><span class="comment">#PrologSlurmctld=</span></span><br><span class="line"><span class="comment">#PropagatePrioProcess=0</span></span><br><span class="line"><span class="comment">#PropagateResourceLimits=</span></span><br><span class="line"><span class="comment">#PropagateResourceLimitsExcept=</span></span><br><span class="line"><span class="comment">#RebootProgram=</span></span><br><span class="line">ReturnToService=1</span><br><span class="line">SlurmctldPidFile=/var/run/slurmctld.pid</span><br><span class="line">SlurmctldPort=6817</span><br><span class="line">SlurmdPidFile=/var/run/slurmd.pid</span><br><span class="line">SlurmdPort=6818</span><br><span class="line">SlurmdSpoolDir=/var/spool/slurmd</span><br><span class="line">SlurmUser=slurm</span><br><span class="line"><span class="comment">#SlurmdUser=root</span></span><br><span class="line"><span class="comment">#SrunEpilog=</span></span><br><span class="line"><span class="comment">#SrunProlog=</span></span><br><span class="line">StateSaveLocation=/var/spool/slurmctld</span><br><span class="line">SwitchType=switch/none</span><br><span class="line"><span class="comment">#TaskEpilog=</span></span><br><span class="line">TaskPlugin=task/affinity</span><br><span class="line"><span class="comment">#TaskProlog=</span></span><br><span class="line"><span class="comment">#TopologyPlugin=topology/tree</span></span><br><span class="line"><span class="comment">#TmpFS=/tmp</span></span><br><span class="line"><span class="comment">#TrackWCKey=no</span></span><br><span class="line"><span class="comment">#TreeWidth=</span></span><br><span class="line"><span class="comment">#UnkillableStepProgram=</span></span><br><span class="line"><span class="comment">#UsePAM=0</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># TIMERS</span></span><br><span class="line"><span class="comment">#BatchStartTimeout=10</span></span><br><span class="line"><span class="comment">#CompleteWait=0</span></span><br><span class="line"><span class="comment">#EpilogMsgTime=2000</span></span><br><span class="line"><span class="comment">#GetEnvTimeout=2</span></span><br><span class="line"><span class="comment">#HealthCheckInterval=0</span></span><br><span class="line"><span class="comment">#HealthCheckProgram=</span></span><br><span class="line">InactiveLimit=0</span><br><span class="line">KillWait=30</span><br><span class="line"><span class="comment">#MessageTimeout=10</span></span><br><span class="line"><span class="comment">#ResvOverRun=0</span></span><br><span class="line">MinJobAge=300</span><br><span class="line"><span class="comment">#OverTimeLimit=0</span></span><br><span class="line">SlurmctldTimeout=120</span><br><span class="line">SlurmdTimeout=300</span><br><span class="line"><span class="comment">#UnkillableStepTimeout=60</span></span><br><span class="line"><span class="comment">#VSizeFactor=0</span></span><br><span class="line">Waittime=0</span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># SCHEDULING</span></span><br><span class="line"><span class="comment">#DefMemPerCPU=0</span></span><br><span class="line"><span class="comment">#MaxMemPerCPU=0</span></span><br><span class="line"><span class="comment">#SchedulerTimeSlice=30</span></span><br><span class="line">SchedulerType=<span class="built_in">sched</span>/backfill</span><br><span class="line">SelectType=select/cons_tres</span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># JOB PRIORITY</span></span><br><span class="line"><span class="comment">#PriorityFlags=</span></span><br><span class="line"><span class="comment">#PriorityType=priority/multifactor</span></span><br><span class="line"><span class="comment">#PriorityDecayHalfLife=</span></span><br><span class="line"><span class="comment">#PriorityCalcPeriod=</span></span><br><span class="line"><span class="comment">#PriorityFavorSmall=</span></span><br><span class="line"><span class="comment">#PriorityMaxAge=</span></span><br><span class="line"><span class="comment">#PriorityUsageResetPeriod=</span></span><br><span class="line"><span class="comment">#PriorityWeightAge=</span></span><br><span class="line"><span class="comment">#PriorityWeightFairshare=</span></span><br><span class="line"><span class="comment">#PriorityWeightJobSize=</span></span><br><span class="line"><span class="comment">#PriorityWeightPartition=</span></span><br><span class="line"><span class="comment">#PriorityWeightQOS=</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># LOGGING AND ACCOUNTING</span></span><br><span class="line"><span class="comment">#AccountingStorageEnforce=0</span></span><br><span class="line"><span class="comment">#AccountingStorageHost=</span></span><br><span class="line"><span class="comment">#AccountingStoragePass=</span></span><br><span class="line"><span class="comment">#AccountingStoragePort=</span></span><br><span class="line">AccountingStorageType=accounting_storage/slurmdbd</span><br><span class="line"><span class="comment">#AccountingStorageType=accounting_storage/none</span></span><br><span class="line"><span class="comment">#AccountingStorageUser=</span></span><br><span class="line"><span class="comment">#AccountingStoreFlags=</span></span><br><span class="line"><span class="comment">#JobCompHost=</span></span><br><span class="line"><span class="comment">#JobCompLoc=</span></span><br><span class="line">JobCompLoc=/opt/slurm/jobcomp</span><br><span class="line"><span class="comment">#JobCompPass=</span></span><br><span class="line"><span class="comment">#JobCompPort=</span></span><br><span class="line">JobCompType=jobcomp/filetxt</span><br><span class="line"><span class="comment">#JobCompUser=</span></span><br><span class="line"><span class="comment">#JobContainerType=</span></span><br><span class="line">JobAcctGatherFrequency=5</span><br><span class="line">JobAcctGatherType=jobacct_gather/linux</span><br><span class="line">SlurmctldDebug=info</span><br><span class="line">SlurmctldLogFile=/var/log/slurmctld.log</span><br><span class="line">SlurmdDebug=info</span><br><span class="line">SlurmdLogFile=/var/log/slurmd.log</span><br><span class="line"><span class="comment">#SlurmSchedLogFile=</span></span><br><span class="line"><span class="comment">#SlurmSchedLogLevel=</span></span><br><span class="line"><span class="comment">#DebugFlags=</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># POWER SAVE SUPPORT FOR IDLE NODES (optional)</span></span><br><span class="line"><span class="comment">#SuspendProgram=</span></span><br><span class="line"><span class="comment">#ResumeProgram=</span></span><br><span class="line"><span class="comment">#SuspendTimeout=</span></span><br><span class="line"><span class="comment">#ResumeTimeout=</span></span><br><span class="line"><span class="comment">#ResumeRate=</span></span><br><span class="line"><span class="comment">#SuspendExcNodes=</span></span><br><span class="line"><span class="comment">#SuspendExcParts=</span></span><br><span class="line"><span class="comment">#SuspendRate=</span></span><br><span class="line"><span class="comment">#SuspendTime=</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># COMPUTE NODES</span></span><br><span class="line">NodeName=mu01      CPUs=24 Boards=1 SocketsPerBoard=2 CoresPerSocket=12 ThreadsPerCore=1 RealMemory=94000</span><br><span class="line">NodeName=cu[01-19] CPUs=24 Boards=1 SocketsPerBoard=2 CoresPerSocket=12 ThreadsPerCore=1 RealMemory=94000</span><br><span class="line"></span><br><span class="line">PartitionName=MU Nodes=mu01                     MaxTime=INFINITE State=UP    <span class="comment"># CHANGE &quot;HOSTNAME&quot;</span></span><br><span class="line">PartitionName=CU Nodes=cu[01-19]    Default=YES MaxTime=INFINITE State=UP    <span class="comment"># CHANGE &quot;HOSTNAME&quot;</span></span><br><span class="line">[root@mu01 ~]<span class="comment">#</span></span><br><span class="line"></span><br><span class="line">建立slurmctld服务存储其状态等的目录，由slurm.conf中StateSaveLocation参数定义：</span><br><span class="line"><span class="built_in">mkdir</span> /var/spool/slurmctld</span><br><span class="line">设置/var/spool/slurmctld目录所有者为slurm用户：</span><br><span class="line"><span class="built_in">chown</span> slurm.slurm /var/spool/slurmctld</span><br><span class="line"></span><br><span class="line">[root@mu01 ~]<span class="comment"># cat /etc/slurm/cgroup.conf</span></span><br><span class="line"><span class="comment">###</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Slurm cgroup support configuration file</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># See man slurm.conf and man cgroup.conf for further</span></span><br><span class="line"><span class="comment"># information on cgroup configuration parameters</span></span><br><span class="line"><span class="comment">#--</span></span><br><span class="line">ConstrainCores=<span class="built_in">yes</span></span><br><span class="line">ConstrainDevices=<span class="built_in">yes</span></span><br><span class="line">ConstrainRAMSpace=<span class="built_in">yes</span></span><br><span class="line">ConstrainSwapSpace=<span class="built_in">yes</span></span><br><span class="line">[root@mu01 ~]<span class="comment">#</span></span><br><span class="line"></span><br><span class="line">[root@mu01 ~]<span class="comment"># cat /etc/slurm/slurmdbd.conf</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Example slurmdbd.conf file.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># See the slurmdbd.conf man page for more information.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Archive info</span></span><br><span class="line"><span class="comment">#ArchiveJobs=yes</span></span><br><span class="line"><span class="comment">#ArchiveDir=&quot;/tmp&quot;</span></span><br><span class="line"><span class="comment">#ArchiveSteps=yes</span></span><br><span class="line"><span class="comment">#ArchiveScript=</span></span><br><span class="line"><span class="comment">#JobPurge=12</span></span><br><span class="line"><span class="comment">#StepPurge=1</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Authentication info</span></span><br><span class="line">AuthType=auth/munge</span><br><span class="line">AuthInfo=/var/run/munge/munge.socket.2</span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># slurmDBD info</span></span><br><span class="line">Dbdaddr=127.0.0.1</span><br><span class="line">DbdHost=localhost</span><br><span class="line">DbdPort=6819</span><br><span class="line">SlurmUser=slurm</span><br><span class="line"><span class="comment">#MessageTimeout=300</span></span><br><span class="line">DebugLevel=verbose</span><br><span class="line"><span class="comment">#DefaultQOS=normal,standby</span></span><br><span class="line">LogFile=/opt/slurm/log/slurmdbd.log</span><br><span class="line">PidFile=/opt/slurm/log/slurmdbd.pid</span><br><span class="line"><span class="comment">#PluginDir=/usr/lib/slurm</span></span><br><span class="line"><span class="comment">#PrivateData=accounts,users,usage,jobs</span></span><br><span class="line"><span class="comment">#TrackWCKey=yes</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Database info</span></span><br><span class="line">StorageType=accounting_storage/mysql</span><br><span class="line"><span class="comment">#数据库信息</span></span><br><span class="line">StorageHost=127.0.0.1</span><br><span class="line">StoragePort=3306</span><br><span class="line">StoragePass=Inspur1!</span><br><span class="line">StorageUser=slurm</span><br><span class="line"><span class="comment">#数据库名称</span></span><br><span class="line">StorageLoc=slurm_acct_db</span><br><span class="line">[root@mu01 ~]<span class="comment">#</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-</ul>
-</li>
-</ol>
-<ul>
-<li><p><strong>设置 Slurm 中定义的集群名为 hpccluster</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sacctmgr add cluster hpccluster</span><br></pre></td></tr></table></figure></li>
-<li><p><strong>控制节点启动 slurmctld 和 slurmdbd 服务</strong></p>
-   <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">启动slurmdbd服务：</span><br><span class="line">[root@admin slurm]<span class="comment"># systemctl start slurmdbd</span></span><br><span class="line">[root@admin slurm]<span class="comment"># systemctl status slurmdbd</span></span><br><span class="line">● slurmdbd.service - Slurm DBD accounting daemon</span><br><span class="line">   Loaded: loaded (/usr/lib/systemd/system/slurmdbd.service; enabled; vendor preset: disabled)</span><br><span class="line">   Active: active (running)</span><br><span class="line">设置slurmdbd服务为开机自启动：</span><br><span class="line">[root@admin slurm]<span class="comment"># systemctl enable slurmdbd</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li><p><strong>计算节点启动 slurmd 服务</strong></p>
-</li>
-</ul>
-<h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><ul>
-<li><strong>查看集群状态</strong><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sinfo</span><br></pre></td></tr></table></figure></li>
-<li><strong>查看记账信息</strong><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sacct</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h4 id="故障排除"><a href="#故障排除" class="headerlink" title="故障排除"></a>故障排除</h4><ul>
-<li>如果计算节点重启后，需要重新启动 munge 和 slurmd 服务，并使用 <code>scontrol</code> 命令更新节点状态为 idle<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart munge slurmd</span><br><span class="line">scontrol update node=&lt;nodename&gt; state=idle</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h4 id="监控"><a href="#监控" class="headerlink" title="监控"></a>监控</h4><ul>
-<li><strong>Grafana + Prometheus</strong><ul>
-<li><strong>安装 node_exporter</strong></li>
-<li><strong>启动 Prometheus</strong></li>
-<li><strong>安装 Grafana 并提供 WEB 界面展示监控数据</strong></li>
-</ul>
-</li>
-</ul>
-<h4 id="安装应用程序"><a href="#安装应用程序" class="headerlink" title="安装应用程序"></a>安装应用程序</h4><ul>
-<li><strong>Intel OneAPI MPI 编译环境</strong></li>
-<li><strong>ifort（Fortran 编译器）</strong></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/07/26/Rocky9_slurm/" data-id="clz2ru1nl0000jva35a7rhftw" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-NCCL" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2024/07/25/NCCL/" class="article-date">
-  <time datetime="2024-07-25T08:28:00.000Z" itemprop="datePublished">2024-07-25</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/07/25/NCCL/">NCCL</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="NF5688M7-机型-A800-GPU-NCCL-测试步骤"><a href="#NF5688M7-机型-A800-GPU-NCCL-测试步骤" class="headerlink" title="NF5688M7 机型 A800 GPU NCCL 测试步骤"></a>NF5688M7 机型 A800 GPU NCCL 测试步骤</h1><h2 id="一、基础环境"><a href="#一、基础环境" class="headerlink" title="一、基础环境"></a>一、基础环境</h2><ul>
-<li>默认GPU卡状态正常，通过<code>nvidia-smi</code>能正常打印基本信息，待测GPU无占用。</li>
-<li>IB卡通过<code>ibstat</code>能正常打印基本信息且显示State: Active。</li>
-<li>待测机器之间可以免密登录。</li>
-<li><strong>机型</strong>: NF5688-M7</li>
-<li><strong>GPU</strong>: A800 * 8</li>
-<li><strong>IB卡</strong>: MCX653105A-HDAT * 8</li>
-<li><strong>系统</strong>: CentOS7.9</li>
-<li><strong>GPU驱动版本</strong>: 535.183.06</li>
-<li><strong>CUDA版本</strong>: 12.4</li>
-</ul>
-<h2 id="二、安装基础测试软件包"><a href="#二、安装基础测试软件包" class="headerlink" title="二、安装基础测试软件包"></a>二、安装基础测试软件包</h2><h3 id="安装-NVIDIA-HPC-SDK"><a href="#安装-NVIDIA-HPC-SDK" class="headerlink" title="安装 NVIDIA HPC SDK"></a>安装 NVIDIA HPC SDK</h3><ol>
-<li>下载安装包:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://developer.download.nvidia.com/hpc-sdk/24.5/nvhpc_2024_245_Linux_x86_64_cuda_12.4.tar.gz</span><br></pre></td></tr></table></figure></li>
-<li>解压缩:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar xpzf nvhpc_2024_245_Linux_x86_64_cuda_12.4.tar.gz</span><br></pre></td></tr></table></figure></li>
-<li>执行安装命令:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvhpc_2024_245_Linux_x86_64_cuda_12.4/install</span><br></pre></td></tr></table></figure></li>
-<li>加载环境变量:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">export PATH=/home/software/nvidia/hpc_sdk/Linux_x86_64/24.5/compilers/bin:$PATH</span><br><span class="line">export MANPATH=/home/software/nvidia/hpc_sdk/Linux_x86_64/24.5/compilers/man:$MANPATH</span><br><span class="line">export PATH=/home/software/nvidia/hpc_sdk/Linux_x86_64/24.5/comm_libs/mpi/bin:$PATH</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h3 id="安装-OpenMPI"><a href="#安装-OpenMPI" class="headerlink" title="安装 OpenMPI"></a>安装 OpenMPI</h3><ol>
-<li>下载源码包:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://www.open-mpi.org/software/ompi/v5.0/downloads/openmpi-5.0.3.tar.bz2</span><br></pre></td></tr></table></figure></li>
-<li>编译安装:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mkdir /home/software/openmpi-5.0.3</span><br><span class="line">ssh g82</span><br><span class="line">cd /home/sourcecode/openmpi-5.0.3/</span><br><span class="line">./configure --prefix=/home/software/openmpi-5.0.3 --with-cuda</span><br><span class="line">make -j</span><br><span class="line">make install</span><br></pre></td></tr></table></figure></li>
-<li>加载环境变量:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">export MPI_HOME=/home/software/openmpi-5.0.3/</span><br><span class="line">export PATH=$MPI_HOME/bin:$PATH</span><br><span class="line">export LD_LIBRARY_PATH=$MPI_HOME/lib:$LD_LIBRARY_PATH</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h3 id="安装-NCCL"><a href="#安装-NCCL" class="headerlink" title="安装 NCCL"></a>安装 NCCL</h3><ol>
-<li>下载源码包:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/nvidia/nccl.git</span><br></pre></td></tr></table></figure></li>
-<li>编译:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum -y install rpm-build rpmdevtools</span><br><span class="line">make pkg.redhat.build</span><br></pre></td></tr></table></figure></li>
-<li>安装:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd build/pkg/rpm/</span><br><span class="line">rpm -ivh libnccl-*</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h3 id="安装-NCCL-Tests"><a href="#安装-NCCL-Tests" class="headerlink" title="安装 NCCL-Tests"></a>安装 NCCL-Tests</h3><ol>
-<li>下载源码包:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/nvidia/nccl-tests.git</span><br></pre></td></tr></table></figure></li>
-<li>编译:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd nccl-tests</span><br><span class="line">make MPI=1 MPI_HOME=/home/software/openmpi-5.0.3/ CUDA_HOME=/usr/local/cuda</span><br></pre></td></tr></table></figure></li>
-<li>复制编译好的安装包到共享存储目录下:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp -r nccl-tests /home/software/nvidia/</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h2 id="三、开始测试"><a href="#三、开始测试" class="headerlink" title="三、开始测试"></a>三、开始测试</h2><h3 id="1、单机测试"><a href="#1、单机测试" class="headerlink" title="1、单机测试"></a>1、单机测试</h3><p>在 <code>/home/software/nvidia/nccl-tests</code> 目录下执行:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mpirun -np 8 ./build/all_reduce_perf -b 8 -e 128M -f 2 -g 1</span><br></pre></td></tr></table></figure>
-
-<h4 id="方法1：使用-NVIDIA-HPC-SDK"><a href="#方法1：使用-NVIDIA-HPC-SDK" class="headerlink" title="方法1：使用 NVIDIA HPC SDK"></a>方法1：使用 NVIDIA HPC SDK</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">export PATH=/home/software/nvidia/hpc_sdk/Linux_x86_64/24.5/compilers/bin:$PATH</span><br><span class="line">export MANPATH=/home/software/nvidia/hpc_sdk/Linux_x86_64/24.5/compilers/man:$MANPATH</span><br><span class="line">export PATH=/home/software/nvidia/hpc_sdk/Linux_x86_64/24.5/comm_libs/mpi/bin:$PATH</span><br></pre></td></tr></table></figure>
-
-<h4 id="方法2：使用-OpenMPI"><a href="#方法2：使用-OpenMPI" class="headerlink" title="方法2：使用 OpenMPI"></a>方法2：使用 OpenMPI</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">export MPI_HOME=/home/software/openmpi-5.0.3/</span><br><span class="line">export PATH=$MPI_HOME/bin:$PATH</span><br><span class="line">export LD_LIBRARY_PATH=$MPI_HOME/lib:$LD_LIBRARY_PATH</span><br></pre></td></tr></table></figure>
-
-<h3 id="2、多机测试"><a href="#2、多机测试" class="headerlink" title="2、多机测试"></a>2、多机测试</h3><p>在 <code>nccl-tests</code> 目录下:</p>
-<ol>
-<li>新建 <code>myhosts</code> 文件，将待测各节点 IP 写入 <code>myhosts</code> 文件中。</li>
-<li>执行测试命令:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mpirun --allow-run-as-root --machinefile /home/software/nvidia/nccl-tests-master/myhosts -N 1 -x LD_LIBRARY_PATH -x NCCL_DEBUG=INFO -x NCCL_IB_HCA=mlx5_0,mlx5_1,mlx5_2,mlx5_3,mlx5_4,mlx5_6,mlx5_7,mlx5_8 ./build/all_reduce_perf -b 8 -e 2G -w 20 -n 1000 -f 2 -g 8 | tee NCCL.log</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h3 id="3、测试结果分析"><a href="#3、测试结果分析" class="headerlink" title="3、测试结果分析"></a>3、测试结果分析</h3><ul>
-<li>本次测试 NCCL 理论值为单机总带宽即 200 Gb/s。</li>
-<li>效率 = 156.10 / 200 = 78%。</li>
-<li><strong>备注</strong>:<ul>
-<li>in-place 下的 busbw 一列的最后一行标黄部分即为实测 NCCL 带宽值</li>
-</ul>
-</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/07/25/NCCL/" data-id="clz116sul0000lja32u42dahf" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-redhat7.9_docker" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2024/07/20/redhat7.9_docker/" class="article-date">
-  <time datetime="2024-07-20T07:00:00.000Z" itemprop="datePublished">2024-07-20</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/07/20/redhat7.9_docker/">redhat7.9离线安装docker</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h6 id="安装docker离线包"><a href="#安装docker离线包" class="headerlink" title="安装docker离线包"></a>安装docker离线包</h6><p>1、将docker安装包解压，将安装包内的全部二进制文件，copy至/usr/bin/目录；<br>2、将docker.service文件copy至/usr/lib/systemd/system/ 目录；<br>3、启动docker：systemctl start docker；<br>设置开机自启动：systemctl enable docker；<br>4、查看docker版本：docker version</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> docker/</span><br><span class="line">unzip redhat7.9安装docker离线软安装包.zip</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line"><span class="built_in">cd</span> redhat7.9安装docker离线软安装包/</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line">tar -zxvf docker-26.1.2.tgz</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line"><span class="built_in">cp</span> -r docker/* /usr/bin/</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line"><span class="built_in">cp</span> docker.service /usr/lib/systemd/system/</span><br><span class="line">systemctl start docker</span><br><span class="line">systemctl <span class="built_in">enable</span> docker</span><br><span class="line">systemctl status docker</span><br><span class="line"><span class="built_in">cd</span></span><br><span class="line">docker --version</span><br></pre></td></tr></table></figure>
-
-<h6 id="安装docker-compose"><a href="#安装docker-compose" class="headerlink" title="安装docker-compose"></a>安装docker-compose</h6><p>1、将docker-compose-linux-x86_64文件重命名为 docker-compose；<br>2、添加执行权限 chmod +x docker-compose；<br>3、将docker-compose文件 mv 至 /usr/local/bin/ 目录；<br>4、执行 docker-compose version 查看版本；</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> docker/redhat7.9安装docker离线软安装包/</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line"><span class="built_in">cp</span> docker-compose-linux-x86_64 docker-compose</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line"><span class="built_in">chmod</span> +x docker-compose</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line"><span class="built_in">cp</span> docker-compose  /usr/local/bin/</span><br><span class="line">docker-compose version</span><br></pre></td></tr></table></figure>
-
-<h6 id="安装nvidia-container-runtime："><a href="#安装nvidia-container-runtime：" class="headerlink" title="安装nvidia-container-runtime："></a>安装nvidia-container-runtime：</h6><p>1、解压 nvidia-docker2-rpm.tar.gz；<br>2、rpm -ivh或者yum install安装；<br>3、systemctl restart docker 重启docker服务；</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf nvidia-docker2-rpm.tar.gz</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line"><span class="built_in">ls</span> root/</span><br><span class="line"><span class="built_in">ls</span> root/rpm/</span><br><span class="line"><span class="built_in">cd</span> root/rpm/</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line">rpm -ivh libnvidia-container* nvidia-*</span><br><span class="line">systemctl restart docker</span><br><span class="line">systemctl status docker</span><br></pre></td></tr></table></figure>
-
-<h6 id="下载docker镜像测试运行"><a href="#下载docker镜像测试运行" class="headerlink" title="下载docker镜像测试运行"></a>下载docker镜像测试运行</h6><p>编辑daemon.json 文件，添加镜像加速器的地址。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span>  ~/.docker/daemon.json</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;registry-mirrors&quot;</span>: [</span><br><span class="line">    <span class="string">&quot;https://docker.mirrors.ustc.edu.cn&quot;</span></span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h6 id="下载docker镜像测试运行-1"><a href="#下载docker镜像测试运行-1" class="headerlink" title="下载docker镜像测试运行"></a>下载docker镜像测试运行</h6><p>NGC镜像下载地址</p>
-<pre><code class="bash">https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch
-docker pull nvcr.io/nvidia/pytorch:24.06-py3
-
-docker run --gpus all --ipc=host --ulimit memlock=-1 --ulimit stack=67108864   nvcr.io/nvidia/pytorch:24.06-py3
-
-交互方式进入docker镜像
-docker run -it --gpus all --ipc=host --ulimit memlock=-1 --ulimit stack=67108864   nvcr.io/nvidia/pytorch:24.06-py3
-实测可用命令进入docker容器
-docker run -it --gpus all --ipc=host --ulimit memlock=-1 --ulimit stack=67108864   pytorch-20240719.tar:latest
-```bash
-
-
-###### 如何让系统普通用户也能使用docker命令
-将用户添加到了docker组
-sudo groupadd docker
-sudo usermod -aG docker test10
-id  test10
-重启Docker服务以确保用户组的更改（普通用户属于docker组）被应用
-使用sudo systemctl restart docker来重启Docker守护进程。
-
-
-
-###### redhat7.9离线安装docker软件包
-链接：https://pan.baidu.com/s/1WK78h2tq5S6iECcu4lRhCg 
-提取码：o83k 
-
-
-###### 如果可以联网，redhat7.9建议的repo仓库文件：
-
-
-###### 下载英伟达NGC  pytorch镜像，保存为tar了。19G。有需要可用离线导入
-链接：https://pan.baidu.com/s/1rQ6PhLlnKfu9tNlCC_Dl6w
-提取码：215c 
-
-</code></pre>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/07/20/redhat7.9_docker/" data-id="clz105670000liga33hp00l2w" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-
-
-  <nav id="page-nav">
-    
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
-  </nav>
 
 </section>
         

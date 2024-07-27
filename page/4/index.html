@@ -64,6 +64,56 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-IB_test" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/06/22/IB_test/" class="article-date">
+  <time datetime="2022-06-22T11:59:35.176Z" itemprop="datePublished">2022-06-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/06/22/IB_test/">IB网络性能测试</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>收集ib驱动内置命令各项测试数据、判断IB网络性能<br>在80个计算节点任意选择2个节点，一个节点发送IB网络数据包数据，另一个节点接收数据。<br>查看IB网络收发包网络带宽。<br>在server端执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ib_write_rw -a</span><br></pre></td></tr></table></figure>
+
+<p>在client端执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ib_write_rw -a   对端节点IB网卡IP地址</span><br></pre></td></tr></table></figure>
+
+<p>新的测试方法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mpirun -machinefile hostfile -np 80 ./IMB-MPI1 pingpong </span><br></pre></td></tr></table></figure>
+
+<p>手动创建hostfile,并根据节点数量输入np值（相等或者少于均可）；<br>其中IMB-MPI1文件是从intel编译器中cp到测试路径中的；<br>intel2018的测试结果不好；<br>使用intel2020编译器测试出来的效果和ib_write_bw这种点对点测试的一致。<br>IMB-MPI1可执行文件的路径：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/opt/intel2020/impi/2019.7.217/intel/bin</span><br></pre></td></tr></table></figure>
+<p>网络调优：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#可以通过mellanox提供的工具自动优化</span></span><br><span class="line">mlnx_tune -h</span><br><span class="line"></span><br><span class="line"><span class="comment">#显示当前配置状态</span></span><br><span class="line">mlnx_tune -r</span><br><span class="line"></span><br><span class="line"><span class="comment">#开始优化</span></span><br><span class="line">mlnx_tune -p HIGH_THROUGHPUT</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/06/22/IB_test/" data-id="clz10566a0008iga3fzor3ioc" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Switch_Deployment_Configuration" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2022/06/22/Switch_Deployment_Configuration/" class="article-date">
@@ -330,99 +380,6 @@
 
 
   
-    <article id="post-IB_FW_upgrade" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/06/17/IB_FW_upgrade/" class="article-date">
-  <time datetime="2022-06-17T15:09:28.590Z" itemprop="datePublished">2022-06-17</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/06/17/IB_FW_upgrade/">升级IB交换机固件</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>交换机固件下载地址：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://www.mellanox.com/support/firmware/firmware-downloads</span><br></pre></td></tr></table></figure>
-
-<p>IB交换机驱动下载地址：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://www.mellanox.com/products/infiniband-drivers/linux/mlnx_ofed</span><br></pre></td></tr></table></figure>
-
-<p>#安装IB驱动MLNX_OFED_LINUX-5.3-1.0.0.1-rhel7.5-x86_64</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tar zxvf MLNX_OFED_LINUX-5.3-1.0.0.1-rhel7.5-x86_64.tgz </span><br><span class="line"><span class="built_in">cd</span> MLNX_OFED_LINUX-5.3-1.0.0.1-rhel7.5-x86_64/</span><br><span class="line">./mlnxofedinstall --all --force</span><br></pre></td></tr></table></figure>
-
-<p>#重启服务器</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reboot </span><br></pre></td></tr></table></figure>
-
-<p>#查看IP地址</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip a</span><br></pre></td></tr></table></figure>
-
-<p>#配置IB网卡的IP地址</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/sysconfig/network-scripts/</span><br></pre></td></tr></table></figure>
-
-<p>#编辑IB网口网卡配置文件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">vi ifcfg-ib0</span><br><span class="line"><span class="built_in">cat</span> ifcfg-ib0</span><br><span class="line">NAME=ib0</span><br><span class="line">DEVICE=ib0</span><br><span class="line">BOOTPROTO=static</span><br><span class="line">ONBOOT=<span class="built_in">yes</span></span><br><span class="line">TYPE=InfiniBand</span><br><span class="line">IPADDR=11.11.11.200</span><br><span class="line">NETMASK=255.255.0.0 </span><br></pre></td></tr></table></figure>
-
-<p>#重启网络管理服务</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl  restart  network</span><br></pre></td></tr></table></figure>
-
-<p>#查看IB网卡状态</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ibstat</span><br></pre></td></tr></table></figure>
-
-<p>#管理节点启动opensmd子网管理器服务</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start opensmd</span><br></pre></td></tr></table></figure>
-
-<p>#查看连接到的IB交换机设备标识</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mst status</span><br><span class="line">/dev/mst/SW_MT54000_Quantum_Mellanox_Technologies_lid-0x0006</span><br><span class="line">/dev/mst/SW_MT54000_Quantum_Mellanox_Technologies_lid-0x0007</span><br><span class="line">/dev/mst/SW_MT54000_Quantum_Mellanox_Technologies_lid-0x0008</span><br><span class="line">/dev/mst/SW_MT54000_Quantum_Mellanox_Technologies_lid-0x0009</span><br><span class="line">/dev/mst/SW_MT54000_Quantum_Mellanox_Technologies_lid-0x000A</span><br><span class="line">/dev/mst/SW_MT54000_Quantum_Mellanox_Technologies_lid-0x000B</span><br></pre></td></tr></table></figure>
-
-<p>#升级IB交换机固件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mst status</span><br><span class="line">mst startus opensmd</span><br><span class="line">mst start</span><br><span class="line">mst ib add</span><br><span class="line">mst status</span><br></pre></td></tr></table></figure>
-
-<p>#查看IB交换机配置</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mlxconfig -d /dev/mst/SW_MT54000_Quantum_Mellanox_Technologies_lid-0x0002 query</span><br><span class="line">flint -d /dev/mst/SW_MT54000_Quantum_Mellanox_Technologies_lid-0x0002 query</span><br></pre></td></tr></table></figure>
-
-<p>#解压缩IB固件包</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip fw-Quantum-rel-27_2008_2500-MQM8790-HS2X_Ax.bin.zip </span><br></pre></td></tr></table></figure>
-
-<p>#升级IB交换机固件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flint -d /dev/mst/SW_MT54000_Quantum_Mellanox_Technologies_lid-0x0002 -i fw-Quantum-rel-27_2008_2500-MQM8790-HS2X_Ax.bin burn</span><br></pre></td></tr></table></figure>
-
-<p>#重启IB交换机</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flint -d /dev/mst/SW_MT54000_Quantum_Mellanox_Technologies_lid-0x0002 swreset</span><br></pre></td></tr></table></figure>
-
-<p>#查询IB交换机固件版本</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">flint -d /dev/mst/SW_MT54000_Quantum_Mellanox_Technologies_lid-0x0002 query</span><br><span class="line">mlxconfig -d /dev/mst/SW_MT54000_Quantum_Mellanox_Technologies_lid-0x0002 query</span><br></pre></td></tr></table></figure>
-
-<p>#开启一分二线缆功能</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mlxconfig -d /dev/mst/SW_MT54000_Quantum_Mellanox_Technologies_lid-0x0002 <span class="built_in">set</span> SPLIT_MODE=1</span><br></pre></td></tr></table></figure>
-
-<p>#重启IB交换机查看配置</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">flint -d /dev/mst/SW_MT54000_Quantum_Mellanox_Technologies_lid-0x0002 swreset</span><br><span class="line">mlxconfig -d /dev/mst/SW_MT54000_Quantum_Mellanox_Technologies_lid-0x0002 query</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/17/IB_FW_upgrade/" data-id="clz1056680006iga3a7304zgw" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -459,6 +416,10 @@
       <ul>
         
           <li>
+            <a href="/2024/07/27/ubuntu_slurm/">Ubuntu安装slurm超算集群</a>
+          </li>
+        
+          <li>
             <a href="/2024/07/27/A800/">Pytorch检查GPU卡状态正常</a>
           </li>
         
@@ -472,10 +433,6 @@
         
           <li>
             <a href="/2024/07/20/redhat7.9_docker/">redhat7.9离线安装docker</a>
-          </li>
-        
-          <li>
-            <a href="/2022/11/24/CentOS7_Slurm/">CentOS7.9 install Slurm</a>
           </li>
         
       </ul>
